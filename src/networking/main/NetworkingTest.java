@@ -13,11 +13,13 @@ public class NetworkingTest {
 		UDPClient client = new UDPClient();
 		Date timer = new Date();
 		long start = timer.getTime();
+		
 		server.start();
 		client.start();
+		
 		client.sendData("join");
 		try {
-			Thread.sleep(5);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -32,7 +34,9 @@ public class NetworkingTest {
 		
 		
 		try {
+
 			server.join();
+			client.halt();
 			client.join();
 		} catch (InterruptedException e) {}
 		System.out.println("done");

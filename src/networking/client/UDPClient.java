@@ -9,18 +9,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class UDPClient extends Thread{
 	
-	private DatagramSocket socket;
 	private InetAddress address;
 	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
-	
+	private ClientReceiver receiver;
+	ClientSender sender;
 	
 	public UDPClient() {
-		try {
-			socket = new DatagramSocket();
-		} catch (SocketException e1) {
-			System.out.println("Socket Exception in client");
-		}
 		try {
 			address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
@@ -32,8 +27,8 @@ public class UDPClient extends Thread{
 	
 	public void run() {
 		
-		ClientReceiver receiver = new ClientReceiver();
-		ClientSender sender = new ClientSender(address, socket, messageQueue);
+		receiver = new ClientReceiver();
+		sender = new ClientSender(address, messageQueue);
 		
 		sender.start();
 		receiver.start();
@@ -46,8 +41,7 @@ public class UDPClient extends Thread{
 			e.printStackTrace();
 		}
 		
-		socket.close();
-		
+		System.out.println("client stopped");
 		
 		
 	}
@@ -60,7 +54,8 @@ public class UDPClient extends Thread{
 		}
 	}
 
-	public void close() {
-		socket.close();
+	public void halt() {
+		sender.halt();
+		receiver.halt();
 	}
 }

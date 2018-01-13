@@ -1,30 +1,31 @@
 package networking.server;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import networking.globals.Globals;
 import networking.model.Model;
 
 public class UDPServer extends Thread{
 
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private ArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<InetAddress> clientList;
+	ServerReciever receiver;
+	ServerSender sender;
+	Model model;
 	
 	public UDPServer() {
 	
-		this.clientList = new ArrayList<InetAddress>();
+		this.clientList = new CopyOnWriteArrayList<InetAddress>();
 		
 	}
 
 	public void run() {
 		
-		Model model = new Model(0, 0);
-		ServerReciever receiver = new ServerReciever(model, clientList); 
-		ServerSender sender = new ServerSender(model, clientList);
+		this.model = new Model(0, 0);
+		this.receiver = new ServerReciever(model, clientList, this); 
+		this.sender = new ServerSender(model, clientList);
 		receiver.start();
 		sender.start();
 		System.out.println("thread started and waiting to join");
@@ -35,8 +36,13 @@ public class UDPServer extends Thread{
 			// TODO: handle exception
 		}
 		
-		System.out.println("Threads joined");
+		System.out.println("Server stopped");
 		
+	}
+	
+	public void halt() {
+		this.receiver.halt();
+		this.sender.halt();
 	}
 
 	

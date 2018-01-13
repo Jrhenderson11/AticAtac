@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -14,13 +14,13 @@ import networking.model.Model;
 
 public class ServerSender extends Thread {
 	//	DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-	private  ArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<InetAddress> clientList;
 	private Model model;
 	private boolean running;
 	private DatagramSocket socket;
 	
 	
-	public ServerSender(Model newModel, ArrayList<InetAddress> newList) {
+	public ServerSender(Model newModel, CopyOnWriteArrayList<InetAddress> newList) {
 		this.model = newModel;
 		this.clientList = newList;	
 	}
@@ -50,6 +50,7 @@ public class ServerSender extends Thread {
 			
 			
 		}
+		System.out.println("server sender stopped");
 	}
 	
 	public void halt() {

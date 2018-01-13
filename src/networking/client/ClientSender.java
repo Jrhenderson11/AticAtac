@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import networking.globals.Globals;
 
@@ -17,9 +17,14 @@ public class ClientSender extends Thread {
 	private boolean running;
  	private BlockingQueue<String> messageQueue;
 	
-	public ClientSender(InetAddress newServer, DatagramSocket newSocket, BlockingQueue newQueue) {
+	public ClientSender(InetAddress newServer, BlockingQueue newQueue) {
 		this.server = newServer;
-		this.socket = newSocket;
+		try {
+			this.socket = new DatagramSocket();
+		} catch (SocketException e) {
+			System.out.println("client sender cannot acquire socket");
+			e.printStackTrace();
+		}
 		this.messageQueue = newQueue;
 	}
 
@@ -40,12 +45,14 @@ public class ClientSender extends Thread {
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
+				System.out.println("error sending from client");
 				System.exit(-1);
 				e.printStackTrace();
 			}
 			try {Thread.sleep(5);} catch (InterruptedException e1) {}
 			//System.out.println("sent");
 		}
+		socket.close();
 	}
 	
 	public String sendData(String msg) {

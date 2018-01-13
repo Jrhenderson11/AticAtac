@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import networking.globals.Globals;
 import networking.model.Model;
@@ -16,12 +17,13 @@ public class ServerReciever extends Thread {
 	private Model model;
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private ArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<InetAddress> clientList;
+	private UDPServer master;
 	
-	
-	public ServerReciever(Model newModel, ArrayList<InetAddress> newList) {
+	public ServerReciever(Model newModel, CopyOnWriteArrayList<InetAddress> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
+		this.master = newMaster;
 		try {
 			this.socket = new DatagramSocket(Globals.PORT);
 		} catch (SocketException e) {
@@ -76,7 +78,7 @@ public class ServerReciever extends Thread {
 		
 		
 		if (data.equals("stop")) {
-			this.halt();
+			this.master.halt();
 		} else if (data.split(":")[0].equals("ADD")) {
 			int addX = Integer.parseInt(data.split(":")[1]);
 			int addY = Integer.parseInt(data.split(":")[2]);
