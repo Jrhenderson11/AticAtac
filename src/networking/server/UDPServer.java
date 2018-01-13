@@ -10,14 +10,14 @@ public class UDPServer extends Thread{
 
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private CopyOnWriteArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<ClientInfo> clientList;
 	ServerReciever receiver;
 	ServerSender sender;
 	Model model;
 	
 	public UDPServer() {
 	
-		this.clientList = new CopyOnWriteArrayList<InetAddress>();
+		this.clientList = new CopyOnWriteArrayList<ClientInfo>();
 		
 	}
 

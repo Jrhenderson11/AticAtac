@@ -11,13 +11,15 @@ import networking.globals.Globals;
 
 public class ClientSender extends Thread {
 
+	private String name;
 	private byte[] buffer = new byte[256];
 	private InetAddress server;
 	private DatagramSocket socket;
 	private boolean running;
- 	private BlockingQueue<String> messageQueue;
-	
-	public ClientSender(InetAddress newServer, BlockingQueue newQueue) {
+	private BlockingQueue<String> messageQueue;
+
+	public ClientSender(String newName, InetAddress newServer, BlockingQueue newQueue) {
+		this.name = newName;
 		this.server = newServer;
 		try {
 			this.socket = new DatagramSocket();
@@ -35,13 +37,13 @@ public class ClientSender extends Thread {
 			try {
 				message = messageQueue.take();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			}
-			//send message once got
+			// send message once got
 			buffer = message.getBytes();
-			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.PORT);
-			//System.out.println("sending " + message);
-			
+			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.SERVER_PORT);
+			// System.out.println("sending " + message);
+
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
@@ -49,17 +51,15 @@ public class ClientSender extends Thread {
 				System.exit(-1);
 				e.printStackTrace();
 			}
-			try {Thread.sleep(5);} catch (InterruptedException e1) {}
-			//System.out.println("sent");
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e1) {
+			}
 		}
 		socket.close();
-	}
-	
-	public String sendData(String msg) {
 		
-	
-		return "";
 	}
+
 	public void halt() {
 		this.running = false;
 	}

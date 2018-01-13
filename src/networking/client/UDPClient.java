@@ -7,45 +7,47 @@ import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class UDPClient extends Thread{
-	
+public class UDPClient extends Thread {
+
+	private String name;
 	private InetAddress address;
 	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
 	private ClientReceiver receiver;
 	ClientSender sender;
-	
-	public UDPClient() {
+
+	public UDPClient(String newName) {
+		this.name = newName;
 		try {
-			address = InetAddress.getByName("localhost");
+			this.address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			System.out.println("so apparently localhost is unreachable...");
 			System.exit(-1);
 		}
-		messageQueue = new LinkedBlockingQueue<String>();
+		this.messageQueue = new LinkedBlockingQueue<String>();
 	}
-	
+
 	public void run() {
-		
-		receiver = new ClientReceiver();
-		sender = new ClientSender(address, messageQueue);
-		
+
+		receiver = new ClientReceiver(name);
+		sender = new ClientSender(name, address, messageQueue);
+
 		sender.start();
 		receiver.start();
-		
+
 		try {
 			sender.join();
 			receiver.join();
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println("client stopped");
-		
-		
+
+		System.out.println(name + " stopped");
+
 	}
-	
+
 	public void sendData(String data) {
 		try {
 			this.messageQueue.put(data);
@@ -56,6 +58,8 @@ public class UDPClient extends Thread{
 
 	public void halt() {
 		sender.halt();
+		sender.interrupt();
 		receiver.halt();
+		receiver.interrupt();
 	}
 }

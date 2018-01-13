@@ -17,19 +17,20 @@ public class ServerReciever extends Thread {
 	private Model model;
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private CopyOnWriteArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<ClientInfo> clientList;
+	private CopyOnWriteArrayList<InetAddress> addressList;
 	private UDPServer master;
 	
-	public ServerReciever(Model newModel, CopyOnWriteArrayList<InetAddress> newList, UDPServer newMaster) {
+	public ServerReciever(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
 		try {
-			this.socket = new DatagramSocket(Globals.PORT);
+			this.socket = new DatagramSocket(Globals.SERVER_PORT);
 		} catch (SocketException e) {
-			// TODO: handle exception
 			System.out.println("unable to lock port");
 		}
+		this.addressList = new CopyOnWriteArrayList<>();
 		
 	}
 
@@ -51,8 +52,7 @@ public class ServerReciever extends Thread {
 			}
 
 			String received = new String(packet.getData(), 0, packet.getLength());
-			origin = packet.getAddress();
-			processData(received, origin);
+			processData(received, packet.getAddress());
 			// if recieved end terminate via running = false
 
 		}
@@ -69,10 +69,21 @@ public class ServerReciever extends Thread {
 		if (data.equals("join")) {
 			if (clientList.size() < Globals.MAX_CONNECTIONS) {
 				//add to list + send confirmation
-				this.clientList.add(origin);
+				
+				String newName = "P" + Integer.toString(clientList.size()+1);
+				int port = Globals.CLIENT_PORT + (clientList.size());
+				ClientInfo newClient = new ClientInfo(newName, origin, port);
+				this.clientList.add(newClient);
+				this.addressList.add(origin);
+				System.out.println("added client: " + newClient.toString());
+				//send ACK
+ 			
+			} else {
+				//send RST
+				
 			}
-		} else if (clientList.contains(origin)==false) {
-			//reject as unkown client
+		} else if (addressList.contains(origin)==false) {
+			//reject as unknown client
 			return;
 		}
 		

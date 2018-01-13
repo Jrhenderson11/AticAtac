@@ -14,18 +14,19 @@ import networking.model.Model;
 
 public class ServerSender extends Thread {
 	//	DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-	private CopyOnWriteArrayList<InetAddress> clientList;
+	private CopyOnWriteArrayList<ClientInfo> clientList;
 	private Model model;
 	private boolean running;
 	private DatagramSocket socket;
 	
 	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<InetAddress> newList) {
+	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList) {
 		this.model = newModel;
 		this.clientList = newList;	
 	}
 	
 	public void run() {
+		InetAddress address;
 		System.out.println("Server sender started");
 		try {
 			socket = new DatagramSocket();
@@ -35,12 +36,12 @@ public class ServerSender extends Thread {
 		System.out.println("got sender socket");
 		running = true;
 		while (running) {
-			for (InetAddress client : clientList) {
+			for (ClientInfo client : clientList) {
+				address = client.getAddress();
 				byte[] buffer = SerializationUtils.serialize(model);
 				
-				//byte[] buffer = byte(model);
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, client, Globals.PORT2);
-				//System.out.println("sending model");
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
+				//System.out.println("sending model " + address.toString() +":"+ client.getPort());
 				try {
 					socket.send(packet);
 				} catch (IOException e) {
