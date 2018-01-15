@@ -13,16 +13,22 @@ import com.aticatac.rendering.display.DisplayPanel;
 
 public class DemoTest {
 
+	StaticComponent s1;
+	
 	public DemoTest() {
 		
 	}
 
+
+	
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
-		DisplayPanel display = new DisplayPanel(900, 600, 30);
+		DemoTest demo = new DemoTest();
+		DisplayPanel display = new DisplayPanel(900, 600, 30, demo);
+	
 		try {
-			StaticComponent s1 = new StaticComponent("assets/test/tile1.png");
-			s1.setPosition(50, 50);
+			demo.s1 = new StaticComponent("assets/test/tile1.png");
+			demo.s1.setPosition(50, 50);
 			
 			AnimatedComponent a1 = new AnimatedComponent(new SpriteSheet("assets/test/spritesheet1.png", new Dimension(100, 100)), 
 					new Rectangle(200, 50, 100, 100), 0, 0, 1);
@@ -30,15 +36,20 @@ public class DemoTest {
 			window.setContentPane(display);
 			window.setPreferredSize(new Dimension(900, 600));
 		
-			display.addComponent(s1);
+			display.addComponent(demo.s1);
 			display.addComponent(a1);
 			window.pack();
 			window.setVisible(true);
-			
+			display.setFocusable(true);
+			display.setFocusTraversalKeysEnabled(false);
+			display.addKeyListener(display);
 			display.start();
 			
 			while (true) {
-				s1.translate(1, 1);
+				
+				
+				
+				//s1.translate(1, 1);
 				Thread.sleep(100);
 			}
 			
@@ -51,5 +62,8 @@ public class DemoTest {
 			display.stop();
 		}
 		
+	}
+	public void move(int x, int y) {
+		this.s1.translate(x, y);
 	}
 }
