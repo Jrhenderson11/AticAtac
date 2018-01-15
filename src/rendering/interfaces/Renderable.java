@@ -1,4 +1,4 @@
-package rendering.components;
+package rendering.interfaces;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -17,10 +17,5 @@ public interface Renderable {
 	 * @return A Rectangle that encapsulates the image
 	 */
 	public Rectangle getImageRect();
-	/**
-	 * Gets the Rectangle that is used for collision detection
-	 * @return The Rectangle used for collision detection
-	 */
-	public Rectangle getCollisionRect();
 	
 }

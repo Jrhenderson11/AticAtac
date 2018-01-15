@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import rendering.interfaces.Renderable;
+
 public class StaticComponent implements Renderable {
 
 	
@@ -171,7 +173,6 @@ public class StaticComponent implements Renderable {
 	/**
 	 * Returns the rectangle that defines the collision boundaries
 	 */
-	@Override
 	public Rectangle getCollisionRect() {
 		return collisionRect;
 	}

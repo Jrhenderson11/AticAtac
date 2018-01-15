@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-import rendering.components.Renderable;
+import rendering.interfaces.Renderable;
 
 @SuppressWarnings("serial")
 public class DisplayPanel extends JPanel implements Runnable {

@@ -39,7 +39,6 @@ public class DemoTest {
 			
 			while (true) {
 				s1.translate(1, 1);
-				System.out.println("tick1");
 				Thread.sleep(100);
 			}
 			

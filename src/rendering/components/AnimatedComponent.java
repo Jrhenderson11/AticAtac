@@ -3,6 +3,8 @@ package rendering.components;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import rendering.interfaces.Renderable;
+
 public class AnimatedComponent implements Renderable {
 	
 	
@@ -103,7 +105,6 @@ public class AnimatedComponent implements Renderable {
 	/**
 	 * Return the Rectangle that defines the collision boundary for the component
 	 */
-	@Override
 	public Rectangle getCollisionRect() {
 		return collisionRect;
 	}
