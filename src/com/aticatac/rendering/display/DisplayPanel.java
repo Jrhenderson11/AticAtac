@@ -215,13 +215,13 @@ public class DisplayPanel extends JPanel implements Runnable, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		int location = e.getKeyCode();
 		if (location == KeyEvent.VK_LEFT) {
-        	this.master.move(-1, 0);
+        	this.master.move(-3, 0);
         } else if (location == KeyEvent.VK_RIGHT) {
-        	this.master.move(1, 0);
+        	this.master.move(3, 0);
         } else if (location == KeyEvent.VK_DOWN) {
-        	this.master.move(0, 1);
+        	this.master.move(0, 3);
         } else if (location == KeyEvent.VK_UP) {
-        	this.master.move(0, -1);
+        	this.master.move(0, -3);
         }
 
 	
