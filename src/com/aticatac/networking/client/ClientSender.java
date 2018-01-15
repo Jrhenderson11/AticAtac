@@ -1,4 +1,4 @@
-package networking.client;
+package com.aticatac.networking.client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 
-import networking.globals.Globals;
+import com.aticatac.networking.globals.Globals;
 
 public class ClientSender extends Thread {
 

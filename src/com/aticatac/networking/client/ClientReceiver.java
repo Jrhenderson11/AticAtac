@@ -1,4 +1,4 @@
-package networking.client;
+package com.aticatac.networking.client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,8 +7,8 @@ import java.net.SocketException;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import networking.globals.Globals;
-import networking.model.Model;
+import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.model.Model;
 
 public class ClientReceiver extends Thread {
 

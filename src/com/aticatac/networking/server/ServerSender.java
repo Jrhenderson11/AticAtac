@@ -1,4 +1,4 @@
-package networking.server;
+package com.aticatac.networking.server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import networking.globals.Globals;
-import networking.model.Model;
+import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.model.Model;
 
 public class ServerSender extends Thread {
 	//	DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);

@@ -1,4 +1,4 @@
-package networking.model;
+package com.aticatac.networking.model;
 
 import java.io.Serializable;
 

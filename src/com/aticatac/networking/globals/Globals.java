@@ -1,4 +1,4 @@
-package networking.globals;
+package com.aticatac.networking.globals;
 
 public class Globals {
 

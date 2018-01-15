@@ -1,4 +1,4 @@
-package networking.client;
+package com.aticatac.networking.client;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;

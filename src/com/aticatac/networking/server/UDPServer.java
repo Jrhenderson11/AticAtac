@@ -1,10 +1,10 @@
-package networking.server;
+package com.aticatac.networking.server;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import networking.model.Model;
+import com.aticatac.networking.model.Model;
 
 public class UDPServer extends Thread{
 

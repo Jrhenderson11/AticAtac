@@ -1,4 +1,4 @@
-package networking.server;
+package com.aticatac.networking.server;
 
 import java.net.InetAddress;
 

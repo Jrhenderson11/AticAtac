@@ -10,9 +10,9 @@ public class Main {
 
         while (running) {
 
-            handleinupt();
-            updatestate();
-            render();
+            //handleinput();
+            //updatestate();
+            //srender();
 
         }
     }

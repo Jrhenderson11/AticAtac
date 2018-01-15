@@ -1,4 +1,4 @@
-package networking.server;
+package com.aticatac.networking.server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,8 +8,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import networking.globals.Globals;
-import networking.model.Model;
+import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.model.Model;
 
 public class ServerReciever extends Thread {
 

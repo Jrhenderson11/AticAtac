@@ -1,9 +1,9 @@
-package networking.main;
+package com.aticatac.networking.main;
 
 import java.util.Date;
 
-import networking.client.UDPClient;
-import networking.server.UDPServer;
+import com.aticatac.networking.client.UDPClient;
+import com.aticatac.networking.server.UDPServer;
 
 public class NetworkingTest {
 
