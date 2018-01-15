@@ -1,4 +1,4 @@
-package rendering.display;
+package com.aticatac.rendering.display;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-import rendering.interfaces.Renderable;
+import com.aticatac.rendering.interfaces.Renderable;
 
 @SuppressWarnings("serial")
 public class DisplayPanel extends JPanel implements Runnable {

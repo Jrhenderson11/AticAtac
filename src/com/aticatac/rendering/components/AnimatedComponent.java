@@ -1,9 +1,9 @@
-package rendering.components;
+package com.aticatac.rendering.components;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import rendering.interfaces.Renderable;
+import com.aticatac.rendering.interfaces.Renderable;
 
 public class AnimatedComponent implements Renderable {
 	

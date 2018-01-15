@@ -1,4 +1,4 @@
-package rendering.interfaces;
+package com.aticatac.rendering.interfaces;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;

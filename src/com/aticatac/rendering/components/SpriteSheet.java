@@ -1,4 +1,4 @@
-package rendering.components;
+package com.aticatac.rendering.components;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;

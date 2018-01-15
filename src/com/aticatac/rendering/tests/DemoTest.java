@@ -1,4 +1,4 @@
-package rendering.tests;
+package com.aticatac.rendering.tests;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import rendering.components.AnimatedComponent;
-import rendering.components.SpriteSheet;
-import rendering.components.StaticComponent;
-import rendering.display.DisplayPanel;
+import com.aticatac.rendering.components.AnimatedComponent;
+import com.aticatac.rendering.components.SpriteSheet;
+import com.aticatac.rendering.components.StaticComponent;
+import com.aticatac.rendering.display.DisplayPanel;
 
 public class DemoTest {
 

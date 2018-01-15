@@ -1,4 +1,4 @@
-package rendering.components;
+package com.aticatac.rendering.components;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import rendering.interfaces.Renderable;
+import com.aticatac.rendering.interfaces.Renderable;
 
 public class StaticComponent implements Renderable {
 
