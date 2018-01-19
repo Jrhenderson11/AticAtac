@@ -133,15 +133,15 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 * For every component in the components list
 	 */
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		
 		Graphics2D g2d = (Graphics2D) g;
 		
 		for (Renderable component: components) {
 			Rectangle rect = component.getImageRect();
 			if (displayRect.intersects(rect)) {
-				g2d.drawImage(component.getImage(), (rect.x - displayRect.x), (rect.y - displayRect.y), this);
+				g2d.drawImage(component.getImage(), (rect.x - displayRect.x), (rect.y - displayRect.y), null);
 			}
 		}
 	}

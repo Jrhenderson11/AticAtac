@@ -20,16 +20,17 @@ public class DemoTest {
 
 	public static void main(String[] args) {
 		JFrame window = new JFrame();
-		DisplayPanel display = new DisplayPanel(900, 600, 30);
+		DisplayPanel display = new DisplayPanel(900, 600, 24);
 		try {
 			StaticComponent s1 = new StaticComponent("assets/test/tile1.png");
 			s1.setPosition(50, 50);
 			
 			AnimatedComponent a1 = new AnimatedComponent(new SpriteSheet("assets/test/spritesheet1.png", new Dimension(100, 100)), 
-					new Rectangle(200, 50, 100, 100), 0, 0, 1);
+					new Rectangle(200, 50, 100, 100), 0, 0, 3);
 			
 			window.setContentPane(display);
 			window.setPreferredSize(new Dimension(900, 600));
+			window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 			//Creates a new scene to display
 			Scene scene = new Scene();
@@ -47,7 +48,7 @@ public class DemoTest {
 			
 			while (true) {
 				s1.translate(1, 1);
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			}
 			
 			
