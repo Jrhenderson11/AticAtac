@@ -2,7 +2,9 @@ package com.aticatac.rendering.display;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
@@ -26,6 +28,10 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 */
 	private Scene scene;
 	/**
+	 * A local collection of components
+	 */
+	private LinkedList<Renderable> components;
+	/**
 	 * Delay between each redrawing of the panel
 	 */
 	private int frameDelay;
@@ -48,6 +54,7 @@ public class DisplayPanel extends JPanel implements Runnable {
 	public DisplayPanel(Rectangle displayRect, int frameRate) {
 		this.displayRect = displayRect;
 		this.scene = new Scene();
+		this.components = new LinkedList<Renderable>();
 		this.frameDelay = 1000 / frameRate;
 		this.running = true;
 		this.setPreferredSize(displayRect.getSize());
@@ -96,6 +103,7 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 */
 	public void setScene(Scene scene) {
 		this.scene = scene;
+		updateScene();
 	}
 	
 	/**
@@ -104,6 +112,14 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 */
 	public Scene getScene() {
 		return scene;
+	}
+	
+	/**
+	 * Updates the local component list with changes from the scene.
+	 * If an object is removed from the scene, the scene needs updating
+	 */
+	public void updateScene() {
+		this.components = scene.getSceneComponents();
 	}
 	
 	/**
@@ -117,12 +133,15 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 * For every component in the components list
 	 */
 	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		for (Renderable component: scene.getSceneComponents()) {
+	public void paint(Graphics g) {
+		super.paint(g);
+		
+		Graphics2D g2d = (Graphics2D) g;
+		
+		for (Renderable component: components) {
 			Rectangle rect = component.getImageRect();
 			if (displayRect.intersects(rect)) {
-				g.drawImage(component.getImage(), (rect.x - displayRect.x), (rect.y - displayRect.y), this);
+				g2d.drawImage(component.getImage(), (rect.x - displayRect.x), (rect.y - displayRect.y), this);
 			}
 		}
 	}

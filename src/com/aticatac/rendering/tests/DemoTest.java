@@ -26,7 +26,7 @@ public class DemoTest {
 			s1.setPosition(50, 50);
 			
 			AnimatedComponent a1 = new AnimatedComponent(new SpriteSheet("assets/test/spritesheet1.png", new Dimension(100, 100)), 
-					new Rectangle(200, 50, 100, 100), 0, 0, 5);
+					new Rectangle(200, 50, 100, 100), 0, 0, 1);
 			
 			window.setContentPane(display);
 			window.setPreferredSize(new Dimension(900, 600));
@@ -47,7 +47,7 @@ public class DemoTest {
 			
 			while (true) {
 				s1.translate(1, 1);
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			}
 			
 			
