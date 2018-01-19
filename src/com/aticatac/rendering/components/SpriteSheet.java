@@ -50,7 +50,7 @@ public class SpriteSheet {
 			e.printStackTrace();
 		}
 		//check if full sprite sheet dimensions are a multiple of the spriteSize dimension, so that images obtained from spritesheet tile properly
-		if (verifySpritesheet(new Dimension(fullSheet.getWidth(), fullSheet.getHeight()), spriteSize)) {
+		if (!verifySpritesheet(new Dimension(fullSheet.getWidth(), fullSheet.getHeight()), spriteSize)) {
 			System.err.println("Warning: Given spriteSize does not match sprite sheet \"" + sheetFilePath + "\". The sprite sheet dimensions should be a multiple of the given spriteSize");
 		}
 		//Fill the sprite sheet array
@@ -101,8 +101,7 @@ public class SpriteSheet {
 	 * @param spriteSize The size each sprite in the sheet should be
 	 * @return True if the full sprite sheet dimensions are a multiple of the given sprite size
 	 */
-	private static boolean verifySpritesheet(Dimension sheetSize, Dimension spriteSize) {
+	public static boolean verifySpritesheet(Dimension sheetSize, Dimension spriteSize) {
 		return (sheetSize.getWidth() % spriteSize.getWidth() == 0) && (sheetSize.getHeight() % spriteSize.getHeight() == 0);
 	}
-
 }

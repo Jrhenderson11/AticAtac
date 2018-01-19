@@ -38,6 +38,7 @@ public class Scene {
 	public Scene() {
 		this.layers = new LinkedList<LinkedList<Renderable>>();
 		this.layerNames = new LinkedList<String>();
+		addLayer(DEFAULT_LAYERNAME);
 	}
 	
 	

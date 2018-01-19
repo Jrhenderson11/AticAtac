@@ -26,7 +26,7 @@ public class DemoTest {
 			s1.setPosition(50, 50);
 			
 			AnimatedComponent a1 = new AnimatedComponent(new SpriteSheet("assets/test/spritesheet1.png", new Dimension(100, 100)), 
-					new Rectangle(200, 50, 100, 100), 0, 0, 1);
+					new Rectangle(200, 50, 100, 100), 0, 0, 5);
 			
 			window.setContentPane(display);
 			window.setPreferredSize(new Dimension(900, 600));
@@ -35,6 +35,7 @@ public class DemoTest {
 			Scene scene = new Scene();
 			scene.addComponent(s1); //adds components to the default layer of the scene
 			scene.addComponent(a1);
+			
 			
 			//set the display to the scene
 			display.setScene(scene);

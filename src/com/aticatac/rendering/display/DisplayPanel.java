@@ -169,7 +169,6 @@ public class DisplayPanel extends JPanel implements Runnable {
 	public void run() {
 		while(running()) {
 			draw();
-			System.out.println("tick2");
 			try {
 				Thread.sleep(frameDelay);
 			} catch (InterruptedException e) {
