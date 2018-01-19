@@ -10,6 +10,7 @@ import com.aticatac.rendering.components.AnimatedComponent;
 import com.aticatac.rendering.components.SpriteSheet;
 import com.aticatac.rendering.components.StaticComponent;
 import com.aticatac.rendering.display.DisplayPanel;
+import com.aticatac.rendering.display.Scene;
 
 public class DemoTest {
 
@@ -30,8 +31,14 @@ public class DemoTest {
 			window.setContentPane(display);
 			window.setPreferredSize(new Dimension(900, 600));
 		
-			display.addComponent(s1);
-			display.addComponent(a1);
+			//Creates a new scene to display
+			Scene scene = new Scene();
+			scene.addComponent(s1); //adds components to the default layer of the scene
+			scene.addComponent(a1);
+			
+			//set the display to the scene
+			display.setScene(scene);
+			
 			window.pack();
 			window.setVisible(true);
 			

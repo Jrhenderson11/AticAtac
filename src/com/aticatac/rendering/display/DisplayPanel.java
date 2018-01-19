@@ -3,7 +3,6 @@ package com.aticatac.rendering.display;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
@@ -25,7 +24,7 @@ public class DisplayPanel extends JPanel implements Runnable {
 	/**
 	 * List of the components that will be renderered if they are within the display rect
 	 */
-	private LinkedList<Renderable> components;
+	private Scene scene;
 	/**
 	 * Delay between each redrawing of the panel
 	 */
@@ -48,7 +47,7 @@ public class DisplayPanel extends JPanel implements Runnable {
 	 */
 	public DisplayPanel(Rectangle displayRect, int frameRate) {
 		this.displayRect = displayRect;
-		this.components = new LinkedList<Renderable>();
+		this.scene = new Scene();
 		this.frameDelay = 1000 / frameRate;
 		this.running = true;
 		this.setPreferredSize(displayRect.getSize());
@@ -92,22 +91,19 @@ public class DisplayPanel extends JPanel implements Runnable {
 	
 	
 	/**
-	 * Adds a component to the end of the components list
-	 * Adding a component means it will be drawn to the screen if in view.
-	 * @param component The component to add
-	 * @return Returns true if the list is changed as a result of the add.
+	 * Sets the scene of this display panel to the given scene.
+	 * @param scene The scene to set this display to.
 	 */
-	public boolean addComponent(Renderable component) {
-		return components.add(component);
+	public void setScene(Scene scene) {
+		this.scene = scene;
 	}
 	
 	/**
-	 * Removes the given component from the list of components
-	 * @param component The component to remove
-	 * @return True if the component is in the list and has been removed.
+	 * Get the scene this display is showing
+	 * @return The scene object
 	 */
-	public boolean removeComponent(Renderable component) {
-		return components.remove(component);
+	public Scene getScene() {
+		return scene;
 	}
 	
 	/**
@@ -123,7 +119,7 @@ public class DisplayPanel extends JPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for (Renderable component: components) {
+		for (Renderable component: scene.getSceneComponents()) {
 			Rectangle rect = component.getImageRect();
 			if (displayRect.intersects(rect)) {
 				g.drawImage(component.getImage(), (rect.x - displayRect.x), (rect.y - displayRect.y), this);
