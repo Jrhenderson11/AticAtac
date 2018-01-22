@@ -20,10 +20,19 @@ public class Map {
 		this.width = newWidth;
 		this.height = newHeight;
 		this.grid = new int[width][height];
+		this.fillmap(0);
 	}
 
 	public int[][] getGrid() {
 		return this.grid;
+	}
+
+	public int getCoords(int x, int y) {
+		try {
+			return grid[x][y];
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 	
 	private void fillmap(int fillval) {
@@ -34,8 +43,6 @@ public class Map {
 		}
 	}
 	
-	
-
 	public boolean saveMap(String fileName) {
 		String[] lines = new String[grid.length];
 		int j =0;
@@ -74,7 +81,6 @@ public class Map {
 		return false;
 
 	}
-
 
 	public void loadMap(String fileName) {
 		ArrayList<String> lines = new ArrayList<String>();
