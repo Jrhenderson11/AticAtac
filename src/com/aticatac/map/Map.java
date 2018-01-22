@@ -14,7 +14,8 @@ public class Map {
 	private int[][] grid;
 	
 	private int width;
-	private int height;
+	
+		private int height;
 	
 	public Map(int newWidth, int newHeight) {
 		this.width = newWidth;
@@ -33,6 +34,18 @@ public class Map {
 		} catch (Exception e) {
 			return -1;
 		}
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public void updateCoords(int x, int y, int val) {
+		this.grid[x][y] = val;
 	}
 	
 	private void fillmap(int fillval) {
