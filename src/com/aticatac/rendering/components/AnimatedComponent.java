@@ -73,7 +73,7 @@ public class AnimatedComponent implements Renderable {
 	 */
 	@Override
 	public BufferedImage getImage() {
-		if (frameTicker >= frameDuration) {
+		if (frameTicker >= frameDuration - 1) {
 			frameTicker = 0;
 			if (currentFrame >= (spriteSheet.getNumFrames() - 1)) {
 				currentFrame = 0;

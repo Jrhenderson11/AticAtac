@@ -167,7 +167,8 @@ public class StaticComponent implements Renderable {
 	 */
 	@Override
 	public Rectangle getImageRect() {
-		return new Rectangle((collisionRect.x - rectXOffset), (collisionRect.y - rectYOffset), image.getWidth(), image.getHeight()); 
+		return new Rectangle((collisionRect.x - rectXOffset), (collisionRect.y - rectYOffset),
+				image.getWidth(), image.getHeight());
 	}
 	
 	/**
