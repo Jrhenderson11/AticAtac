@@ -1,15 +1,16 @@
 package com.aticatac.rendering.interfaces;
 
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
+
+import javafx.scene.image.Image;
 
 public interface Renderable {
 	
 	/**
-	 * Gets the BufferedImage
-	 * @return The BufferedImage instance
+	 * Gets the Image
+	 * @return The Image instance
 	 */
-	public BufferedImage getImage();
+	public Image getImage();
 	/**
 	 * Gets the Rectangle that encapsulates the image.
 	 * Defined by the top, left coordinate of the collision rect (including the offset), and the width and height of the image.
