@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Map {
-
 	
 	private int[][] grid;
 	
@@ -190,6 +189,8 @@ public class Map {
 		
 		//carve horizontal  and vertical to make rooms
 		makeRect(posX, (centreY-doorwidth/2), xLen, doorwidth, 0);
+		
+	
 	}
 	
 
