@@ -7,5 +7,4 @@ public class demoMap {
 		map.randomiseMap();
 		map.saveMap("assets/maps/map.txt");
 	}
-
 }
