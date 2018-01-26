@@ -2,15 +2,14 @@ package com.aticatac.rendering.components;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
 import com.aticatac.rendering.interfaces.Renderable;
 
-public class StaticComponent implements Renderable {
+import javafx.scene.image.Image;
+
+public class DisplayComponent implements Renderable {
 
 	
 	// ------
@@ -21,7 +20,7 @@ public class StaticComponent implements Renderable {
 	/**
 	 * The image of this component
 	 */
-	private BufferedImage image;
+	private Image image;
 	/**
 	 * The Rectangle that defines this components collision boundaries
 	 */
@@ -48,13 +47,13 @@ public class StaticComponent implements Renderable {
 	 * @param rectXOffset The horizontal offset of the collision rectangle from the left side of the image.
 	 * @param rectYOffset The vertical offset of the collision rectangle from the top of the image
 	 */
-	public StaticComponent(BufferedImage image, Rectangle collisionRect, int rectXOffset, int rectYOffset) {
+	public DisplayComponent(Image image, Rectangle collisionRect, int rectXOffset, int rectYOffset) {
 		this.image = image;
 		this.collisionRect = collisionRect;
 		this.rectXOffset = rectXOffset;
 		this.rectYOffset = rectYOffset;
 	}
-	public StaticComponent(BufferedImage image, Rectangle collisionRect) {
+	public DisplayComponent(Image image, Rectangle collisionRect) {
 		this(image, collisionRect, 0, 0);
 	}
 	
@@ -64,11 +63,11 @@ public class StaticComponent implements Renderable {
 	 * @param rectXOffset The horizontal offset of the collision rectangle from the left side of the image.
 	 * @param rectYOffset The vertical offset of the collision rectangle from the top of the image
 	 */
-	public StaticComponent(BufferedImage image, int rectXOffset, int rectYOffset) {
-		this(image, new Rectangle(image.getWidth(), image.getHeight()), rectXOffset, rectYOffset);
+	public DisplayComponent(Image image, int rectXOffset, int rectYOffset) {
+		this(image, new Rectangle((int) image.getWidth(), (int) image.getHeight()), rectXOffset, rectYOffset);
 	}
-	public StaticComponent(BufferedImage image) {
-		this(image, new Rectangle(image.getWidth(), image.getHeight()));
+	public DisplayComponent(Image image) {
+		this(image, new Rectangle((int) image.getWidth(), (int) image.getHeight()));
 	}
 	
 	/**
@@ -79,10 +78,10 @@ public class StaticComponent implements Renderable {
 	 * @param rectYOffset The vertical offset of the collision rectangle from the top of the image
 	 * @throws IOException When the file cannot be found or read.
 	 */
-	public StaticComponent(String filePath, Rectangle collisionRect, int rectXOffset, int rectYOffset) throws IOException {
-		 this(ImageIO.read(new File(filePath)), collisionRect, rectXOffset, rectYOffset);
+	public DisplayComponent(String filePath, Rectangle collisionRect, int rectXOffset, int rectYOffset) throws IOException {
+		 this(new Image(new File(filePath).toURI().toString()), collisionRect, rectXOffset, rectYOffset);
 	}
-	public StaticComponent(String filePath, Rectangle collisionRect) throws IOException {
+	public DisplayComponent(String filePath, Rectangle collisionRect) throws IOException {
 		this(filePath, collisionRect, 0, 0);
 	}
 	
@@ -93,13 +92,13 @@ public class StaticComponent implements Renderable {
 	 * @param rectYOffset The vertical offset of the collision rectangle from the top of the image
 	 * @throws IOException When the file cannot be found or read.
 	 */
-	public StaticComponent(String filePath, int rectXOffset, int rectYOffset) throws IOException {
-		this.image = ImageIO.read(new File(filePath));
-		this.collisionRect = new Rectangle(image.getWidth(), image.getHeight());
+	public DisplayComponent(String filePath, int rectXOffset, int rectYOffset) throws IOException {
+		this.image = new Image(new File(filePath).toURI().toString());
+		this.collisionRect = new Rectangle((int) image.getWidth(), (int) image.getHeight());
 		this.rectXOffset = rectXOffset;
 		this.rectYOffset = rectYOffset;
 	}
-	public StaticComponent(String filePath) throws IOException {
+	public DisplayComponent(String filePath) throws IOException {
 		this(filePath, 0, 0);
 	}
 	
@@ -158,7 +157,7 @@ public class StaticComponent implements Renderable {
 	 * Returns the image of this component.
 	 */
 	@Override
-	public BufferedImage getImage() {
+	public Image getImage() {
 		return image;
 	}
 	
@@ -167,8 +166,7 @@ public class StaticComponent implements Renderable {
 	 */
 	@Override
 	public Rectangle getImageRect() {
-		return new Rectangle((collisionRect.x - rectXOffset), (collisionRect.y - rectYOffset),
-				image.getWidth(), image.getHeight());
+		return new Rectangle((collisionRect.x - rectXOffset), (collisionRect.y - rectYOffset), (int) image.getWidth(), (int) image.getHeight()); 
 	}
 	
 	/**
