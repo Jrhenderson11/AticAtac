@@ -10,9 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
 
-public class DemoTest extends Application {
+public class Test extends Application {
 
-	public DemoTest() {
+	public Test() {
 		
 	}
 

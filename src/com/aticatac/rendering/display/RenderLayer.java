@@ -27,6 +27,7 @@ public class RenderLayer extends LinkedList<Renderable> {
 	 */
 	private boolean visible;
 	
+	
 	// ------------
 	// Constructors
 	// ------------
