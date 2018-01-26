@@ -6,14 +6,5 @@ public class Main {
 
     public static void main(String[] args) {
 
-        running = true;
-
-        while (running) {
-
-            handleinupt();
-            updatestate();
-            render();
-
-        }
     }
 }
