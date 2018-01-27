@@ -3,6 +3,8 @@ package com.aticatac.rendering.tests;
 import com.aticatac.rendering.components.DisplayComponent;
 import com.aticatac.rendering.display.RenderLayer;
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.world.Level;
+import com.aticatac.world.World;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -23,6 +25,13 @@ public class Test extends Application {
 		Renderer renderer = new Renderer(900, 600); //create a new renderer with a 900x600 display
 	
 		RenderLayer layer1 = new RenderLayer("default");
+		
+		Level map = new Level(50, 50);
+		map.randomiseMap();
+		
+		World world = new World(map);
+		
+		renderer.setWorld(world);
 		
 		layer1.add(c1); //add the component to this layer
 		
