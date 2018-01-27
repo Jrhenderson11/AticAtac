@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 
+import com.aticatac.world.Level;
+import com.aticatac.world.World;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -23,6 +26,10 @@ public class Renderer {
 	 * A list of the layers to render
 	 */
 	private LinkedList<RenderLayer> layers;
+	/**
+	 * The world to render
+	 */
+	private World world;
 	
 	
 	// ------------
@@ -74,14 +81,36 @@ public class Renderer {
 
 	  
 	/**
+	 * Render map
 	 * Render each layer in the layer list in order
-	 * @param g
+	 * @param g The GraphicsContext, probably from Canvas.getGraphicsContext2D()
 	 */
 	public void render(GraphicsContext g) {
+		//fill the background with white
 		g.setFill(Color.WHITE);
 		g.fill();
+		
+		//render the level
+		renderMap(g);	
+		
+		//render any other components in the layers
 		for (RenderLayer layer: layers) {
 			layer.render(g, displayRect);
+		}
+	}
+	
+	public void renderMap(GraphicsContext g) {
+		//render the level
+		g.setFill(Color.BLACK);
+		Level map = world.getLevel();
+		int tileWidth = displayRect.width / map.getWidth();
+		int tileHeight = displayRect.height / map.getHeight();
+		for (int x = 0; x < map.getWidth(); x++) {
+			for (int y = 0; y <map.getHeight(); y++) {
+				if (map.getCoords(x, y) == 1) {                //draw if tile is a wall
+					g.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+				}
+			}
 		}
 	}
 	
@@ -145,6 +174,14 @@ public class Renderer {
 			layer.show();
 			return true;
 		} else return false;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 	
 }
