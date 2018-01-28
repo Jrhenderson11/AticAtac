@@ -1,13 +1,18 @@
 package com.aticatac.rendering.tests;
 
 
+import java.util.ArrayList;
+
 import com.aticatac.rendering.components.DisplayComponent;
 import com.aticatac.rendering.display.GameWindow;
 import com.aticatac.rendering.display.RenderLayer;
 import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Test extends Application {
@@ -30,10 +35,48 @@ public class Test extends Application {
 		
 		layer1.add(c1); //add the component to this layer
 		window.getRenderer().addLayer(layer1); //add this layer to the renderer
+	
+		//add key event listeners
+		ArrayList<String> input = new ArrayList<String>();
 		
+		window.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent e) {
+				String code = e.getCode().toString();
+				if (!input.contains(code)) {
+					input.add(code);
+				}
+			}
+	    });
+	 
+		window.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
+	        public void handle(KeyEvent e) {
+	            String code = e.getCode().toString();
+	            input.remove(code);
+	        }
+	    });
 		
-		window.update();
+		//sets up an AnimationTimer to update the display
+		new AnimationTimer() {
+	        public void handle(long currentNanoTime) {
+	        	if (input.contains("LEFT")) {
+	        		c1.translate(-2, 0);
+	        	}
+	        	if (input.contains("RIGHT")) {
+	        		c1.translate(2, 0);
+	        	}
+	        	if (input.contains("UP")) {
+	        		c1.translate(0, -2);
+	        	}
+	        	if (input.contains("DOWN")) {
+	        		c1.translate(0, 2);
+	        	}
+	        	window.update();
+	        }
+	    }.start();
+		
 		window.show();
+		
+		
 	}
 
 	public static void main(String[] args) {

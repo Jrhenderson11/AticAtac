@@ -38,6 +38,10 @@ public class GameWindow extends Stage {
 		this(new Dimension(width, height));
 	}
 	
+	public Scene getCurrentScene() {
+		return scene;
+	}
+	
 	/**
 	 * Returns the renderer for this window
 	 * @return The Renderer object
