@@ -19,4 +19,11 @@ public class SystemSettings {
     public static void setScreenHeight(int screenHeight) {
         SystemSettings.screenHeight = screenHeight;
     }
+
+    public static int getNativeHeight() {
+        return 480;
+    }
+    public static int getNativeWidth() {
+        return 720;
+    }
 }
