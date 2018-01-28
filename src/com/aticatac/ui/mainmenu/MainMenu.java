@@ -1,8 +1,7 @@
 package com.aticatac.ui.mainmenu;
 
-import com.aticatac.ui.mainmenu.handlers.MainMenuAnimationHandler;
-import com.aticatac.ui.mainmenu.handlers.MainMenuKeyPressedHandler;
-import com.aticatac.ui.mainmenu.handlers.MainMenuKeyReleasedHandler;
+import com.aticatac.ui.mainmenu.handlers.*;
+import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.Group;
@@ -24,6 +23,8 @@ public class MainMenu extends Scene{
     public MainMenu(Group root, Stage primaryStage) {
         super(root);
 
+        // TODO: replace Placeholder
+
         this.menuItems = new ArrayList<>();
         this.menuItems.add(new MenuItem("Find a Lobby", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
@@ -31,7 +32,7 @@ public class MainMenu extends Scene{
         this.menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Statistics", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Credits", new Placeholder(new Group())));
-        this.menuItems.add(new MenuItem("Quit", new Placeholder(new Group())));
+        this.menuItems.add(new MenuItem("Quit", new Quit(new Group())));
 
         int width = SystemSettings.getScreenWidth();
         int height = SystemSettings.getScreenHeight();
@@ -40,12 +41,14 @@ public class MainMenu extends Scene{
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        MainMenuAnimationHandler animation = new MainMenuAnimationHandler(gc, menuItems, System.nanoTime());
+        MainMenuAnimation animation = new MainMenuAnimation(gc, menuItems, System.nanoTime());
         animation.start();
 
         this.pressedKeys = new HashSet<>();
-        this.setOnKeyPressed(new MainMenuKeyPressedHandler(menuItems, pressedKeys, primaryStage, animation));
-        this.setOnKeyReleased(new MainMenuKeyReleasedHandler(pressedKeys));
+        this.setOnKeyPressed(new MainMenuKeyPressed(menuItems, pressedKeys, primaryStage, animation));
+        this.setOnKeyReleased(new MainMenuKeyReleased(pressedKeys));
+        this.setOnMouseMoved(new MainMenuMouseMoved(menuItems));
+        this.setOnMouseClicked(new MainMenuMouseClicked(menuItems, primaryStage));
 
         /*
 

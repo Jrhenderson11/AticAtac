@@ -46,34 +46,44 @@ public class Drawer {
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
 
-        gc.save();
 
+        gc.save();
 
         Color stroke = Color.BLACK;
         Color fill = Color.LIGHTSLATEGREY;
-        Color sfill = Color.color(abs(sin(animation)), abs(cos(0.3 * animation)), abs(cos(0.7 * animation)));
+        Color sfill = Color.color(0.5 * abs(sin(animation))
+                , 0.5 * abs(cos(0.3 * animation))
+                , 0.5 * abs(cos(0.7 * animation)));
 
         gc.setStroke(stroke);
-        gc.setLineWidth(1);
+        gc.setLineWidth(2);
 
         for(int i = 0; i < items.size(); i++) {
+            gc.save();
+
             MenuItem item = items.get(i);
 
             if (item.selected()) {
                 gc.setFill(sfill);
+                gc.translate(0 , 1.5 * sin(animation));
             } else {
                 gc.setFill(fill);
             }
 
             gc.setFont(Font.font("Carlito", FontWeight.BOLD, 30));
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.strokeText(item.getName(), width / 2, (i + 2) * height / 9);
-            gc.fillText(item.getName(), width / 2, (i + 2) * height / 9);
+            double x = width / 2;
+            double y = (i + 2) * height / 9;
+            gc.strokeText(item.getName(), x, y);
+            gc.fillText(item.getName(), x, y);
+
+            item.setHitbox(x - 100, y - 30,  200, 40);
 
             gc.restore();
 
         }
 
+        gc.restore();
 
     }
 

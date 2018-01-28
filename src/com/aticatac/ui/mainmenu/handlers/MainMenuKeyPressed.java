@@ -1,7 +1,6 @@
 package com.aticatac.ui.mainmenu.handlers;
 
 import com.aticatac.ui.mainmenu.MenuItem;
-import com.aticatac.utils.SystemSettings;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -10,14 +9,16 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class MainMenuKeyPressedHandler implements EventHandler<KeyEvent> {
+import static com.aticatac.ui.mainmenu.MenuItem.whichSelected;
+
+public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
 
     private final ArrayList<MenuItem> menuItems;
     private final Stage stage;
-    private final MainMenuAnimationHandler animation;
+    private final MainMenuAnimation animation;
     private Set<KeyCode> pressedKeys;
 
-    public MainMenuKeyPressedHandler(ArrayList<MenuItem> menuItems, Set<KeyCode> pressedKeys, Stage primaryStage, MainMenuAnimationHandler animation) {
+    public MainMenuKeyPressed(ArrayList<MenuItem> menuItems, Set<KeyCode> pressedKeys, Stage primaryStage, MainMenuAnimation animation) {
         this.menuItems = menuItems;
         this.pressedKeys = pressedKeys;
         this.stage = primaryStage;
@@ -32,7 +33,7 @@ public class MainMenuKeyPressedHandler implements EventHandler<KeyEvent> {
             pressedKeys.add(event.getCode());
         }
 
-        int selectedId = whichSelected();
+        int selectedId = whichSelected(menuItems);
 
         if(pressedKeys.contains(KeyCode.DOWN)) {
 
@@ -67,21 +68,11 @@ public class MainMenuKeyPressedHandler implements EventHandler<KeyEvent> {
             }
         } else if (pressedKeys.contains(KeyCode.ENTER)) {
 
-            stage.setScene(menuItems.get(whichSelected()).choose());
+            stage.setScene(menuItems.get(whichSelected(menuItems)).choose());
             animation.stop();
 
         }
 
     }
 
-    private int whichSelected() {
-
-        for (int i = 0; i < menuItems.size(); i++) {
-
-            if(menuItems.get(i).selected()) return i;
-        }
-
-        return -1;
-
-    }
 }

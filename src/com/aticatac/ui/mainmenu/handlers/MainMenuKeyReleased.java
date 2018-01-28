@@ -6,11 +6,11 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.Set;
 
-public class MainMenuKeyReleasedHandler implements EventHandler<KeyEvent> {
+public class MainMenuKeyReleased implements EventHandler<KeyEvent> {
 
     private final Set<KeyCode> pressedKeys;
 
-    public MainMenuKeyReleasedHandler(Set<KeyCode> pressedKeys) {
+    public MainMenuKeyReleased(Set<KeyCode> pressedKeys) {
         this.pressedKeys = pressedKeys;
     }
 

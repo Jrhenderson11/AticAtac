@@ -11,13 +11,13 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
-public class MainMenuAnimationHandler extends AnimationTimer {
+public class MainMenuAnimation extends AnimationTimer {
 
     private final GraphicsContext gc;
     private final long then;
     private final ArrayList<MenuItem> menuItems;
 
-    public MainMenuAnimationHandler(GraphicsContext gc, ArrayList<MenuItem> menuItems, long then) {
+    public MainMenuAnimation(GraphicsContext gc, ArrayList<MenuItem> menuItems, long then) {
         super();
         this.gc = gc;
         this.then = then;
