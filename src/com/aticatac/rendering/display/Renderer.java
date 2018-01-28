@@ -92,7 +92,7 @@ public class Renderer {
 		
 		//render the level
 		//renderMapBW(g);
-		renderMapNeon(g, Color.YELLOW);
+		renderMapNeon(g, Color.RED);
 		
 		//render any other components in the layers
 		for (RenderLayer layer: layers) {
@@ -118,7 +118,7 @@ public class Renderer {
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
-		int glowRadius = 3;
+		int glowRadius = 4;
 		int glowArc = 7;
 		int barWidth = 1;
 		
