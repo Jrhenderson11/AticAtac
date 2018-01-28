@@ -105,6 +105,15 @@ public class Level {
 		}
 		return count;
 	}
+	
+	// used to get who has control of a specific tile
+	public int getPlayer(int x, int y) {
+		try {
+			return grid[x][y];
+		}catch(Exception e) {
+			return -1;
+		}
+	}
 
 	public void updateCoords(int x, int y, int val) {
 		this.grid[x][y] = val;
