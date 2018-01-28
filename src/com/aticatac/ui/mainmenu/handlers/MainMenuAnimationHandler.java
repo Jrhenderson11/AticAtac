@@ -1,5 +1,6 @@
-package com.aticatac.ui.mainmenu;
+package com.aticatac.ui.mainmenu.handlers;
 
+import com.aticatac.ui.mainmenu.MenuItem;
 import com.aticatac.ui.utils.Drawer;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
@@ -10,22 +11,17 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
-public class MainMenuHandler extends AnimationTimer {
+public class MainMenuAnimationHandler extends AnimationTimer {
 
     private final GraphicsContext gc;
     private final long then;
-    private final int width;
-    private final int height;
-    private ArrayList<MenuItem> menuItems;
+    private final ArrayList<MenuItem> menuItems;
 
-    public MainMenuHandler(GraphicsContext gc, long then) {
+    public MainMenuAnimationHandler(GraphicsContext gc, ArrayList<MenuItem> menuItems, long then) {
         super();
         this.gc = gc;
         this.then = then;
-        this.width = SystemSettings.getScreenWidth();
-        this.height = SystemSettings.getScreenHeight();
-        this.menuItems = new ArrayList<>();
-        this.menuItems.add(new MenuItem("Lobby", new Placeholder(new Group())));
+        this.menuItems = menuItems;
     }
 
     @Override
@@ -33,6 +29,7 @@ public class MainMenuHandler extends AnimationTimer {
 
         Drawer.background(gc, Color.GRAY);
         Drawer.title(gc, now - then);
+        Drawer.menuItems(gc, menuItems, now - then);
 
     }
 

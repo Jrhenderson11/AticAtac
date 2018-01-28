@@ -12,4 +12,20 @@ public class MenuItem {
        this.link = link;
        this.selected = false;
     }
+
+    public void select() {
+        selected = true;
+    }
+
+    public void unselect() {
+        selected = false;
+    }
+
+    public boolean selected() {
+        return selected;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

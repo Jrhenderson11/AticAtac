@@ -1,11 +1,14 @@
 package com.aticatac.ui.utils;
 
+import com.aticatac.ui.mainmenu.MenuItem;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+
+import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -37,8 +40,39 @@ public class Drawer {
         gc.restore();
     }
 
-    public static void menuItems(GraphicsContext gc, String text) {
+    public static void menuItems(GraphicsContext gc, ArrayList<MenuItem> items, long time) {
 
+        double animation = (double) time / 500000000;
+        int width = SystemSettings.getNativeWidth();
+        int height = SystemSettings.getNativeHeight();
+
+        gc.save();
+
+
+        Color stroke = Color.BLACK;
+        Color fill = Color.LIGHTSLATEGREY;
+        Color sfill = Color.color(abs(sin(animation)), abs(cos(0.3 * animation)), abs(cos(0.7 * animation)));
+
+        gc.setStroke(stroke);
+        gc.setLineWidth(1);
+
+        for(int i = 0; i < items.size(); i++) {
+            MenuItem item = items.get(i);
+
+            if (item.selected()) {
+                gc.setFill(sfill);
+            } else {
+                gc.setFill(fill);
+            }
+
+            gc.setFont(Font.font("Carlito", FontWeight.BOLD, 30));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.strokeText(item.getName(), width / 2, (i + 2) * height / 9);
+            gc.fillText(item.getName(), width / 2, (i + 2) * height / 9);
+
+            gc.restore();
+
+        }
 
 
     }
