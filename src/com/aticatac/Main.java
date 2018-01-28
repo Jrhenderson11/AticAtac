@@ -20,7 +20,7 @@ public class Main extends Application{
     public void start(Stage primaryStage) {
 
         primaryStage.setTitle("AticAtac");
-        primaryStage.setScene(new MainMenu(new Group()));
+        primaryStage.setScene(new MainMenu(new Group(), primaryStage));
         primaryStage.show();
 
 

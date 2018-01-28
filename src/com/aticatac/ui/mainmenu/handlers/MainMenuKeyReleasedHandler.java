@@ -16,7 +16,6 @@ public class MainMenuKeyReleasedHandler implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent event) {
-
         pressedKeys.remove(event.getCode());
 
     }

@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +21,7 @@ public class MainMenu extends Scene{
     private final ArrayList<MenuItem> menuItems;
     private final Set<KeyCode> pressedKeys;
 
-    public MainMenu(Group root) {
+    public MainMenu(Group root, Stage primaryStage) {
         super(root);
 
         this.menuItems = new ArrayList<>();
@@ -39,10 +40,11 @@ public class MainMenu extends Scene{
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        new MainMenuAnimationHandler(gc, menuItems, System.nanoTime()).start();
+        MainMenuAnimationHandler animation = new MainMenuAnimationHandler(gc, menuItems, System.nanoTime());
+        animation.start();
 
         this.pressedKeys = new HashSet<>();
-        this.setOnKeyPressed(new MainMenuKeyPressedHandler(menuItems, pressedKeys));
+        this.setOnKeyPressed(new MainMenuKeyPressedHandler(menuItems, pressedKeys, primaryStage, animation));
         this.setOnKeyReleased(new MainMenuKeyReleasedHandler(pressedKeys));
 
         /*

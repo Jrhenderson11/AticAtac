@@ -5,6 +5,7 @@ import com.aticatac.utils.SystemSettings;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -12,11 +13,15 @@ import java.util.Set;
 public class MainMenuKeyPressedHandler implements EventHandler<KeyEvent> {
 
     private final ArrayList<MenuItem> menuItems;
+    private final Stage stage;
+    private final MainMenuAnimationHandler animation;
     private Set<KeyCode> pressedKeys;
 
-    public MainMenuKeyPressedHandler(ArrayList<MenuItem> menuItems, Set<KeyCode> pressedKeys) {
+    public MainMenuKeyPressedHandler(ArrayList<MenuItem> menuItems, Set<KeyCode> pressedKeys, Stage primaryStage, MainMenuAnimationHandler animation) {
         this.menuItems = menuItems;
         this.pressedKeys = pressedKeys;
+        this.stage = primaryStage;
+        this.animation = animation;
 
     }
 
@@ -60,6 +65,11 @@ public class MainMenuKeyPressedHandler implements EventHandler<KeyEvent> {
                 menuItems.get(selectedId--).unselect();
                 menuItems.get(selectedId).select();
             }
+        } else if (pressedKeys.contains(KeyCode.ENTER)) {
+
+            stage.setScene(menuItems.get(whichSelected()).choose());
+            animation.stop();
+
         }
 
     }
