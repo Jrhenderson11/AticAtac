@@ -1,5 +1,7 @@
 package com.aticatac.rendering.tests;
 
+import java.io.File;
+
 import com.aticatac.rendering.components.DisplayComponent;
 import com.aticatac.rendering.display.RenderLayer;
 import com.aticatac.rendering.display.Renderer;
@@ -22,12 +24,12 @@ public class Test extends Application {
 	public void start(Stage stage) throws Exception {
 		DisplayComponent c1 = new DisplayComponent("assets/test/tile1.png"); //a component to display
 		
-		Renderer renderer = new Renderer(900, 600); //create a new renderer with a 900x600 display
+		Renderer renderer = new Renderer(1900, 1000); //create a new renderer with a 900x600 display
 	
 		RenderLayer layer1 = new RenderLayer("default");
 		
 		Level map = new Level(50, 50);
-		map.randomiseMap();
+		map.loadMap("assets/maps/map.txt");
 		
 		World world = new World(map);
 		
@@ -41,7 +43,7 @@ public class Test extends Application {
 		Group root = new Group();      //javafx stuff
 		Scene scene = new Scene(root); 
 		stage.setScene(scene); 
-		Canvas canvas = new Canvas(900, 600); //create a canvas to allow drawing images
+		Canvas canvas = new Canvas(1900, 1000); //create a canvas to allow drawing images
 		
 		//add canvas to scene
 		root.getChildren().add(canvas);

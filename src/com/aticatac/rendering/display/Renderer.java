@@ -87,11 +87,12 @@ public class Renderer {
 	 */
 	public void render(GraphicsContext g) {
 		//fill the background with white
-		g.setFill(Color.WHITE);
-		g.fill();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, displayRect.width, displayRect.height);
 		
 		//render the level
-		renderMap(g);	
+		//renderMapBW(g);
+		renderMapNeon(g, Color.YELLOW);
 		
 		//render any other components in the layers
 		for (RenderLayer layer: layers) {
@@ -99,7 +100,7 @@ public class Renderer {
 		}
 	}
 	
-	public void renderMap(GraphicsContext g) {
+	public void renderMapBW(GraphicsContext g) {
 		//render the level
 		g.setFill(Color.BLACK);
 		Level map = world.getLevel();
@@ -109,6 +110,81 @@ public class Renderer {
 			for (int y = 0; y <map.getHeight(); y++) {
 				if (map.getCoords(x, y) == 1) {                //draw if tile is a wall
 					g.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+				}
+			}
+		}
+	}
+
+	public void renderMapNeon(GraphicsContext g, Color color) {
+		//settings
+		double opacity = 0.5;
+		int glowRadius = 3;
+		int glowArc = 7;
+		int barWidth = 1;
+		
+		//setup color
+		Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+		g.setFill(opaqueColor);
+		
+		//load map
+		Level map = world.getLevel();
+		int[][] grid = map.getGrid();
+		int tileWidth = displayRect.width / map.getWidth();
+		int tileHeight = displayRect.height / map.getHeight();
+		
+		// if (x, y) is the top left corner of a quad square
+		// 
+		// | a | b |
+		// ---------
+		// | c | d |
+		//
+		// a = (x, y), b = (x+1, y), c = (x, y+1), d = (x+1, y+1)
+		//
+		for (int x = 0; x < grid.length - 1; x++) {
+			for (int y = 0; y < grid[0].length - 1; y++) {
+				//north bar (a ^ b)
+				if ((grid[x][y] == 1) ^ (grid[x+1][y] == 1)) {
+					int drawX = ((x + 1) * tileWidth);
+					int drawY = (y * tileHeight);
+					//draw neon glow
+					g.setFill(opaqueColor);
+					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
+					//draw neon bars
+					g.setFill(color);
+					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+				}
+				//east bar (b ^ d)
+				if ((grid[x+1][y] == 1) ^ (grid[x+1][y+1] == 1)) {
+					int drawX = ((x + 1) * tileWidth);
+					int drawY = ((y + 1) * tileHeight);
+					//draw neon glow
+					g.setFill(opaqueColor);
+					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
+					//draw neon bars
+					g.setFill(color);
+					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
+				}
+				//south bar (c ^ d)
+				if ((grid[x][y+1] == 1) ^ (grid[x+1][y+1] == 1)) {
+					int drawX = ((x + 1) * tileWidth);
+					int drawY = ((y + 1) * tileHeight);
+					//draw neon glow
+					g.setFill(opaqueColor);
+					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
+					//draw neon bars
+					g.setFill(color);
+					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+				}
+				//west bar (a ^ c)
+				if ((grid[x][y] == 1) ^ (grid[x][y+1] == 1)) {
+					int drawX = (x * tileWidth);
+					int drawY = ((y + 1) * tileHeight);
+					//draw neon glow
+					g.setFill(opaqueColor);
+					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
+					//draw neon bars
+					g.setFill(color);
+					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
 				}
 			}
 		}
