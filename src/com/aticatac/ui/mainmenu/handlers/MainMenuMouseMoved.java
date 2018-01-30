@@ -1,15 +1,13 @@
 package com.aticatac.ui.mainmenu.handlers;
 
-import com.aticatac.ui.mainmenu.MenuItem;
-import com.aticatac.utils.SystemSettings;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-import static com.aticatac.ui.mainmenu.MenuItem.unselectAll;
+import static com.aticatac.ui.mainmenu.utils.MenuItem.unselectAll;
 
 public class MainMenuMouseMoved implements EventHandler<MouseEvent> {
 

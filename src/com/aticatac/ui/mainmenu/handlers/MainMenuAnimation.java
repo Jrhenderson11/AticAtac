@@ -1,11 +1,8 @@
 package com.aticatac.ui.mainmenu.handlers;
 
-import com.aticatac.ui.mainmenu.MenuItem;
-import com.aticatac.ui.utils.Drawer;
-import com.aticatac.ui.utils.Placeholder;
-import com.aticatac.utils.SystemSettings;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
+import com.aticatac.ui.mainmenu.utils.MainMenuDrawer;
 import javafx.animation.AnimationTimer;
-import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -27,9 +24,9 @@ public class MainMenuAnimation extends AnimationTimer {
     @Override
     public void handle(long now) {
 
-        Drawer.background(gc, Color.GRAY);
-        Drawer.title(gc, now - then);
-        Drawer.menuItems(gc, menuItems, now - then);
+        MainMenuDrawer.background(gc, Color.GRAY);
+        MainMenuDrawer.title(gc, now - then);
+        MainMenuDrawer.menuItems(gc, menuItems, now - then);
 
     }
 

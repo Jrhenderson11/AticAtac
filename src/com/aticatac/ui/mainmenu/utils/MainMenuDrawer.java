@@ -1,6 +1,6 @@
-package com.aticatac.ui.utils;
+package com.aticatac.ui.mainmenu.utils;
 
-import com.aticatac.ui.mainmenu.MenuItem;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -15,7 +15,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 
-public class Drawer {
+public class MainMenuDrawer {
 
     public static void title(GraphicsContext gc, long time) {
         gc.save();

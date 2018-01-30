@@ -1,6 +1,7 @@
 package com.aticatac.ui.mainmenu;
 
 import com.aticatac.ui.mainmenu.handlers.*;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
@@ -32,10 +33,10 @@ public class MainMenu extends Scene{
         this.menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Statistics", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Credits", new Placeholder(new Group())));
-        this.menuItems.add(new MenuItem("Quit", new Quit(new Group())));
+        this.menuItems.add(new MenuItem("Quit", new Quit(new Group(), this)));
 
-        int width = SystemSettings.getScreenWidth();
-        int height = SystemSettings.getScreenHeight();
+        int width = SystemSettings.getNativeWidth();
+        int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);
@@ -48,7 +49,7 @@ public class MainMenu extends Scene{
         this.setOnKeyPressed(new MainMenuKeyPressed(menuItems, pressedKeys, primaryStage, animation));
         this.setOnKeyReleased(new MainMenuKeyReleased(pressedKeys));
         this.setOnMouseMoved(new MainMenuMouseMoved(menuItems));
-        this.setOnMouseClicked(new MainMenuMouseClicked(menuItems, primaryStage));
+        this.setOnMouseClicked(new MainMenuMouseClicked(menuItems, primaryStage, animation));
 
         /*
 

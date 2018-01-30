@@ -1,6 +1,6 @@
 package com.aticatac.ui.mainmenu.handlers;
 
-import com.aticatac.ui.mainmenu.MenuItem;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static com.aticatac.ui.mainmenu.MenuItem.whichSelected;
+import static com.aticatac.ui.mainmenu.utils.MenuItem.whichSelected;
 
 public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
 
@@ -68,8 +68,8 @@ public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
             }
         } else if (pressedKeys.contains(KeyCode.ENTER)) {
 
+            animation.stop(); // TODO: Not sure if this is needed. Remove from mouse clicked if not
             stage.setScene(menuItems.get(whichSelected(menuItems)).choose());
-            animation.stop();
 
         }
 

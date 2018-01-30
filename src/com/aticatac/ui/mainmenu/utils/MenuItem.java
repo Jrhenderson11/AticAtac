@@ -1,4 +1,4 @@
-package com.aticatac.ui.mainmenu;
+package com.aticatac.ui.mainmenu.utils;
 
 import javafx.scene.Scene;
 import javafx.scene.shape.Rectangle;

@@ -1,22 +1,24 @@
 package com.aticatac.ui.mainmenu.handlers;
 
-import com.aticatac.ui.mainmenu.MenuItem;
+import com.aticatac.ui.mainmenu.utils.MenuItem;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-import static com.aticatac.ui.mainmenu.MenuItem.whichSelected;
+import static com.aticatac.ui.mainmenu.utils.MenuItem.whichSelected;
 
 public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
 
     private final ArrayList<MenuItem> menuItems;
     private final Stage stage;
+    private final MainMenuAnimation animation;
 
-    public MainMenuMouseClicked(ArrayList<MenuItem> menuItems, Stage primaryStage) {
+    public MainMenuMouseClicked(ArrayList<MenuItem> menuItems, Stage primaryStage, MainMenuAnimation animation) {
         this.menuItems = menuItems;
         this.stage = primaryStage;
+        this.animation = animation;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
 
         if (selectedId == -1) return;
         else {
+            animation.stop();
             stage.setScene(menuItems.get(selectedId).choose());
         }
 
