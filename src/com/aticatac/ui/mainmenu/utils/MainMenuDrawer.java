@@ -87,13 +87,4 @@ public class MainMenuDrawer {
 
     }
 
-    public static void background(GraphicsContext gc, Color color) {
-
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
-
-        gc.setFill(color);
-        gc.fillRect(0, 0, width, height);
-
-    }
 }

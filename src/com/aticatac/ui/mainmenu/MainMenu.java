@@ -33,7 +33,7 @@ public class MainMenu extends Scene{
         this.menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Statistics", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Credits", new Placeholder(new Group())));
-        this.menuItems.add(new MenuItem("Quit", new Quit(new Group(), this)));
+        this.menuItems.add(new MenuItem("Quit", new Quit(new Group(), this, primaryStage)));
 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
