@@ -45,6 +45,7 @@ public class Level {
 	}
 
 	public int[][] getReducedMap(int playercolour) {
+		//returns a map: 1 indicates this square is playercolor, 0 means it is not
 		int[][] redMap = new int[10][10];
 
 		int chunkwidth = width/10;
@@ -54,20 +55,25 @@ public class Level {
 			for (int x=0; x< 10; x++) {
 				//get max for 10th sq 
 				
-				/*int[] colours = new int[10];
+				int[] colours = new int[10];
 				for (int colour: colours) {
 					colour = 0;
-				}*/
+				}
 				
 				for (int y2=0; y2< chunkheight; y2++) {
 					for (int x2=0; x2< chunkwidth; x2++) {
 				//		 colours[grid[x*chunkwidth + x2][y*chunkwidth + y2]] +=1; 
 						if (grid[x*chunkwidth + x2][y*chunkwidth + y2] == playercolour) {
-							redMap[x][y] = 1;
+							colours[1]++;
 						} else {
-							redMap[x][y] = 0;
+							colours[0]++;
 						}
 					}
+				}
+				if (colours[1]>colours[0]) {
+					redMap[x][y] = 1;
+				} else {
+					redMap[x][y] = 0;
 				}
 				/*
 				//calc max and set in red
@@ -85,7 +91,7 @@ public class Level {
 		
 		return redMap;
 	}
-	
+
 	
 	// used to determine who has control of map by counting tiles of one colour
 	public int getNumTiles(int val) {
