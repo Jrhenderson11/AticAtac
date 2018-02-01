@@ -44,6 +44,49 @@ public class Level {
 		return this.height;
 	}
 
+	public int[][] getReducedMap(int playercolour) {
+		int[][] redMap = new int[10][10];
+
+		int chunkwidth = width/10;
+		int chunkheight = height/10;
+		
+		for (int y=0; y< 10; y++) {
+			for (int x=0; x< 10; x++) {
+				//get max for 10th sq 
+				
+				/*int[] colours = new int[10];
+				for (int colour: colours) {
+					colour = 0;
+				}*/
+				
+				for (int y2=0; y2< chunkheight; y2++) {
+					for (int x2=0; x2< chunkwidth; x2++) {
+				//		 colours[grid[x*chunkwidth + x2][y*chunkwidth + y2]] +=1; 
+						if (grid[x*chunkwidth + x2][y*chunkwidth + y2] == playercolour) {
+							redMap[x][y] = 1;
+						} else {
+							redMap[x][y] = 0;
+						}
+					}
+				}
+				/*
+				//calc max and set in red
+				int max = 0;
+				for (int colour:colours) {
+					if (colour > max) {
+						
+					}
+				}
+				*/
+				
+			}
+		}
+		
+		
+		return redMap;
+	}
+	
+	
 	// used to determine who has control of map by counting tiles of one colour
 	public int getNumTiles(int val) {
 		int count=0;
