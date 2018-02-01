@@ -16,5 +16,9 @@ public class Tile {
 			return true;
 		return false;
 	}
-
+	
+	public int getH(Tile goal) {
+		return Math.abs(goal.X - this.X) + Math.abs(goal.Y - this.Y);
+	}
+	
 }
