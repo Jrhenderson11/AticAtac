@@ -41,9 +41,9 @@ public class MainMenuDrawer {
         gc.restore();
     }
 
-    public static void menuItems(GraphicsContext gc, ArrayList<MenuItem> items, long time) {
+    public static void menuItems(GraphicsContext gc, ArrayList<MenuItem> items, double time) {
 
-        double animation = (double) time / 500000000;
+        double animation = time / 500000000;
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
 
@@ -71,7 +71,7 @@ public class MainMenuDrawer {
                 gc.setFill(fill);
             }
 
-            gc.setFont(Font.font("Carlito", FontWeight.BOLD, 30));
+            gc.setFont(UIDrawer.OPTION_TEXT);
             gc.setTextAlign(TextAlignment.CENTER);
             double x = width / 2;
             double y = (i + 2) * height / 9;
