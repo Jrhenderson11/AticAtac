@@ -12,9 +12,14 @@ public class TestAStar {
 	}
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		Level level = new Level(50,50);
 		level.loadMap("assets/maps/map.txt");
+		
+		for(int j =0; j<20;j++) {
+			System.out.println(level.getCoords(j, 5));
+		}
+		
 		AStar aStar = new AStar(new Tile(1,1), new Tile(2,4), level);
 		ArrayList<Tile> path = aStar.getPath();
 		for(Tile t: path) {
