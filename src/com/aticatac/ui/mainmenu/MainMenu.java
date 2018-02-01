@@ -3,6 +3,7 @@ package com.aticatac.ui.mainmenu;
 import com.aticatac.ui.mainmenu.handlers.*;
 import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
+import com.aticatac.ui.tutorial.Tutorial;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.Group;
@@ -29,7 +30,7 @@ public class MainMenu extends Scene{
         this.menuItems = new ArrayList<>();
         this.menuItems.add(new MenuItem("Find a Lobby", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
-        this.menuItems.add(new MenuItem("Tutorial", new Placeholder(new Group())));
+        this.menuItems.add(new MenuItem("Tutorial", new Tutorial(new Group())));
         this.menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Statistics", new Placeholder(new Group())));
         this.menuItems.add(new MenuItem("Credits", new Placeholder(new Group())));
