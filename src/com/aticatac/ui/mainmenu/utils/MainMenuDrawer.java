@@ -1,6 +1,7 @@
 package com.aticatac.ui.mainmenu.utils;
 
 import com.aticatac.ui.mainmenu.utils.MenuItem;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -32,7 +33,7 @@ public class MainMenuDrawer {
         gc.setFill(col);
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
-        gc.setFont(Font.font("Carlito", FontWeight.BOLD, 48));
+        gc.setFont(UIDrawer.TITLE_FONT);
         gc.translate(2 * sin(animation),sin(animation));
         gc.fillText("ATACATIC", width / 2, height / 7);
         gc.strokeText("ATACATIC", width / 2, height / 7);

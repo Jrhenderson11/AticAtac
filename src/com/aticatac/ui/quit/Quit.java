@@ -8,7 +8,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -31,27 +30,26 @@ public class Quit extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Function<Void, Void> yes = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void aVoid) {
-                System.exit(0);
-                return null;
-            }
+
+        ArrayList<Option> options = new ArrayList<>();
+        AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
+
+        Function<Void, Void> yes = nothing -> {
+            System.exit(0);
+            return null;
         };
 
-        Function<Void, Void> no = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void aVoid) {
-                primaryStage.setScene(mainMenu);
-                return null;
-            }
+        Function<Void, Void> no = nothing -> {
+            animation.stop(); // TODO: might have to remove this, also this code is a little dodgey. I don't like pointers
+            primaryStage.setScene(mainMenu);
+            return null;
         };
 
-        ArrayList<Option> options = new ArrayList<Option>();
         options.add(new Option(yes, "Yes"));
         options.add(new Option(no, "No"));
 
-        AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
+        animation.start();
+
 
     }
 }

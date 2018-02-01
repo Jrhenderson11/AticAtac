@@ -1,6 +1,5 @@
 package com.aticatac.ui.utils;
 
-import com.aticatac.ui.mainmenu.utils.MainMenuDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,6 +17,6 @@ public class Placeholder extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        MainMenuDrawer.background(gc, Color.YELLOW);
+        UIDrawer.background(gc, Color.YELLOW);
     }
 }

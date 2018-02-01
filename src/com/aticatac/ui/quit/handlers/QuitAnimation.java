@@ -25,7 +25,8 @@ public class QuitAnimation extends AnimationTimer {
     public void handle(long now) {
 
         UIDrawer.background(gc, Color.BLACK);
-        QuitDrawer.options(gc, options);
+        QuitDrawer.options(gc, options, now);
+        QuitDrawer.title(gc, now);
 
     }
 }
