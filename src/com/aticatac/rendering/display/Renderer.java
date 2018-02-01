@@ -148,7 +148,7 @@ public class Renderer {
 					int drawY = (y * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
-					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
+					g.fillRoundRect(drawX, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
 					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
