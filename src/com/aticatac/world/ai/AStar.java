@@ -60,16 +60,21 @@ public class AStar {
 			if(current.equals(finishTile)) {
 				break;
 			}
-			
-			
-			for (Tile t : this.removeInvalid(getNeighbours())) {
+						
+			for (Tile t : this.removeInvalid(getNeighbours(current))) {
 				if (!visited.contains(t)) {
 					cost.put(t, cost.get(current)+1);
 					parent.put(t, current);
 					opened.add(t);
 				}
 			}
-
+		}
+		
+		assert(current.equals(finishTile));
+		Tile parentTile = null;
+		while(!(parentTile = parent.get(current)).equals(startTile)) {
+			path.add(current);
+			current = parentTile;
 		}
 		
 		
@@ -77,13 +82,20 @@ public class AStar {
 	}
 
 	private ArrayList<Tile> removeInvalid(ArrayList<Tile> neighbours) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Tile> validNeighbours = new ArrayList<>();
+		for(Tile t: neighbours) {
+			if(this.level.getCoords(t.X, t.Y)!=1) {
+				validNeighbours.add(t);
+			}
+		}
+		return validNeighbours;
 	}
 	
-	private ArrayList<Tile> getNeighbours() {
-		// TODO Auto-generated method stub
-		return null;
+	private ArrayList<Tile> getNeighbours(Tile t) {
+		ArrayList<Tile> neighbours = new ArrayList<>();
+		neighbours.add(new Tile(t.X, t.Y));
+		// Do this for each neighbour combination
+		return neighbours;
 	}
 
 }
