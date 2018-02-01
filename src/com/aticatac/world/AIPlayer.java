@@ -4,7 +4,7 @@ import com.aticatac.utils.Controller;
 
 public class AIPlayer extends Player {
 	
-	public AIPlayer(Controller controller, String identifier, String colour) {
+	public AIPlayer(Controller controller, int identifier, String colour) {
 		super(controller, identifier, colour);
 	}
 	

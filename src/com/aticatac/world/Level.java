@@ -56,7 +56,7 @@ public class Level {
 		}
 		return count;
 	}
-
+	
 	public void updateCoords(int x, int y, int val) {
 		this.grid[x][y] = val;
 	}

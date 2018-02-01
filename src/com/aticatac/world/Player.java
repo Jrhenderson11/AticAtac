@@ -8,13 +8,13 @@ public class Player {
 	private final static int BASE_PAINT_INCREASE = 5;
 	
     private Controller controller;
-    private String identifier;
+    private int identifier;
     private String colour;
     private int paintLevel;
     private int x;
     private int y;
     
-    public Player(Controller controller, String identifier, String colour) {
+    public Player(Controller controller, int identifier, String colour) {
     	this.controller = controller;
     	this.identifier = identifier;
     	this.colour = colour;
