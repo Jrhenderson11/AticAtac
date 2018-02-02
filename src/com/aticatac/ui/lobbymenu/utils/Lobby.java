@@ -15,4 +15,21 @@ public class Lobby {
         peasants = new ArrayList<>();
     }
 
+    public ClientInfo getLobbyLeader() {
+        return lobbyLeader;
+    }
+
+    public ArrayList<ClientInfo> getPeasants() {
+        return peasants;
+    }
+
+    // Make sure not full
+    public boolean addClient(ClientInfo client){
+        if (peasants.size() == 3) {
+            return false;
+        } else {
+            peasants.add(client);
+            return true;
+        }
+    }
 }
