@@ -1,4 +1,4 @@
-package com.aticatac.ui.lobbymenu.utils;
+package com.aticatac.lobby.utils;
 
 import javafx.scene.paint.Color;
 

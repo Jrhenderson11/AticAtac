@@ -1,4 +1,4 @@
-package com.aticatac.ui.lobbymenu.utils;
+package com.aticatac.lobby.utils;
 
 //TODO: ClientInfo, Lobby, LobbyInfo all need to be shared by the server project @James
 
