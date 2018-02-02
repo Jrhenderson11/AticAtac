@@ -24,9 +24,12 @@ public class QuitAnimation extends AnimationTimer {
     @Override
     public void handle(long now) {
 
+        double animation = now - then;
+        animation = animation / 1000000000;
+
         UIDrawer.background(gc, Color.BLACK);
-        QuitDrawer.options(gc, options, now);
-        QuitDrawer.title(gc, now);
+        QuitDrawer.options(gc, options, animation);
+        QuitDrawer.title(gc, animation);
 
     }
 }

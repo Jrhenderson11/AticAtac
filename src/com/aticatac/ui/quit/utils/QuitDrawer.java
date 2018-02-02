@@ -13,7 +13,7 @@ import static java.lang.StrictMath.sin;
 
 public class QuitDrawer {
 
-    public static void options(GraphicsContext gc, ArrayList<Option> options, long animation) {
+    public static void options(GraphicsContext gc, ArrayList<Option> options, double animation) {
 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
@@ -33,9 +33,10 @@ public class QuitDrawer {
                 gc.setFill(Color.WHITE);
             }
 
-            gc.fillText(options.get(i).getText(), 2 *( i + 1) * width / 6, 2 * height / 3);
-            gc.strokeText(options.get(i).getText(), 2 * (i + 1) * width / 6, 2 * height / 3);
-
+            int x = 2 *( i + 1) * width / 6;
+            int y = 2 * height / 3;
+            gc.fillText(options.get(i).getText(), x, y);
+            gc.strokeText(options.get(i).getText(), x, y);
             gc.restore();
 
         }
@@ -43,7 +44,7 @@ public class QuitDrawer {
 
     }
 
-    public static void title(GraphicsContext gc, long animation) {
+    public static void title(GraphicsContext gc, double animation) {
 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
