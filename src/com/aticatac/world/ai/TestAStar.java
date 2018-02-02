@@ -2,8 +2,6 @@ package com.aticatac.world.ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
-
-import com.aticatac.utils.Tile;
 import com.aticatac.world.Level;
 
 public class TestAStar {
