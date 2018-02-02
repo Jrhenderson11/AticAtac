@@ -1,15 +1,18 @@
 package com.aticatac.rendering.tests;
 
+
+import java.util.ArrayList;
+
 import com.aticatac.rendering.components.DisplayComponent;
+import com.aticatac.rendering.display.GameWindow;
 import com.aticatac.rendering.display.RenderLayer;
-import com.aticatac.rendering.display.Renderer;
 import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Test extends Application {
@@ -21,35 +24,59 @@ public class Test extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		DisplayComponent c1 = new DisplayComponent("assets/test/tile1.png"); //a component to display
-		
-		Renderer renderer = new Renderer(900, 600); //create a new renderer with a 900x600 display
-	
 		RenderLayer layer1 = new RenderLayer("default");
 		
 		Level map = new Level(50, 50);
-		map.randomiseMap();
-		
+		map.loadMap("assets/maps/map.txt");
 		World world = new World(map);
 		
-		renderer.setWorld(world);
+		GameWindow window = new GameWindow(1920, 1080);
+		window.getRenderer().setWorld(world);
 		
 		layer1.add(c1); //add the component to this layer
+		window.getRenderer().addLayer(layer1); //add this layer to the renderer
+	
+		//add key event listeners
+		ArrayList<String> input = new ArrayList<String>();
 		
-		renderer.addLayer(layer1); //add this layer to the renderer
+		window.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent e) {
+				String code = e.getCode().toString();
+				if (!input.contains(code)) {
+					input.add(code);
+				}
+			}
+	    });
+	 
+		window.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
+	        public void handle(KeyEvent e) {
+	            String code = e.getCode().toString();
+	            input.remove(code);
+	        }
+	    });
+		
+		//sets up an AnimationTimer to update the display
+		new AnimationTimer() {
+	        public void handle(long currentNanoTime) {
+	        	if (input.contains("LEFT")) {
+	        		c1.translate(-2, 0);
+	        	}
+	        	if (input.contains("RIGHT")) {
+	        		c1.translate(2, 0);
+	        	}
+	        	if (input.contains("UP")) {
+	        		c1.translate(0, -2);
+	        	}
+	        	if (input.contains("DOWN")) {
+	        		c1.translate(0, 2);
+	        	}
+	        	window.update();
+	        }
+	    }.start();
+		
+		window.show();
 		
 		
-		Group root = new Group();      //javafx stuff
-		Scene scene = new Scene(root); 
-		stage.setScene(scene); 
-		Canvas canvas = new Canvas(900, 600); //create a canvas to allow drawing images
-		
-		//add canvas to scene
-		root.getChildren().add(canvas);
-		
-		//to render the components in the renderer, pass it the canvas GraphicsContext object
-		renderer.render(canvas.getGraphicsContext2D());
-		
-		stage.show(); //display the window
 	}
 
 	public static void main(String[] args) {

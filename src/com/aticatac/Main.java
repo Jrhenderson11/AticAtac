@@ -1,19 +1,27 @@
 package com.aticatac;
 
-public class Main {
+import com.aticatac.ui.mainmenu.MainMenu;
+import com.aticatac.utils.SystemSettings;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.stage.Stage;
 
-    private static boolean running;
+public class Main extends Application{
 
     public static void main(String[] args) {
 
-        running = true;
+        SystemSettings.setScreenHeight(480);
+        SystemSettings.setScreenWidth(720);
 
-        while (running) {
+        Main.launch(args);
+    }
 
-            //handleinput();
-            //updatestate();
-            //srender();
+    @Override
+    public void start(Stage primaryStage) {
 
-        }
+        primaryStage.setTitle("AticAtac");
+        primaryStage.setScene(new MainMenu(new Group(), primaryStage));
+        primaryStage.show();
+
     }
 }

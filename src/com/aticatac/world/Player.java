@@ -11,13 +11,13 @@ public class Player {
 	
     private Controller controller;
     private int identifier;
-    private String colour;
+    protected int colour;
     private int paintLevel;
     protected int x;
     protected int y;
 	protected Level level;
     
-    public Player(Controller controller, Level level, int identifier, String colour) {
+    public Player(Controller controller, Level level, int identifier, int colour) {
     	this.controller = controller;
     	this.level = level;
     	this.identifier = identifier;
