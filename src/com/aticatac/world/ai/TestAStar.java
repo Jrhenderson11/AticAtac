@@ -1,5 +1,6 @@
 package com.aticatac.world.ai;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.utils.Tile;
@@ -20,10 +21,10 @@ public class TestAStar {
 			System.out.println(level.getCoords(j, 5));
 		}
 		
-		AStar aStar = new AStar(new Tile(1,1), new Tile(2,4), level);
-		ArrayList<Tile> path = aStar.getPath();
-		for(Tile t: path) {
-			System.out.println(t.X + "\t" + t.Y);
+		AStar aStar = new AStar(new Point(1,1), new Point(2,4), level);
+		ArrayList<Point> path = aStar.getPath();
+		for(Point p: path) {
+			System.out.println(p.x + "\t" + p.y);
 		}
 	}
 }

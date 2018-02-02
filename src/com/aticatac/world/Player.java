@@ -1,9 +1,9 @@
 package com.aticatac.world;
 
+import java.awt.Point;
 import java.util.LinkedList;
 
 import com.aticatac.utils.Controller;
-import com.aticatac.utils.Tile;
 
 public class Player {
 	protected final static int MINIMUM_PAINT_FOR_SHOOT = 5;
@@ -11,7 +11,7 @@ public class Player {
 	protected final static int BASE_PAINT_INCREASE = 5;
 
 	protected Controller controller;
-	protected LinkedList<Tile> playerTiles;
+	protected LinkedList<Point> playerTiles;
 	protected int identifier;
 	protected String colour;
 	protected int paintLevel;
@@ -43,8 +43,8 @@ public class Player {
 		return 0;
 	}
 	
-	public Tile getCurrentTile() {
-		return new Tile(this.x, this.y);
+	public Point getCurrentPoint() {
+		return new Point(this.x, this.y);
 	}
 
 	public void increasePaintLevel(int multiplier) {

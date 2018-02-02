@@ -1,9 +1,9 @@
 package com.aticatac.world;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.utils.Controller;
-import com.aticatac.utils.Tile;
 import com.aticatac.world.ai.AStar;
 
 public class AIPlayer extends Player {
@@ -19,8 +19,8 @@ public class AIPlayer extends Player {
 				this.shoot();
 		 	}else{
 				if(!this.moving()){
-					Tile tile = this.closestFreeTile();
-		 			this.makeMovement('p', this.pathToFreeTile(tile));
+					Point Point = this.closestFreePoint();
+		 			this.makeMovement('p', this.pathToFreePoint(Point));
 				}
 			}
 		// Have some decision making here
@@ -48,14 +48,14 @@ public class AIPlayer extends Player {
 		// the different controls
 	}
 	
-	private void makeMovement(char c, ArrayList<Tile> pathToFreeTile) {
+	private void makeMovement(char c, ArrayList<Point> pathToFreePoint) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public Tile closestFreeTile() {
+	public Point closestFreePoint() {
 		boolean foundClosest = false;
-		Tile t = null;
+		Point t = null;
 		int i = 0;
 		//if this.level.getCoords(x,y) == 1 then it is a wall, should this be taken into consideration
 		// is there a way to do this more efficently??
@@ -65,7 +65,7 @@ public class AIPlayer extends Player {
 					try {
 					if(this.level.getCoords(x + j,y + k) == 0) {
 						foundClosest = true;
-						t = new Tile(x+j, y+k);
+						t = new Point(x+j, y+k);
 						break;
 					}}catch(Exception e) {
 						e.printStackTrace();
@@ -77,9 +77,9 @@ public class AIPlayer extends Player {
 		return t;
 	}
 
-	// get the path that the ai player will take to reach the free tile
-	public ArrayList<Tile> pathToFreeTile(Tile endTile) {
-		return (new AStar(this.getCurrentTile(), endTile, this.level)).getPath();
+	// get the path that the ai player will take to reach the free Point
+	public ArrayList<Point> pathToFreePoint(Point endPoint) {
+		return (new AStar(this.getCurrentPoint(), endPoint, this.level)).getPath();
 	}
 
 }
