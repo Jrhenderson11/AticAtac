@@ -51,7 +51,7 @@ public class ClientReceiver extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				System.out.println("IO error in Client Receiver Thread (Server Down)");
+				System.out.println("IO error in Client Receiver Thread (TestServer Down)");
 				break;
 			}
 

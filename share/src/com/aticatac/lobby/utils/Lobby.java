@@ -6,7 +6,11 @@ import java.util.ArrayList;
 
 public class Lobby {
 
+    // Min = 1, Max = 4
+    private int max_players;
+
     private ClientInfo lobbyLeader;
+
     // TODO: need a better name for the people who aren't lobby leader
     private ArrayList<ClientInfo> peasants;
 
@@ -31,5 +35,9 @@ public class Lobby {
             peasants.add(client);
             return true;
         }
+    }
+
+    public void removeClient(ClientInfo client) {
+        peasants.remove(client);
     }
 }
