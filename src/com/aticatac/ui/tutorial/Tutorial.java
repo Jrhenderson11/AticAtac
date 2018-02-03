@@ -1,6 +1,5 @@
 package com.aticatac.ui.tutorial;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -23,24 +22,29 @@ import javafx.scene.paint.Color;
 
 public class Tutorial extends Scene {
 	
+	private int displayWidth;
+	private int displayHeight;
+	private Level level;
+	
 	public Tutorial (Group root) {
         super(root);
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
         
-        Canvas canvas = new Canvas(width, height);
-
+        this.displayWidth = SystemSettings.getNativeWidth();
+        this.displayHeight = SystemSettings.getNativeHeight();
+        
+        this.level = new Level(50, 50);
+        level.loadMap("assets/maps/map.txt");
+        
+        Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Renderer renderer = new Renderer(width, height);
-        
-        Level level = new Level(50, 50);
-        level.loadMap("assets/maps/map.txt");
-        
+        Renderer renderer = new Renderer(displayWidth, displayHeight);
         
         World world = new World(level);
-        Player player = new Player(Controller.REAL, 2, Color.GREEN);
+        Player player = new Player(Controller.REAL, 2, Color.YELLOW);
+        player.setPosition(new Point(50, 50));
+        
         world.addPlayer(player);
         
         renderer.setWorld(world);
@@ -69,18 +73,45 @@ public class Tutorial extends Scene {
   	        public void handle(long currentNanoTime) {
   	        	if (input.contains(KeyCode.A)) {
   	        		player.move(-2, 0);
+  	        		Point p = getMapCoords(player.getPosition());
+  	        		if (level.getGrid()[p.x][p.y] == 1) {
+  	        			player.move(2, 0);
+  	        		}
   	        	}
   	        	if (input.contains(KeyCode.D)) {
   	        		player.move(2, 0);
+  	        		Point p = getMapCoords(player.getPosition());
+  	        		if (level.getGrid()[p.x][p.y] == 1) {
+  	        			player.move(-2, 0);
+  	        		}
   	        	}
   	        	if (input.contains(KeyCode.W)) {
   	        		player.move(0, -2);
+  	        		Point p = getMapCoords(player.getPosition());
+  	        		if (level.getGrid()[p.x][p.y] == 1) {
+  	        			player.move(0, 2);
+  	        		}
   	        	}
   	        	if (input.contains(KeyCode.S)) {
   	        		player.move(0, 2);
+  	        		Point p = getMapCoords(player.getPosition());
+  	        		if (level.getGrid()[p.x][p.y] == 1) {
+  	        			player.move(0, -2);
+  	        		}
   	        	}
   	        	renderer.render(gc);
   	        }
   	    }.start();   
+	}
+	
+	/**
+	 * Get the map coordinates from the on screen display position
+	 * @param displayPosition
+	 * @return
+	 */
+	private Point getMapCoords(Point displayPosition) {
+		int tileWidth = displayWidth / level.getWidth();
+		int tileHeight = displayHeight / level.getHeight();
+		return new Point((displayPosition.x / tileWidth), (displayPosition.y / tileHeight));
 	}
 }

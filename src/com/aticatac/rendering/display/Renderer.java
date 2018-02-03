@@ -122,8 +122,8 @@ public class Renderer {
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
-		int glowRadius = 4;
-		int glowArc = 7;
+		int glowRadius = 3;
+		int glowArc = 3;
 		int barWidth = 1;
 		
 		//setup color
@@ -155,7 +155,7 @@ public class Renderer {
 					g.fillRoundRect(drawX, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
 				}
 				//east bar (b ^ d)
 				if ((grid[x+1][y] == 1) ^ (grid[x+1][y+1] == 1)) {
@@ -166,7 +166,7 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
+					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
 				}
 				//south bar (c ^ d)
 				if ((grid[x][y+1] == 1) ^ (grid[x+1][y+1] == 1)) {
@@ -177,7 +177,7 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
 				}
 				//west bar (a ^ c)
 				if ((grid[x][y] == 1) ^ (grid[x][y+1] == 1)) {
@@ -188,17 +188,25 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
+					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
 				}
 			}
 		}
 	}
 	
 	public void renderPlayers(GraphicsContext gc) {
-		int playerSize = 10;
+		int playerSize = 8;
+		double opacity = 0.5;
+		
 		for (Player player: world.getPlayers()) {
-			gc.setStroke(player.getColour());
-			gc.strokeOval(player.getPosition().x, player.getPosition().y, playerSize, playerSize);
+			Color color = player.getColour();
+			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+			gc.setStroke(color);
+			gc.setLineWidth(1.0);
+			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
+			gc.setStroke(opaqueColor);
+			gc.setLineWidth(3);
+			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
 		}
 	};
 	
