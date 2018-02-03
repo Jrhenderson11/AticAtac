@@ -91,7 +91,6 @@ public class Level {
 		
 		return redMap;
 	}
-
 	
 	// used to determine who has control of map by counting tiles of one colour
 	public int getNumTiles(int val) {
