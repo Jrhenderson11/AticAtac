@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import com.aticatac.world.Level;
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -98,6 +99,9 @@ public class Renderer {
 		for (RenderLayer layer: layers) {
 			layer.render(g, displayRect);
 		}
+		
+		//render players
+		renderPlayers(g);
 	}
 	
 	public void renderMapBW(GraphicsContext g) {
@@ -189,6 +193,14 @@ public class Renderer {
 			}
 		}
 	}
+	
+	public void renderPlayers(GraphicsContext gc) {
+		int playerSize = 10;
+		for (Player player: world.getPlayers()) {
+			gc.setStroke(player.getColour());
+			gc.strokeOval(player.getPosition().x, player.getPosition().y, playerSize, playerSize);
+		}
+	};
 	
 	/**
 	 * Adds a layer to render
