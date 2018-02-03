@@ -16,12 +16,19 @@ public class Model implements Serializable{
 		this.y = newY;
 	}
 	
+	public void init() {
+		Level level = new Level(1200, 1200);
+		//move to srv and replace with msg
+		level.loadMap("D:/Documents/College/Term 2/Team project/aticatac/assets/maps/map2.txt");
+		int[][] map = level.getGrid();
+	}
+	
 	public void updateCoords(int newX, int newY) {
 		this.x = newX;
 		this.y = newY;
 	}
 	
-	public void updates(boolean moveUp, boolean moveDown, boolean moveLeft, boolean moveRight, boolean run, int speed) {
+	public void update(boolean moveUp, boolean moveDown, boolean moveLeft, boolean moveRight, boolean run, int speed) {
 		//MOVE TO SRV???
 		if (moveUp /*&& checkPos(1)*/) {
 			y -= speed;
@@ -60,8 +67,4 @@ public class Model implements Serializable{
 	public int getY() {
 		return this.y;
 	}
-	
-	
-
-	
 }

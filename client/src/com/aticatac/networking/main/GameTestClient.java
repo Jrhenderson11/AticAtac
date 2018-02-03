@@ -120,11 +120,7 @@ public class GameTestClient extends Application {
 		y = 5;
 		gc.drawImage(space, 0, 0);
 		gc.drawImage(ufo, x, y);
-		//move to srv and replace with msg
-		Level level = new Level(1200, 1200);
-		//move to srv and replace with msg
-		level.loadMap("D:/Documents/College/Term 2/Team project/aticatac/assets/maps/map2.txt");
-		int[][] map = level.getGrid();
+		
 		
 
 		AnimationTimer timer = new AnimationTimer() {

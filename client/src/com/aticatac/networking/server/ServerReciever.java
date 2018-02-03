@@ -87,13 +87,20 @@ public class ServerReciever extends Thread {
 			return;
 		}
 		
-		
-		if (data.equals("stop")) {
+		String[] parts = data.split(":");
+		if (data.equals("init")) {
+			model.init();
+		} else if (data.equals("stop")) {
 			this.master.halt();
-		} else if (data.split(":")[0].equals("ADD")) {
-			int addX = Integer.parseInt(data.split(":")[1]);
-			int addY = Integer.parseInt(data.split(":")[2]);
-			this.model.addToCoords(addX, addY);
+		} else if (parts[0].equals("input")) {
+			//client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
+			boolean up = Boolean.parseBoolean(parts[1]);
+			boolean down = Boolean.parseBoolean(parts[2]);
+			boolean left = Boolean.parseBoolean(parts[3]);
+			boolean right = Boolean.parseBoolean(parts[4]);
+			boolean run = Boolean.parseBoolean(parts[5]);
+			int speed = Integer.parseInt(parts[6]);
+			model.update(up, down, left, right, run, speed);
 		}
 	}
 }
