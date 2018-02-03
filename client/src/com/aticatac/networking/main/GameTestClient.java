@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class GameTest extends Application {
+public class GameTestClient extends Application {
 
 	/**
 	 * @param args
