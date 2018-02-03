@@ -1,11 +1,11 @@
 package com.aticatac.networking.client;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import com.aticatac.networking.model.Model;
 
 public class UDPClient extends Thread {
 
@@ -16,14 +16,9 @@ public class UDPClient extends Thread {
 	private ClientReceiver receiver;
 	ClientSender sender;
 
-	public UDPClient(String newName) {
+	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
-		try {
-			this.address = InetAddress.getByName("localhost");
-		} catch (UnknownHostException e) {
-			System.out.println("so apparently localhost is unreachable...");
-			System.exit(-1);
-		}
+		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
 	}
 
@@ -61,5 +56,9 @@ public class UDPClient extends Thread {
 		sender.interrupt();
 		receiver.halt();
 		receiver.interrupt();
+	}
+
+	public Model getModel() {
+		return this.receiver.getModel();
 	}
 }
