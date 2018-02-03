@@ -1,5 +1,8 @@
 package com.aticatac.networking.main;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.aticatac.networking.client.UDPClient;
 import com.aticatac.networking.model.Model;
 import com.aticatac.world.Level;
@@ -30,11 +33,22 @@ public class GameTestClient extends Application {
 	boolean moveUp, moveDown, moveRight, moveLeft, run;
 	int x, y;
 	int speed = 1;
-
+	Model model;
+	
 	UDPClient client;
 	
 	private void initialiseConnection() {
-		
+		InetAddress srvAddress = null;
+		try {
+			srvAddress = InetAddress.getByName("localhost");
+		} catch (UnknownHostException e) {
+			System.out.println("server unreachable on this network");
+			System.exit(-1);
+		}
+		client = new UDPClient("C1", srvAddress);
+		client.sendData("init");
+		client.sendData("join");
+		System.out.println("Client started and joined");
 	}
 	
 	
@@ -43,7 +57,7 @@ public class GameTestClient extends Application {
 	}
 
 	public void start(Stage stage) {
-		stage.setTitle("Testing");
+		stage.setTitle("Network test");
 
 		Group root = new Group();
 		Scene scene = new Scene(root);
@@ -112,13 +126,14 @@ public class GameTestClient extends Application {
 		level.loadMap("D:/Documents/College/Term 2/Team project/aticatac/assets/maps/map2.txt");
 		int[][] map = level.getGrid();
 		
-		Model model;
+
 		AnimationTimer timer = new AnimationTimer() {
 
 			@Override
 			public void handle(long now) {
 				model = client.getModel();
 				//send inputs (moveUp, moveDown, moveLeft, moveRight, run, speed)
+				client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
 				int x = model.getX();
 				int y = model.getY();
 				//get model
@@ -126,38 +141,7 @@ public class GameTestClient extends Application {
 				gc.fillText("Use WASD keys to move, SHIFT to run.", 100, 150);
 				gc.drawImage(ufo, x, y);
 
-				//MOVE TO SRV???
-				if (moveUp /*&& checkPos(1)*/) {
-					y -= speed;
-					if(map[x][y]==1) {
-						y = y-2;
-					}
 				
-				}
-				if (moveDown /*&& checkPos(2)*/) {
-					y += speed;
-					
-					if(map[x][y]==1) {
-						y = y+2;
-					}
-				}
-				if (moveLeft /*&& checkPos(3)*/) {
-					x -= speed;
-					if(map[x][y]==1) {
-						x = x+2;
-					}
-				}
-
-				if (moveRight /*&& checkPos(4)*/) {
-					x += speed;
-					if(map[x][y]==1) {
-						x = x-2;
-					}
-				}
-
-				if (run) {
-					speed = 3;
-				}
 
 			}
 
