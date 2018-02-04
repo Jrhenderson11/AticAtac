@@ -12,28 +12,31 @@ import java.util.Queue;
 import com.aticatac.world.Level;
 
 public class AStar {
+	private static final double SLOW_COST = 1.5;
+
 	private Point startPoint;
 	private Point finishPoint;
 	private Level level;
-	private Map<Point, Integer> cost;
+	private Map<Point, Double> cost;
 	private Map<Point, Point> parent;
+	private int colour;
 
-	public AStar(Point startPoint, Point finishPoint, Level level) {
+	public AStar(Point startPoint, Point finishPoint, Level level, int colour) {
 		this.startPoint = startPoint;
 		this.finishPoint = finishPoint;
 		this.level = level;
+		this.colour = colour;
 		this.cost = new HashMap<>();
 		this.parent = new HashMap<>();
 	}
-	
+
 	public int getH(Point point, Point finishPoint) {
-		
-		return 0;
+		return Math.abs(point.x - finishPoint.x) + Math.abs(point.y - finishPoint.y);
 	}
 
 	public ArrayList<Point> getPath() {
 		ArrayList<Point> path = new ArrayList<>();
-		cost.put(startPoint, 0);
+		cost.put(startPoint, 0.0);
 
 		Queue<Point> opened = new PriorityQueue<>(11, new Comparator<Point>() {
 			@Override
@@ -60,7 +63,13 @@ public class AStar {
 
 			for (Point t : this.removeInvalid(getNeighbours(current))) {
 				if (!visited.contains(t)) {
-					cost.put(t, cost.get(current) + 1);
+					if (this.level.getCoords(t.x, t.y) == this.colour) {
+						cost.put(t, cost.get(current) + 1);
+					} else {
+						// If the tile is covered in another player's colour, they will run over it
+						// slower
+						cost.put(t, cost.get(current) + SLOW_COST);
+					}
 					parent.put(t, current);
 					opened.add(t);
 				}
@@ -69,7 +78,7 @@ public class AStar {
 
 		assert (current.equals(finishPoint));
 		Point parentPoint = null;
-		
+
 		while (!(parentPoint = parent.get(current)).equals(startPoint)) {
 			path.add(current);
 			current = parentPoint;

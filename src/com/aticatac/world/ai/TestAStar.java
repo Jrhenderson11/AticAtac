@@ -11,15 +11,19 @@ public class TestAStar {
 	}
 	
 	
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		Level level = new Level(50,50);
 		level.loadMap("assets/maps/map.txt");
 		
-		for(int j =0; j<20;j++) {
-			System.out.println(level.getCoords(j, 5));
+		for(int i = 0; i<level.getHeight(); i++) {
+			System.out.print(i + "\t");
+			for(int j=0; j<level.getHeight(); j++) {
+				System.out.print(level.getCoords(i, j));
+			}
+			System.out.println("\n");
 		}
 		
-		AStar aStar = new AStar(new Point(1,1), new Point(2,4), level);
+		AStar aStar = new AStar(new Point(1,1), new Point(2,4), level, 2);
 		ArrayList<Point> path = aStar.getPath();
 		for(Point p: path) {
 			System.out.println(p.x + "\t" + p.y);
