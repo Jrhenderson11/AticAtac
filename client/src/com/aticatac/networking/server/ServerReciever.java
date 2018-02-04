@@ -75,7 +75,7 @@ public class ServerReciever extends Thread {
 				ClientInfo newClient = new ClientInfo(newName, origin, port);
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
-				System.out.println("added client: " + newClient.toString());
+				System.out.println("added client: " + origin);
 				//send ACK
  			
 			} else {

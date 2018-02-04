@@ -12,17 +12,17 @@ import com.aticatac.networking.model.Model;
 
 import javafx.concurrent.Task;
 
-public class ClientReceiver extends Task {
+public class ClientReceiverThread extends Thread {
 
 	private String name;
 	private Model model;
 	private boolean running;
-	private byte[] buffer = new byte[256];
+	private byte[] buffer = new byte[100000];
 	private DatagramSocket socket;
 	private Model oldModel;
 	private int port;
 
-	public ClientReceiver(String newName) {
+	public ClientReceiverThread(String newName) {
 		this.name = newName;
 		this.running = false;
 		this.oldModel = new Model(0, 0);
@@ -41,7 +41,7 @@ public class ClientReceiver extends Task {
 	}
 
 	@Override
-	public Object call() {
+	public void run() {
 		int count = 0;
 		this.running = true;
 		System.out.println(name + " Listening");
@@ -60,7 +60,7 @@ public class ClientReceiver extends Task {
 			}
 			System.out.println("deserializing");
 			// String received = new String(packet.getData(), 0, packet.getLength());
-			//this.model = SerializationUtils.deserialize(packet.getData());
+			this.model = SerializationUtils.deserialize(packet.getData());
 			
 			System.out.println("got model");
 			
@@ -77,7 +77,7 @@ public class ClientReceiver extends Task {
 		}
 		socket.close();
 		System.out.println(name + " r done");
-		return new Object();
+		//return new Object();
 	}
 
 	public void halt() {

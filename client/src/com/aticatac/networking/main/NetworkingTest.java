@@ -10,7 +10,7 @@ import com.aticatac.networking.server.UDPServer;
 public class NetworkingTest {
 
 	public static void main(String[] args) {
-
+/*
 		UDPServer server = new UDPServer();
 		InetAddress srvAddress = null;
 		try {
@@ -65,7 +65,7 @@ public class NetworkingTest {
 		}
 		System.out.println("done");
 		// client.close();
-
+*/
 	}
 
 }

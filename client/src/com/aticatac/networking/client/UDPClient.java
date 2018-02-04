@@ -1,20 +1,21 @@
 package com.aticatac.networking.client;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.aticatac.networking.model.Model;
 
-public class UDPClient extends Thread {
+import javafx.concurrent.Task;
+
+public class UDPClient extends Task {
 
 	private String name;
 	private InetAddress address;
 	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
-	private ClientReceiver receiver;
-	ClientSender sender;
+	private ClientReceiverThread receiver;
+	private ClientSender sender;
 
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
@@ -22,25 +23,31 @@ public class UDPClient extends Thread {
 		this.messageQueue = new LinkedBlockingQueue<String>();
 	}
 
-	public void run() {
+	@Override
+	public Object call() {
 
-		receiver = new ClientReceiver(name);
+		receiver = new ClientReceiverThread(name);
 		sender = new ClientSender(name, address, messageQueue);
-
-		sender.start();
+		
+		Thread sendThread = new Thread(sender);
+		sendThread.setDaemon(true);
+		sendThread.start();
+		//Thread recThread = new Thread(receiver);
+		//recThread.setDaemon(true);
+		//recThread.start();
 		receiver.start();
-
+		
 		try {
-			sender.join();
 			receiver.join();
 			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			
 		}
-
-		System.out.println(name + " stopped");
-
+		//sender.cancel();
+		//receiver.cancel();
+		
+		//System.out.println(name + " stopped");
+		return new Object();
 	}
 
 	public void sendData(String data) {
@@ -53,9 +60,9 @@ public class UDPClient extends Thread {
 
 	public void halt() {
 		sender.halt();
-		sender.interrupt();
+		sender.cancel();
 		receiver.halt();
-		receiver.interrupt();
+		//receiver.cancel();
 	}
 
 	public Model getModel() {

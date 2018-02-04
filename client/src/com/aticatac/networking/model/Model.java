@@ -6,8 +6,12 @@ import com.aticatac.world.Level;
 
 public class Model implements Serializable{
 
+	
 	private int x;
 	private int y;
+
+	int offset = 10;
+
 	private Level map;
 	
 	
@@ -17,10 +21,9 @@ public class Model implements Serializable{
 	}
 	
 	public void init() {
-		Level level = new Level(1200, 1200);
+		this.map = new Level(100, 100);
 		//move to srv and replace with msg
-		level.loadMap("D:/Documents/College/Term 2/Team project/aticatac/assets/maps/map2.txt");
-		int[][] map = level.getGrid();
+		//this.map.loadMap("client/assets/maps/map2.txt");
 	}
 	
 	public void updateCoords(int newX, int newY) {
@@ -59,6 +62,31 @@ public class Model implements Serializable{
 			speed = 3;
 		}
 	}
+	
+	//move to srv
+	private boolean checkPos(int coord, int speed) {
+		int offsetY = map.getHeight() - 10;
+		int offsetX = map.getWidth() - 10;
+
+		int up = y - speed;
+		int down = y + speed;
+		int left = x - speed;
+		int right = x + speed;
+
+		int calcOffset = 0 + offset;
+
+		if (coord == 1 && calcOffset <= up && up <= offsetY) {
+			return true;
+		} else if (coord == 2 && calcOffset <= down && down <= offsetY) {
+			return true;
+		} else if (coord == 3 && calcOffset <= left && left <= offsetX) {
+			return true;
+		} else if (coord == 4 && calcOffset <= right && right <= offsetX) {
+			return true;
+		} else
+			return false;
+	}
+
 	
 	public int getX() {
 		return this.x;

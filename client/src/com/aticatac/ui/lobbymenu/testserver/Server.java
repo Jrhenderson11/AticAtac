@@ -1,34 +1,34 @@
 package com.aticatac.ui.lobbymenu.testserver;
 
-import com.aticatac.ui.lobbymenu.utils.Lobby;
-import com.aticatac.ui.lobbymenu.utils.LobbyInfo;
-import com.aticatac.ui.lobbymenu.utils.LobbyServer;
-
 import java.util.ArrayList;
+
+import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.utils.LobbyServer;
 
 public class Server implements LobbyServer {
 
-    @Override
+    //@Override
     public Lobby joinLobby(int id, String password) {
         return null;
     }
 
-    @Override
+    //@Override
     public void readyUp() {
 
     }
 
-    @Override
+    //@Override
     public boolean startGame() {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean leaveLobby() {
         return false;
     }
 
-    @Override
+    //@Override
     public ArrayList<LobbyInfo> getPublicLobbies() {
         return null;
     }
