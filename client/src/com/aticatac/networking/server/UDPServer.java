@@ -2,8 +2,8 @@ package com.aticatac.networking.server;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.LobbyData;
 import com.aticatac.networking.model.Model;
 
 public class UDPServer extends Thread{
@@ -16,7 +16,7 @@ public class UDPServer extends Thread{
 	private ServerReciever receiver;
 	private ServerSender sender;
 	private Model model;
-	private LobbyData lobby;
+	private Lobby lobby;
 	
 	
 	private int status;
@@ -24,7 +24,7 @@ public class UDPServer extends Thread{
 	public UDPServer() {
 	
 		this.clientList = new CopyOnWriteArrayList<ClientInfo>();
-		this.status = Globals.IN_GAME;
+		this.status = Globals.IN_LOBBY;
 	}
 
 	public void run() {

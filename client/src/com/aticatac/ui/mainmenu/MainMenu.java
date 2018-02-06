@@ -1,26 +1,26 @@
 package com.aticatac.ui.mainmenu;
 
-import com.aticatac.lobby.utils.ClientInfo;
-import com.aticatac.lobby.utils.LobbyServer;
-import com.aticatac.ui.lobbymenu.LobbyBrowser;
-import com.aticatac.ui.lobbymenu.testserver.TestServer;
-import com.aticatac.ui.mainmenu.handlers.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.aticatac.ui.mainmenu.handlers.MainMenuAnimation;
+import com.aticatac.ui.mainmenu.handlers.MainMenuKeyPressed;
+import com.aticatac.ui.mainmenu.handlers.MainMenuKeyReleased;
+import com.aticatac.ui.mainmenu.handlers.MainMenuMouseClicked;
+import com.aticatac.ui.mainmenu.handlers.MainMenuMouseMoved;
 import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.tutorial.Tutorial;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MainMenu extends Scene{
 
@@ -30,10 +30,10 @@ public class MainMenu extends Scene{
         // TODO: replace Placeholder
 
         // TODO: get client info
-        LobbyServer server = new TestServer(new ClientInfo("127.0.0.1", "Tom", false, Color.GREEN));
+//        LobbyServer server = new TestServer(new ClientInfo("127.0.0.1", "Tom", false, Color.GREEN));
 
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", new LobbyBrowser(new Group(), server)));
+        //menuItems.add(new MenuItem("Find a Lobby", new LobbyBrowser(new Group(), server)));
         menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
         menuItems.add(new MenuItem("Tutorial", new Tutorial(new Group())));
         menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));

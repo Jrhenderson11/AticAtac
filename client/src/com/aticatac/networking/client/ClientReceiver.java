@@ -22,7 +22,9 @@ public class ClientReceiver extends Task {
 	private Model oldModel;
 	private int port;
 
-	public ClientReceiver(String newName) {
+	private UDPClient master;
+		
+	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
 		this.running = false;
 		this.oldModel = new Model(0, 0);
@@ -37,7 +39,7 @@ public class ClientReceiver extends Task {
 			}
 		}
 		System.out.println(name + " bound to " + port);
-
+		this.master = newMaster;
 	}
 
 	@Override

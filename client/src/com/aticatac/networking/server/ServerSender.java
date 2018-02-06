@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.LobbyData;
 import com.aticatac.networking.model.Model;
 
 public class ServerSender extends Thread {
@@ -21,10 +21,10 @@ public class ServerSender extends Thread {
 	private boolean running;
 	private DatagramSocket socket;
 	private UDPServer master;
-	private LobbyData lobby;
+	private Lobby lobby;
 	
 	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster, LobbyData newLobby) {
+	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster, Lobby newLobby) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
