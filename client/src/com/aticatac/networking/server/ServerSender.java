@@ -33,7 +33,7 @@ public class ServerSender extends Thread {
 
 	public void run() {
 		InetAddress address;
-		System.out.println("Server sender started");
+		System.out.println("TestServer sender started");
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {

@@ -9,6 +9,9 @@ public interface LobbyServer {
     // rup or default
     void readyUp();
 
+    // brb
+    void unready();
+
     // can only be called if testserver leader && all players ready
     boolean startGame();
 

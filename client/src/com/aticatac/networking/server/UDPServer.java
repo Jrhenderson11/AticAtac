@@ -42,7 +42,7 @@ public class UDPServer extends Thread{
 			// TODO: handle exception
 		}
 		
-		System.out.println("Server stopped");
+		System.out.println("TestServer stopped");
 		
 	}
 	

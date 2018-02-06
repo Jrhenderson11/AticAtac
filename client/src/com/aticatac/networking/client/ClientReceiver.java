@@ -53,7 +53,7 @@ public class ClientReceiver extends Task {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				System.out.println("IO error in Client Receiver Thread (Server Down)");
+				System.out.println("IO error in Client Receiver Thread (TestServer Down)");
 				break;
 			}
 			this.model = SerializationUtils.deserialize(packet.getData());
