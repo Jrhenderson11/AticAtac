@@ -50,29 +50,21 @@ public class ClientReceiver extends Task {
 
 			// make packet
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-			System.out.println("waiting for data");
 			try {
 				socket.receive(packet);
-				System.out.println("got packet");
 			} catch (IOException e) {
 				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
 			}
-			System.out.println("deserializing");
 			this.model = SerializationUtils.deserialize(packet.getData());
-			
-			System.out.println("got model");
 			
 			if ((model.getX() != oldModel.getX()) && (model.getY() != oldModel.getY())) {
 				count++;
-				System.out.println(name + " got new model:");
-				System.out.println("X: " + model.getX());
-				System.out.println("Y: " + model.getY());
 				System.out.println(count);
 			}
 
 			oldModel = model;
-			System.out.println("end loop");
+			
 		}
 		socket.close();
 		System.out.println(name + " r done");
