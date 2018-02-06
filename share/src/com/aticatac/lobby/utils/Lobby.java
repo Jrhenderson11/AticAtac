@@ -11,12 +11,12 @@ public class Lobby {
 
     private ClientInfo lobbyLeader;
 
-    // TODO: need a better name for the people who aren't lobby leader
-    private ArrayList<ClientInfo> peasants;
+    //
+    private ArrayList<ClientInfo> serfs;
 
     public Lobby(ClientInfo lobbyLeader) {
         this.lobbyLeader = lobbyLeader;
-        peasants = new ArrayList<>();
+        serfs = new ArrayList<>();
     }
 
     public ClientInfo getLobbyLeader() {
@@ -24,20 +24,20 @@ public class Lobby {
     }
 
     public ArrayList<ClientInfo> getPeasants() {
-        return peasants;
+        return serfs;
     }
 
     // Make sure not full
     public boolean addClient(ClientInfo client){
-        if (peasants.size() == 3) {
+        if (serfs.size() == 3) {
             return false;
         } else {
-            peasants.add(client);
+            serfs.add(client);
             return true;
         }
     }
 
     public void removeClient(ClientInfo client) {
-        peasants.remove(client);
+        serfs.remove(client);
     }
 }
