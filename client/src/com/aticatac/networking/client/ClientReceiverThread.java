@@ -22,7 +22,6 @@ public class ClientReceiverThread extends Thread {
 	private int port;
 
 	private UDPClient master;
-
 	
 	public ClientReceiverThread(String newName, UDPClient newMaster) {
 		this.name = newName;
@@ -61,9 +60,12 @@ public class ClientReceiverThread extends Thread {
 
 			if (master.getStatus() == Globals.IN_LOBBY) {
 				// deserialise into lobby obj
+				try {
 				Lobby newLobby = SerializationUtils.deserialize(packet.getData());
 				master.setLobby(newLobby);
-				
+				} catch (Exception e) {
+					System.out.println("cannot deserialise lobby (is it a model?)");
+				}
 			} else {
 				//make game model
 				this.model = SerializationUtils.deserialize(packet.getData());

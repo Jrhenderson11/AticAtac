@@ -14,7 +14,6 @@ public class Model implements Serializable{
 
 	//private Level map;
 	
-	
 	public Model(int newX, int newY) {
 		this.x = newX;
 		this.y = newY;

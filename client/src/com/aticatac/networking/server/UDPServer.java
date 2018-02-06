@@ -1,30 +1,33 @@
 package com.aticatac.networking.server;
 
+import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
-public class UDPServer extends Thread{
+import javafx.scene.paint.Color;
 
-	
+import com.aticatac.lobby.utils.ClientInfo;
+
+
+public class UDPServer extends Thread{
 	
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private CopyOnWriteArrayList<ClientInfo> clientList;
+	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
 	private ServerSender sender;
 	private Model model;
 	private Lobby lobby;
-	
-	
+		
 	private int status;
 	
 	public UDPServer() {
 	
-		this.clientList = new CopyOnWriteArrayList<ClientInfo>();
-		this.status = Globals.IN_LOBBY;
+		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
+		this.status = Globals.IN_LIMBO;
 	}
 
 	public void run() {
@@ -55,9 +58,16 @@ public class UDPServer extends Thread{
 		return this.status;
 	}
 
-	public void init() {
+	public void startLobby(String name, InetAddress address, Color colour) {
 		model.init();
+		this.lobby = new Lobby(new ClientInfo(address.toString(), name, false, colour));
+		this.status = Globals.IN_LOBBY;
+	}
+	
+	public void startGame() {
 		this.status = Globals.IN_GAME;
+		//tell clients
+		
 	}
 	
 }

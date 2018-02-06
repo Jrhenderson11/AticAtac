@@ -16,7 +16,7 @@ import com.aticatac.networking.model.Model;
 public class ServerSender extends Thread {
 	// DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address,
 	// port);
-	private CopyOnWriteArrayList<ClientInfo> clientList;
+	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private Model model;
 	private boolean running;
 	private DatagramSocket socket;
@@ -24,7 +24,7 @@ public class ServerSender extends Thread {
 	private Lobby lobby;
 	
 	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster, Lobby newLobby) {
+	public ServerSender(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster, Lobby newLobby) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
@@ -42,7 +42,7 @@ public class ServerSender extends Thread {
 		System.out.println("got sender socket");
 		running = true;
 		while (running) {
-			for (ClientInfo client : clientList) {
+			for (ConnectionInfo client : clientList) {
 				address = client.getAddress();
 				byte[] buffer;
 
@@ -51,10 +51,9 @@ public class ServerSender extends Thread {
 					buffer = SerializationUtils.serialize(lobby);
 					System.out.println("lobby");
 				} else {
+					System.out.println("game");
 					// serve game object
-
 					buffer = SerializationUtils.serialize(model);
-
 				}
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
 

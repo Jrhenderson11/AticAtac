@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.aticatac.networking.client.UDPClient;
+import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 import com.aticatac.world.Level;
 
@@ -24,17 +25,13 @@ import javafx.stage.Stage;
 
 public class GameTestClient extends Application {
 
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
 	int stageX = 1200, stageY = 1200;
 	boolean moveUp, moveDown, moveRight, moveLeft, run;
 	int speed = 1;
 	Model model;
-	
+
 	UDPClient client;
-	
+
 	private void initialiseConnection() {
 		InetAddress srvAddress = null;
 		try {
@@ -47,12 +44,17 @@ public class GameTestClient extends Application {
 		Thread th = new Thread(client);
 		th.setDaemon(true);
 		th.start();
-		
+
 		client.sendData("join");
+		
+		//simulate joining lobby
 		client.sendData("init");
+		client.setStatus(Globals.IN_LOBBY);
+		//client.sendData("start");
+
 		System.out.println("Client started and connected");
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -114,6 +116,9 @@ public class GameTestClient extends Application {
 				} else if (input == KeyCode.SHIFT) {
 					run = false;
 					speed = 1;
+				} else if (input == KeyCode.J) {
+					client.sendData("start");
+					client.setStatus(Globals.IN_GAME);
 				}
 			}
 		});
@@ -125,23 +130,30 @@ public class GameTestClient extends Application {
 		gc.drawImage(ufo, 5, 5);
 
 		AnimationTimer timer = new AnimationTimer() {
-
 			@Override
 			public void handle(long now) {
-				//update model
-				model = client.getModel();
-				client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
-				
-				if (model==null) {
+
+				if (client.getStatus() == Globals.IN_LOBBY) {
 					gc.drawImage(space, 0, 0, 1200, 1200);
-					gc.fillText("Network down " , 100, 150);
+					gc.fillText("You are in a lobby", 100, 150);
 				} else {
-					int x = model.getX();
-					int y = model.getY();
-					
-					gc.drawImage(space, 0, 0, 1200, 1200);
-					gc.fillText("Use WASD keys to move, SHIFT to run.", 100, 150);
-					gc.drawImage(ufo, x, y);
+
+					// update model
+					model = client.getModel();
+					client.sendData("input:" + moveUp + ":" + moveDown + ":" + moveLeft + ":" + moveRight + ":" + run
+							+ ":" + speed);
+
+					if (model == null) {
+						gc.drawImage(space, 0, 0, 1200, 1200);
+						gc.fillText("Network down ", 100, 150);
+					} else {
+						int x = model.getX();
+						int y = model.getY();
+
+						gc.drawImage(space, 0, 0, 1200, 1200);
+						gc.fillText("Use WASD keys to move, SHIFT to run.", 100, 150);
+						gc.drawImage(ufo, x, y);
+					}
 				}
 
 			}
@@ -150,13 +162,7 @@ public class GameTestClient extends Application {
 		timer.start();
 		System.out.println("starting animation timer");
 		stage.show();
-		//try {
-		//	client.halt();
-		//client.cancel();
-		//} catch (InterruptedException e) {
-		//}
-		//System.out.println("done");
+
 	}
-	
 
 }

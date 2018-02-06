@@ -11,17 +11,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
+import javafx.scene.paint.Color;
+
 public class ServerReciever extends Thread {
 
 	private DatagramSocket socket;
 	private Model model;
 	private boolean running;
 	private byte[] buffer = new byte[256];
-	private CopyOnWriteArrayList<ClientInfo> clientList;
+	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private CopyOnWriteArrayList<InetAddress> addressList;
 	private UDPServer master;
 	
-	public ServerReciever(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster) {
+	public ServerReciever(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
@@ -72,7 +74,7 @@ public class ServerReciever extends Thread {
 				
 				String newName = "P" + Integer.toString(clientList.size()+1);
 				int port = Globals.CLIENT_PORT + (clientList.size());
-				ClientInfo newClient = new ClientInfo(newName, origin, port);
+				ConnectionInfo newClient = new ConnectionInfo(newName, origin, port);
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
 				System.out.println("added client: " + origin);
@@ -89,7 +91,9 @@ public class ServerReciever extends Thread {
 		
 		String[] parts = data.split(":");
 		if (data.equals("init")) {
-			master.init();
+			master.startLobby("name", origin, Color.AQUA);
+		} else if (data.equals("start")) {
+			this.master.startGame();
 		} else if (data.equals("stop")) {
 			this.master.halt();
 		} else if (parts[0].equals("input")) {

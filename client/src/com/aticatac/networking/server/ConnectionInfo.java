@@ -2,13 +2,13 @@ package com.aticatac.networking.server;
 
 import java.net.InetAddress;
 
-public class ClientInfo {
+public class ConnectionInfo {
 	
 	private String name;
 	private InetAddress address;
 	private int port;
 	
-	public ClientInfo(String newName, InetAddress newAddress, int newPort) {
+	public ConnectionInfo(String newName, InetAddress newAddress, int newPort) {
 		this.name = newName;
 		this.address = newAddress;
 		this.port = newPort;
