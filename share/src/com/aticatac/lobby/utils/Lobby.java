@@ -11,6 +11,8 @@ public class Lobby implements Serializable{
 	// Min = 1, Max = 4
 	private int max_players;
 
+	private boolean game_started;
+	
 	private ClientInfo lobbyLeader;
 
 	private ArrayList<ClientInfo> serfs;
@@ -18,6 +20,7 @@ public class Lobby implements Serializable{
 	public Lobby(ClientInfo lobbyLeader) {
 		this.lobbyLeader = lobbyLeader;
 		serfs = new ArrayList<>();
+		this.game_started = false;
 	}
 
 	public ClientInfo getLobbyLeader() {
@@ -40,5 +43,14 @@ public class Lobby implements Serializable{
 
 	public void removeClient(ClientInfo client) {
 		serfs.remove(client);
+	}
+	
+	public void setStarted() {
+		this.game_started = true;
+		System.out.println("started");
+	}
+	
+	public boolean getStarted() {
+		return this.game_started;
 	}
 }

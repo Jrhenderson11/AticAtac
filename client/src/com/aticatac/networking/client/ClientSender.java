@@ -54,10 +54,6 @@ public class ClientSender extends Task {
 				System.exit(-1);
 				e.printStackTrace();
 			}
-			/*try {
-				Thread.sleep(5);
-			} catch (InterruptedException e1) {
-			}*/
 		}
 		System.out.println("stopping sender");
 		socket.close();

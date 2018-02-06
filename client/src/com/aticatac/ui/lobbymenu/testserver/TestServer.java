@@ -17,9 +17,9 @@ public class TestServer implements LobbyServer {
 
         this.client = client;
 
-        ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, Color.YELLOW);
-        ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, Color.RED);
-        ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, Color.BLUE);
+        ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, 2);
+        ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, 3);
+        ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, 4);
 
         Lobby lobby = new Lobby(jeff);
         lobby.addClient(bob);

@@ -33,7 +33,7 @@ public class UDPServer extends Thread{
 		
 		this.model = new Model(0, 0);
 		this.receiver = new ServerReciever(model, clientList, this); 
-		this.sender = new ServerSender(model, clientList, this, lobby);
+		this.sender = new ServerSender(model, clientList, this);
 		receiver.start();
 		sender.start();
 		System.out.println("thread started and waiting to join");
@@ -45,7 +45,6 @@ public class UDPServer extends Thread{
 		}
 		
 		System.out.println("TestServer stopped");
-		
 	}
 	
 	public void halt() {
@@ -57,16 +56,22 @@ public class UDPServer extends Thread{
 		return this.status;
 	}
 
-	public void startLobby(String name, InetAddress address, Color colour) {
+	public void startLobby(String name, InetAddress address, int colour) {
 		model.init();
 		this.lobby = new Lobby(new ClientInfo(address.toString(), name, false, colour));
 		this.status = Globals.IN_LOBBY;
 	}
 	
+	public Lobby getLobby() {
+		return this.lobby;
+	}
+	
 	public void startGame() {
+		this.lobby.setStarted();
+		System.out.println(this.lobby.getStarted());
+		this.sender.sendAllLobby();
+		//sleep to ensure clients are actually sent a lobby object
 		this.status = Globals.IN_GAME;
-		//tell clients
-		
 	}
 	
 }

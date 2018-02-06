@@ -37,16 +37,11 @@ public class UDPClient extends Task {
 		Thread sendThread = new Thread(sender);
 		sendThread.setDaemon(true);
 		sendThread.start();
-		//Thread recThread = new Thread(receiver);
-		//recThread.setDaemon(true);
-		//recThread.start();
 		receiver.start();
 		
 		try {
 			receiver.join();
-			
 		} catch (Exception e) {
-			
 		}
 		//sender.cancel();
 		//receiver.cancel();

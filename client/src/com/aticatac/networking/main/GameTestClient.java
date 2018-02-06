@@ -118,7 +118,7 @@ public class GameTestClient extends Application {
 					speed = 1;
 				} else if (input == KeyCode.J) {
 					client.sendData("start");
-					client.setStatus(Globals.IN_GAME);
+					//client.setStatus(Globals.IN_GAME);
 				}
 			}
 		});

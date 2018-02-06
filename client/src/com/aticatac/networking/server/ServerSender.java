@@ -14,21 +14,17 @@ import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
 public class ServerSender extends Thread {
-	// DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address,
-	// port);
+	
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private Model model;
 	private boolean running;
 	private DatagramSocket socket;
 	private UDPServer master;
-	private Lobby lobby;
 	
-	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster, Lobby newLobby) {
+	public ServerSender(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
-		this.lobby = newLobby;
 	}
 
 	public void run() {
@@ -48,7 +44,7 @@ public class ServerSender extends Thread {
 
 				if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
-					buffer = SerializationUtils.serialize(lobby);
+					buffer = SerializationUtils.serialize(master.getLobby());
 				} else {
 					// serve game object
 					buffer = SerializationUtils.serialize(model);
@@ -79,6 +75,40 @@ public class ServerSender extends Thread {
 
 		}
 		System.out.println("server sender stopped");
+	}
+	
+	public void sendAllLobby() {
+		InetAddress address;
+		for (ConnectionInfo client : clientList) {
+			address = client.getAddress();
+			byte[] buffer;
+
+			buffer = SerializationUtils.serialize(master.getLobby());
+			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
+
+			try {
+				int len = (packet.getLength() + 100);
+				socket.setSendBufferSize(len);
+			} catch (SocketException e2) {
+				e2.printStackTrace();
+			}
+
+			try {
+				socket.send(packet);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("buffer length:");
+				System.out.println(buffer.length);
+				try {
+					System.out.println("max allowed length");
+					System.out.println(socket.getSendBufferSize());
+				} catch (SocketException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		
 	}
 
 	public void halt() {

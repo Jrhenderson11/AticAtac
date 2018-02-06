@@ -61,18 +61,24 @@ public class ClientReceiverThread extends Thread {
 			if (master.getStatus() == Globals.IN_LOBBY) {
 				// deserialise into lobby obj
 				try {
-				Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-				master.setLobby(newLobby);
+					Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+					master.setLobby(newLobby);
+					//System.out.println(newLobby.getStarted());
+					if (newLobby.getStarted()==true) {
+						master.setStatus(Globals.IN_GAME);
+					}
 				} catch (Exception e) {
-					System.out.println("cannot deserialise lobby (is it a model?)");
+					//System.out.println("cannot deserialise lobby (is it a model?)");
 				}
 			} else {
 				//make game model
-				this.model = SerializationUtils.deserialize(packet.getData());
-
+				try {
+					this.model = SerializationUtils.deserialize(packet.getData());
+				} catch (Exception e) {
+					System.out.println("uh - oh");
+				}
 				if (model == null) {
 				} else {
-
 				}
 
 				oldModel = model;

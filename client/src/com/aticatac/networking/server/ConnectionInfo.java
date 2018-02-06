@@ -1,8 +1,9 @@
 package com.aticatac.networking.server;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
-public class ConnectionInfo {
+public class ConnectionInfo{
 	
 	private String name;
 	private InetAddress address;
@@ -25,6 +26,5 @@ public class ConnectionInfo {
 	public int getPort() {
 		return port;
 	}
-	
 	
 }
