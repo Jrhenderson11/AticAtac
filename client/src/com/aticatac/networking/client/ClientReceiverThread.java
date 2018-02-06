@@ -65,6 +65,7 @@ public class ClientReceiverThread extends Thread {
 					master.setLobby(newLobby);
 					//System.out.println(newLobby.getStarted());
 					if (newLobby.getStarted()==true) {
+						System.out.println("start game");
 						master.setStatus(Globals.IN_GAME);
 					}
 				} catch (Exception e) {
