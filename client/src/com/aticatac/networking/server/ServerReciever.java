@@ -89,7 +89,7 @@ public class ServerReciever extends Thread {
 		
 		String[] parts = data.split(":");
 		if (data.equals("init")) {
-			model.init();
+			master.init();
 		} else if (data.equals("stop")) {
 			this.master.halt();
 		} else if (parts[0].equals("input")) {

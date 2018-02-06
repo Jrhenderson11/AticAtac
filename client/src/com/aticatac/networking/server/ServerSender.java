@@ -10,20 +10,27 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.model.LobbyData;
 import com.aticatac.networking.model.Model;
 
 public class ServerSender extends Thread {
-	//	DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+	// DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address,
+	// port);
 	private CopyOnWriteArrayList<ClientInfo> clientList;
 	private Model model;
 	private boolean running;
 	private DatagramSocket socket;
+	private UDPServer master;
+	private LobbyData lobby;
 	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList) {
+	
+	public ServerSender(Model newModel, CopyOnWriteArrayList<ClientInfo> newList, UDPServer newMaster, LobbyData newLobby) {
 		this.model = newModel;
-		this.clientList = newList;	
+		this.clientList = newList;
+		this.master = newMaster;
+		this.lobby = newLobby;
 	}
-	
+
 	public void run() {
 		InetAddress address;
 		System.out.println("Server sender started");
@@ -37,18 +44,26 @@ public class ServerSender extends Thread {
 		while (running) {
 			for (ClientInfo client : clientList) {
 				address = client.getAddress();
-				byte[] buffer = SerializationUtils.serialize(model);
-				
+				byte[] buffer;
+
+				if (master.getStatus() == Globals.IN_LOBBY) {
+					// serve lobby object
+					buffer = SerializationUtils.serialize(lobby);
+					System.out.println("lobby");
+				} else {
+					// serve game object
+
+					buffer = SerializationUtils.serialize(model);
+
+				}
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
-				
+
 				try {
 					int len = (packet.getLength() + 100);
 					socket.setSendBufferSize(len);
 				} catch (SocketException e2) {
-					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				//System.out.println("sending model " + address.toString() +":"+ client.getPort());
 				try {
 
 					socket.send(packet);
@@ -56,7 +71,7 @@ public class ServerSender extends Thread {
 					e.printStackTrace();
 					System.out.println("buffer length:");
 					System.out.println(buffer.length);
-					
+
 					try {
 						System.out.println("max allowed length");
 						System.out.println(socket.getSendBufferSize());
@@ -65,16 +80,14 @@ public class ServerSender extends Thread {
 						e1.printStackTrace();
 					}
 				}
-			}	
-			
-			
+			}
+
 		}
 		System.out.println("server sender stopped");
 	}
-	
+
 	public void halt() {
 		this.running = false;
 	}
-	
-	
+
 }
