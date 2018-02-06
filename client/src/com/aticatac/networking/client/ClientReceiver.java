@@ -66,7 +66,6 @@ public class ClientReceiver extends Task {
 			}
 
 			oldModel = model;
-			
 		}
 		socket.close();
 		System.out.println(name + " r done");

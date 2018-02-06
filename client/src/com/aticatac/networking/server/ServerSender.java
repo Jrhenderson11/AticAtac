@@ -49,9 +49,7 @@ public class ServerSender extends Thread {
 				if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
 					buffer = SerializationUtils.serialize(lobby);
-					System.out.println("lobby");
 				} else {
-					System.out.println("game");
 					// serve game object
 					buffer = SerializationUtils.serialize(model);
 				}
@@ -64,13 +62,11 @@ public class ServerSender extends Thread {
 					e2.printStackTrace();
 				}
 				try {
-
 					socket.send(packet);
 				} catch (IOException e) {
 					e.printStackTrace();
 					System.out.println("buffer length:");
 					System.out.println(buffer.length);
-
 					try {
 						System.out.println("max allowed length");
 						System.out.println(socket.getSendBufferSize());

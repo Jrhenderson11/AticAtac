@@ -71,7 +71,6 @@ public class ClientReceiverThread extends Thread {
 				this.model = SerializationUtils.deserialize(packet.getData());
 
 				if (model == null) {
-					System.out.println("error (model is null)");
 				} else {
 
 				}

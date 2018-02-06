@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 
 import com.aticatac.lobby.utils.ClientInfo;
 
-
 public class UDPServer extends Thread{
 	
 	private boolean running;
