@@ -59,8 +59,7 @@ public class ClientReceiver extends Task {
 				break;
 			}
 			System.out.println("deserializing");
-			// String received = new String(packet.getData(), 0, packet.getLength());
-			//this.model = SerializationUtils.deserialize(packet.getData());
+			this.model = SerializationUtils.deserialize(packet.getData());
 			
 			System.out.println("got model");
 			

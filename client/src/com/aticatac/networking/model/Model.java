@@ -12,7 +12,7 @@ public class Model implements Serializable{
 
 	int offset = 10;
 
-	private Level map;
+	//private Level map;
 	
 	
 	public Model(int newX, int newY) {
@@ -21,7 +21,7 @@ public class Model implements Serializable{
 	}
 	
 	public void init() {
-		this.map = new Level(100, 100);
+		//this.map = new Level(100, 100);
 		//move to srv and replace with msg
 		//this.map.loadMap("client/assets/maps/map2.txt");
 	}
@@ -35,28 +35,28 @@ public class Model implements Serializable{
 		//MOVE TO SRV???
 		if (moveUp /*&& checkPos(1)*/) {
 			y -= speed;
-			if(map.getCoords(x, y)==1) {
+			/*if(map.getCoords(x, y)==1) {
 				y = y-2;
-			}
+			}*/
 		}
 		if (moveDown /*&& checkPos(2)*/) {
 			y += speed;
-			
+			/*
 			if(map.getCoords(x, y)==1) {
 				y = y+2;
-			}
+			}*/
 		}
 		if (moveLeft /*&& checkPos(3)*/) {
 			x -= speed;
-			if(map.getCoords(x, y)==1) {
+			/*if(map.getCoords(x, y)==1) {
 				x = x+2;
-			}
+			}*/
 		}
 		if (moveRight /*&& checkPos(4)*/) {
 			x += speed;
-			if(map.getCoords(x, y)==1) {
+			/*if(map.getCoords(x, y)==1) {
 				x = x-2;
-			}
+			}*/
 		}
 		if (run) {
 			speed = 3;
@@ -65,8 +65,8 @@ public class Model implements Serializable{
 	
 	//move to srv
 	private boolean checkPos(int coord, int speed) {
-		int offsetY = map.getHeight() - 10;
-		int offsetX = map.getWidth() - 10;
+		int offsetY = 90;//map.getHeight() - 10;
+		int offsetX = 90;//map.getWidth() - 10;
 
 		int up = y - speed;
 		int down = y + speed;

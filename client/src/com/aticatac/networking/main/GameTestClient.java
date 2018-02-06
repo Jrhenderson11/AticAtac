@@ -130,19 +130,14 @@ public class GameTestClient extends Application {
 			public void handle(long now) {
 				//update model
 				model = client.getModel();
+				client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
+				
 				if (model==null) {
-					//System.out.println("model is null");
 					gc.drawImage(space, 0, 0, 1200, 1200);
 					gc.fillText("Network down " , 100, 150);
-					//send inputs (moveUp, moveDown, moveLeft, moveRight, run, speed)
-					client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
-
 				} else {
-					//model = new Model(0,0);
 					int x = model.getX();
 					int y = model.getY();
-					//send inputs (moveUp, moveDown, moveLeft, moveRight, run, speed)
-					client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
 					
 					gc.drawImage(space, 0, 0, 1200, 1200);
 					gc.fillText("Use WASD keys to move, SHIFT to run.", 100, 150);

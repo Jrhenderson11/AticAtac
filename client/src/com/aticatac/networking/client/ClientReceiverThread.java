@@ -59,7 +59,6 @@ public class ClientReceiverThread extends Thread {
 				break;
 			}
 			System.out.println("deserializing");
-			// String received = new String(packet.getData(), 0, packet.getLength());
 			this.model = SerializationUtils.deserialize(packet.getData());
 			
 			System.out.println("got model");

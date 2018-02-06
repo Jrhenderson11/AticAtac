@@ -46,20 +46,18 @@ public class ClientSender extends Task {
 			// send message once got
 			buffer = message.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.SERVER_PORT);
-			// System.out.println("sending " + message);
-
+			
 			try {
 				socket.send(packet);
-				//System.out.println("send");
 			} catch (IOException e) {
 				System.out.println("error sending from client");
 				System.exit(-1);
 				e.printStackTrace();
 			}
-			try {
+			/*try {
 				Thread.sleep(5);
 			} catch (InterruptedException e1) {
-			}
+			}*/
 		}
 		System.out.println("stopping sender");
 		socket.close();
