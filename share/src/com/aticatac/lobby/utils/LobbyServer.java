@@ -3,6 +3,7 @@ package com.aticatac.lobby.utils;
 import java.util.ArrayList;
 
 public interface LobbyServer {
+	
     // Only give full testserver info once client actually joins
     Lobby joinLobby(int id, String password);
 

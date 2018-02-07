@@ -22,7 +22,7 @@ public class UDPClient extends Task {
 	private int status;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
-	
+
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
@@ -36,20 +36,20 @@ public class UDPClient extends Task {
 
 		receiver = new ClientReceiverThread(name, this);
 		sender = new ClientSender(name, address, messageQueue);
-		
+
 		Thread sendThread = new Thread(sender);
 		sendThread.setDaemon(true);
 		sendThread.start();
 		receiver.start();
-		
+
 		try {
 			receiver.join();
 		} catch (Exception e) {
 		}
-		//sender.cancel();
-		//receiver.cancel();
-		
-		//System.out.println(name + " stopped");
+		// sender.cancel();
+		// receiver.cancel();
+
+		// System.out.println(name + " stopped");
 		return new Object();
 	}
 
@@ -65,7 +65,7 @@ public class UDPClient extends Task {
 		sender.halt();
 		sender.cancel();
 		receiver.halt();
-		//receiver.cancel();
+		// receiver.cancel();
 	}
 
 	public Model getModel() {
@@ -75,15 +75,15 @@ public class UDPClient extends Task {
 	public int getStatus() {
 		return this.status;
 	}
-	
+
 	public void setStatus(int newStatus) {
 		this.status = newStatus;
 	}
-	
+
 	public Lobby getLobby() {
 		return this.lobby;
 	}
-	
+
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;
 	}
@@ -94,22 +94,26 @@ public class UDPClient extends Task {
 
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
-	} 	
-	
-	/*===========*/
-	//Current interface stuff
-	
+	}
+
+	/* =========== */
+	// Current interface stuff
+
 	public void connect() {
 		sendData("join");
 	}
-	
+
 	public void joinLobby() {
-		sendData("init");
+		if (this.status == Globals.IN_LIMBO) {
+			sendData("init");
+			this.status = Globals.IN_LOBBY;
+		}
 	}
-	
+
 	public void startGame() {
-		sendData("start");
+		if (this.status == Globals.IN_LOBBY) {
+			sendData("start");
+		}
 	}
-	
-	
+
 }

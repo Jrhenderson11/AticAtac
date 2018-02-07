@@ -91,8 +91,6 @@ public class ServerReciever extends Thread {
 		
 		String[] parts = data.split(":");
 		if (data.equals("init")) {
-			
-			
 			master.joinLobby("name", origin, 2);
 		} else if (data.equals("start")) {
 			this.master.startGame();

@@ -73,6 +73,7 @@ public class UDPServer extends Thread{
 		} else if (this.status == Globals.IN_LOBBY) {
 			this.lobby.addClient(newClient);
 		}
+		this.lobbyInfo = new LobbyInfo(4, 1 + this.lobby.getPeasants().size(), 1);
 	}
 	
 	public Lobby getLobby() {
