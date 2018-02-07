@@ -122,7 +122,7 @@ public class Renderer {
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
-		int glowRadius = 3;
+		int glowRadius = 2;
 		int glowArc = 3;
 		int barWidth = 1;
 		
@@ -209,6 +209,26 @@ public class Renderer {
 			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
 		}
 	};
+	
+	public void renderTerritory(GraphicsContext gc) {
+		int[][] grid = world.getLevel().getGrid();
+		int tileWidth = displayRect.width / world.getLevel().getWidth();
+		int tileHeight = displayRect.height / world.getLevel().getHeight();
+		double opacity = 0.5;
+		
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				for (Player player: world.getPlayers()) {
+					if (grid[x][y] == player.getIdentifier()) {
+						Color color = player.getColour();
+						Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+						gc.setFill(opaqueColor);
+						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+					}
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Adds a layer to render

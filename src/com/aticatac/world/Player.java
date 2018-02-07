@@ -19,7 +19,7 @@ public class Player {
     
     public Player(Controller controller, int identifier, Color colour) {
     	this.controller = controller;
-    	this.identifier = identifier;
+    	this.setIdentifier(identifier);
     	this.colour = colour;
     	this.position = new Point(10, 10);
     }
@@ -69,5 +69,13 @@ public class Player {
 	public void move(int dX, int dY) {
 		this.position.x += dX;
 		this.position.y += dY;
+	}
+
+	public int getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(int identifier) {
+		this.identifier = identifier;
 	}
 }
