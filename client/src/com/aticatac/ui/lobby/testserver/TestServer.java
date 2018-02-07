@@ -6,6 +6,7 @@ import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
 import javafx.scene.paint.Color;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class TestServer implements LobbyServer {
@@ -74,6 +75,12 @@ public class TestServer implements LobbyServer {
 
     @Override
     public ArrayList<LobbyInfo> getPublicLobbies() {
-        return null;
+
+        ArrayList<LobbyInfo> lobbyInfos = new ArrayList<>();
+        for (int i = 0; i < lobbies.size(); i++) {
+            lobbyInfos.add(new LobbyInfo(4, lobbies.get(i).getPeasants().size() + 1, i, "Testing " + i));
+        }
+
+        return lobbyInfos;
     }
 }
