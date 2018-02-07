@@ -9,9 +9,11 @@ import com.aticatac.world.ai.AStar;
 public class AIPlayer extends Player {
 
 	private static final int PERCENTAGE_TO_MOVE = 85;
+	private boolean moving;
 
 	public AIPlayer(Controller controller, Level level, int identifier, int colour) {
 		super(controller, level, identifier, colour);
+		moving = false;
 	}
 
 	@Override
@@ -20,7 +22,7 @@ public class AIPlayer extends Player {
 
 		if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
 			// If the area is mostly covered by the players own paint
-			if (!this.moving()) {
+			if (!this.moving) {
 				Point Point = this.closestFreePoint();
 				this.makeMovement('p', this.pathToFreePoint(Point));
 			}
@@ -54,14 +56,9 @@ public class AIPlayer extends Player {
 		return count;
 	}
 
-	private boolean moving() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	public void stop() {
 		// TODO Auto-generated method stub
-
+		this.moving = false;
 	}
 
 	public boolean inRange() {
@@ -77,7 +74,9 @@ public class AIPlayer extends Player {
 
 	public void makeMovement(char c, ArrayList<Point> pathToFreePoint) {
 		assert (c == 'p');
+		this.moving = true;
 		// Only should be called with 'p'
+		
 		// Use a class similar to KeyInput to move
 	}
 
@@ -85,8 +84,6 @@ public class AIPlayer extends Player {
 		boolean foundClosest = false;
 		Point t = null;
 		int i = 0;
-		// if this.level.getCoords(x,y) == 1 then it is a wall, should this be taken
-		// into consideration
 		// is there a way to do this more efficently??
 		while (!foundClosest) {
 			for (int j = -i; j < i; j++) {

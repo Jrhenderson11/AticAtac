@@ -9,6 +9,8 @@ public class Player {
 	private final static int PAINT_DECREASE = 5;
 	private final static int BASE_PAINT_INCREASE = 5;
 	
+	
+	
     private Controller controller;
     private int identifier;
     protected int colour;
