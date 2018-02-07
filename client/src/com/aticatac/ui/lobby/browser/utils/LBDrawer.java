@@ -11,13 +11,12 @@ import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 
 public class LBDrawer {
-    public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset , long now) {
+    public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
 
         gc.save();
 
         for (int i = offset; i < lobbies.size(); i++) {
             drawLobbyInfo(gc, i, lobbies.get(i), now);
-            LBDrawer.join(gc, i, now);
         }
 
         gc.restore();
@@ -43,10 +42,10 @@ public class LBDrawer {
         int x = width / 9;
         int y = i * height / 7;
         int w = 7 * width / 9;
-        int l = height / 7;
+        int h = height / 7;
 
-        gc.strokeRect(x, y, w, l);
-        gc.fillRect(x, y, w, l);
+        gc.strokeRect(x, y, w, h);
+        gc.fillRect(x, y, w, h);
 
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setFont(UIDrawer.LOBBYBROWSTEXT);
@@ -63,11 +62,18 @@ public class LBDrawer {
         gc.strokeText(players, x + 3 * width / 9, y + height / 13);
         gc.fillText(players, x + 3 * width / 9, y + height / 13);
 
+        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLACK);
+        gc.fillRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
+        gc.strokeRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
+
+
+        gc.setFont(UIDrawer.LOBBYBROWSTEXT);
+        gc.setFill(Color.BLACK);
+        gc.fillText("JOIN", x +  width * 0.635, y + height * 0.085);
+
         gc.restore();
 
-    }
-
-    public static void join(GraphicsContext gc, int i, long now) {
     }
 
     public static void create(GraphicsContext gc, long now) {
