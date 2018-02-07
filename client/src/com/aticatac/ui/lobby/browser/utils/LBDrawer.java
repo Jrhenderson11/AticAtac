@@ -33,11 +33,7 @@ public class LBDrawer {
         gc.save();
 
         gc.setStroke(Color.BLACK);
-        if (selected) {
-            gc.setFill(Color.LIGHTYELLOW);
-        } else {
-            gc.setFill(Color.LIGHTGRAY);
-        }
+        gc.setFill(Color.gray(0.1));
 
         int x = width / 9;
         int y = i * height / 7;
@@ -62,7 +58,12 @@ public class LBDrawer {
         gc.strokeText(players, x + 3 * width / 9, y + height / 13);
         gc.fillText(players, x + 3 * width / 9, y + height / 13);
 
-        gc.setFill(Color.GREEN);
+        if (selected) {
+            gc.setFill(Color.LIGHTGREEN);
+        } else {
+            gc.setFill(Color.GREEN);
+        }
+
         gc.setStroke(Color.BLACK);
         gc.fillRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
         gc.strokeRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
@@ -70,7 +71,7 @@ public class LBDrawer {
 
         gc.setFont(UIDrawer.LOBBYBROWSTEXT);
         gc.setFill(Color.BLACK);
-        gc.fillText("JOIN", x +  width * 0.635, y + height * 0.085);
+        gc.fillText("JOIN", x + width * 0.635, y + height * 0.085);
 
         gc.restore();
 
