@@ -9,12 +9,19 @@ public class Player {
 	private final static int PAINT_DECREASE = 5;
 	private final static int BASE_PAINT_INCREASE = 5;
 	
+	protected Gun splat;
+	protected Gun spit;
+	protected Gun spray;
 	
+	
+	//Need to change gun class to contain these levels within them
+	protected int splatLevel;
+	protected int spitLevel;
+	protected int sprayLevel;
 	
     private Controller controller;
     private int identifier;
     protected int colour;
-    private int paintLevel;
     protected int x;
     protected int y;
 	protected Level level;
@@ -24,17 +31,25 @@ public class Player {
     	this.level = level;
     	this.identifier = identifier;
     	this.colour = colour;
+    	
+    	this.spit = new SpitGun();
+    	this.splat = new SplatGun();
+    	this.spray = new SprayGun();
+    	
+    	this.spitLevel = 100;
+    	this.sprayLevel = 100;
+    	this.splatLevel = 100;
     }
         
     public void makeMovement(char control) {
     	// Send a request to renderer to move
     }
     
-    public void shoot() {
-    	if(this.paintLevel >= MINIMUM_PAINT_FOR_SHOOT) {
+    public void shoot(Gun g) {
+    	/* if(g.getPaintLevel() >= MINIMUM_PAINT_FOR_SHOOT) {
     		// Send a request to renderer to shoot
         	this.decreasePaintLevel();
-    	}
+    	} */
     }
     
     public char getAction() {
@@ -42,13 +57,15 @@ public class Player {
     	return 0;
     }
     
-    public void increasePaintLevel(int multiplier) {
-    	this.paintLevel = multiplier * BASE_PAINT_INCREASE;
+    public void increasePaintLevel(int multiplier, Gun g) {
+    	//g.increasePaintLevel();
+    	//this.paintLevel = multiplier * BASE_PAINT_INCREASE;
     	// increase paint depending on multiplier from possession in world
     }
     
-    public void decreasePaintLevel() {
-    	this.paintLevel = this.paintLevel - PAINT_DECREASE;
+    public void decreasePaintLevel(Gun g) {
+    	//g.decreasePaintLevel();
+    	//this.paintLevel = this.paintLevel - PAINT_DECREASE;
     	// make a sensible decrease to paint level
     }
     

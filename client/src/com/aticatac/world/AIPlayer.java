@@ -24,7 +24,7 @@ public class AIPlayer extends Player {
 			// If the area is mostly covered by the players own paint
 			if (!this.moving) {
 				Point Point = this.closestFreePoint();
-				this.makeMovement('p', this.pathToFreePoint(Point));
+				this.doAction('p', this.pathToFreePoint(Point));
 			}
 		} else if (this.inRange()) {
 			// If AI player is in range of another player
@@ -32,12 +32,14 @@ public class AIPlayer extends Player {
 			this.stop();
 			this.shoot();
 		} else {
-			// choose a direction and use the splat weapon
+			Point direction = getQuadrant(this.splat);
+			this.doAction('s', this.splat);
+			// splat to this point
 		}
 		return 0;
 	}
 
-	// Splat - Fires a paint explosive a certain range that covers an area with
+	// Splat - Fires a paint explosive a !! certain range that covers an !! area with
 	// paint on impact. Medium paint usage
 	// Spray - Fires paint that covers the ground and hits any opponents in a
 	// straight line.
@@ -56,27 +58,64 @@ public class AIPlayer extends Player {
 		return count;
 	}
 
+	public Point getQuadrant(Gun g) {
+		Point[] options = new Point[4];
+		int range = g.getRange();
+		options[0] = new Point(this.x, this.y + range);
+		options[1] = new Point(this.x + range, this.y);
+		options[2] = new Point(this.x, this.y - range);
+		options[3] = new Point(this.x - range, this.y);
+
+		int bestCover = 0;
+		Point bestPoint = null;
+		int currentCover;
+		for (Point p : options) {
+			currentCover = getCoverage(g, p);
+			if (currentCover > bestCover) {
+				bestCover = currentCover;
+				bestPoint = p;
+			}
+		}
+		return bestPoint;
+	}
+	
+	public int getCoverage(Gun g, Point p) {
+		int splatCoverage = g.getSplatCoverage();
+		// 3x3 area would probs be best
+		int x = 0;
+		int coord;
+		// if this is odd then it is easy, even not so much
+		for (int i = -(splatCoverage/2); i < (splatCoverage/2)+1; i++) {
+			for (int j = -(splatCoverage/2); j < (splatCoverage/2)+1; j++) {
+				coord = this.level.getCoords(p.x + i, p.y + j) 
+				if (coord != this.colour && coord != 1) {
+					x++;					
+				}
+			}
+		}
+		return x;
+	}
+
 	public void stop() {
-		// TODO Auto-generated method stub
 		this.moving = false;
 	}
 
 	public boolean inRange() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
-	public void makeMovement(char control) {
-		// Need to be able to follow a path, might need a control enum just to contain
-		// the different controls
+	public void doAction(char c, Gun g) {
+		assert (c == 's');
+		// Only should be called with 's'
+		// Shoot gun
+		this.decreasePaintLevel(g);
 	}
 
-	public void makeMovement(char c, ArrayList<Point> pathToFreePoint) {
+	public void doAction(char c, ArrayList<Point> pathToFreePoint) {
 		assert (c == 'p');
-		this.moving = true;
 		// Only should be called with 'p'
-		
+
+		this.moving = true;
 		// Use a class similar to KeyInput to move
 	}
 

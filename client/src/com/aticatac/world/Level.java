@@ -105,11 +105,7 @@ public class Level {
 		}
 		return count;
 	}
-<<<<<<< HEAD:src/com/aticatac/world/Level.java
 
-=======
-	
->>>>>>> aaed3a34d7f6f177ff65304137214181dc2f4cfe:client/src/com/aticatac/world/Level.java
 	public void updateCoords(int x, int y, int val) {
 		this.grid[x][y] = val;
 	}
