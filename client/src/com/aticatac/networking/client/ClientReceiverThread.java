@@ -72,7 +72,6 @@ public class ClientReceiverThread extends Thread {
 				try {
 					Lobby newLobby = SerializationUtils.deserialize(packet.getData());
 					master.setLobby(newLobby);
-					//System.out.println(newLobby.getStarted());
 					if (newLobby.getStarted()==true) {
 						System.out.println("start game");
 						master.setStatus(Globals.IN_GAME);
@@ -80,7 +79,7 @@ public class ClientReceiverThread extends Thread {
 				} catch (Exception e) {
 					//System.out.println("cannot deserialise lobby (is it a model?)");
 				}
-			} else {
+			} else if (master.getStatus() == Globals.IN_GAME) {
 				//make game model
 				try {
 					this.model = SerializationUtils.deserialize(packet.getData());

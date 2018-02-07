@@ -59,10 +59,20 @@ public class UDPServer extends Thread{
 		return this.status;
 	}
 
-	public void startLobby(String name, InetAddress address, int colour) {
+	public void startLobby(ClientInfo newClient) {
 		model.init();
-		this.lobby = new Lobby(new ClientInfo(address.toString(), name, false, colour));
+		this.lobby = new Lobby(newClient);
 		this.status = Globals.IN_LOBBY;
+	}
+	
+	public void joinLobby(String name, InetAddress address, int colour) {
+		ClientInfo newClient = new ClientInfo(address.toString(), name, false, colour);
+		if (this.status == Globals.IN_LIMBO) {
+			//no lobby started so start one
+			this.startLobby(newClient);
+		} else if (this.status == Globals.IN_LOBBY) {
+			this.lobby.addClient(newClient);
+		}
 	}
 	
 	public Lobby getLobby() {
