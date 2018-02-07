@@ -26,7 +26,6 @@ public class UDPServer extends Thread{
 	private int status;
 	
 	public UDPServer() {
-	
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
 		this.lobbyInfo = new LobbyInfo(4, 0, 1);
@@ -63,6 +62,7 @@ public class UDPServer extends Thread{
 		model.init();
 		this.lobby = new Lobby(newClient);
 		this.status = Globals.IN_LOBBY;
+		System.out.println("new lobby created");
 	}
 	
 	public void joinLobby(String name, InetAddress address, int colour) {
@@ -74,6 +74,7 @@ public class UDPServer extends Thread{
 			this.lobby.addClient(newClient);
 		}
 		this.lobbyInfo = new LobbyInfo(4, 1 + this.lobby.getPeasants().size(), 1);
+		System.out.println("Client joined lobby");
 	}
 	
 	public Lobby getLobby() {
@@ -85,11 +86,16 @@ public class UDPServer extends Thread{
 	}
 	
 	public void startGame() {
+	if (this.status == Globals.IN_LOBBY) {
+		System.out.println("Game started");
 		this.lobby.setStarted();
-		System.out.println(this.lobby.getStarted());
 		this.sender.sendAllLobby();
 		//sleep to ensure clients are actually sent a lobby object
 		this.status = Globals.IN_GAME;
+	} else {
+		this.sender.sendAllLobby();
+	}
+		
 	}
 	
 }

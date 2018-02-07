@@ -33,7 +33,6 @@ public class ServerReciever extends Thread {
 			System.out.println("unable to lock port");
 		}
 		this.addressList = new CopyOnWriteArrayList<>();
-		
 	}
 
 	public void run() {
@@ -65,6 +64,18 @@ public class ServerReciever extends Thread {
 	public void halt() {
 		this.running = false;
 	}
+
+	public ConnectionInfo getInfo(InetAddress address) {
+		
+		for (ConnectionInfo info:this.clientList) {
+			System.out.println(info.getAddress());
+			if (info.getAddress().equals(address)) {
+				return info;
+			}
+		}
+		System.out.println("invalid client address to search for");
+		return null;
+	}
 	
 	private void processData(String data, InetAddress origin) {
 		//System.out.println(data);
@@ -78,11 +89,6 @@ public class ServerReciever extends Thread {
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
 				System.out.println("added client: " + origin);
-				//send ACK
- 			
-			} else {
-				//send RST
-				
 			}
 		} else if (addressList.contains(origin)==false) {
 			//reject as unknown client
@@ -91,7 +97,8 @@ public class ServerReciever extends Thread {
 		
 		String[] parts = data.split(":");
 		if (data.equals("init")) {
-			master.joinLobby("name", origin, 2);
+			ConnectionInfo info = this.getInfo(origin);
+			master.joinLobby(info.getName(), origin, 2);
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {

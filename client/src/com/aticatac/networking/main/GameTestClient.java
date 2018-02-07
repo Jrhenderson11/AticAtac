@@ -116,7 +116,7 @@ public class GameTestClient extends Application {
 					run = false;
 					speed = 1;
 				} else if (input == KeyCode.J) {
-					client.joinLobby();
+					client.joinLobby(1, "password");
 				} else if (input == KeyCode.K) {
 					client.startGame();
 				}
@@ -137,7 +137,7 @@ public class GameTestClient extends Application {
 					gc.fillText("You are looking at lobbies", 100, 150);
 					gc.fillText(("Max Players: " + client.getLobbyInfo().MAX_PLAYERS), 100, 200);
 					gc.fillText(("Current Players: " + client.getLobbyInfo().CURRENT_PLAYERS), 100, 250);
-					gc.fillText("press J to join", 100, 150);
+					gc.fillText("press J to join", 100, 300);
 				} else if (client.getStatus() == Globals.IN_LOBBY) {
 					gc.drawImage(space, 0, 0, 1200, 1200);
 					gc.fillText("You are in a lobby", 100, 150);

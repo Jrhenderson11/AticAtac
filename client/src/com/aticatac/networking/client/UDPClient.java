@@ -1,17 +1,19 @@
 package com.aticatac.networking.client;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.utils.LobbyServer;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
 import javafx.concurrent.Task;
 
-public class UDPClient extends Task {
+public class UDPClient extends Task implements LobbyServer{
 
 	private String name;
 	private InetAddress address;
@@ -102,18 +104,45 @@ public class UDPClient extends Task {
 	public void connect() {
 		sendData("join");
 	}
-
-	public void joinLobby() {
+	
+	@Override
+	public Lobby joinLobby(int id, String password) {
 		if (this.status == Globals.IN_LIMBO) {
 			sendData("init");
 			this.status = Globals.IN_LOBBY;
 		}
+		return null;
 	}
-
-	public void startGame() {
+	
+	@Override
+	public boolean startGame() {
 		if (this.status == Globals.IN_LOBBY) {
 			sendData("start");
+			return true;
 		}
+		return false;
 	}
 
+	@Override
+	public void readyUp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unready() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean leaveLobby() {
+		return false;
+	}
+
+	@Override
+	public ArrayList<LobbyInfo> getPublicLobbies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

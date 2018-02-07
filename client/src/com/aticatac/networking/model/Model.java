@@ -12,7 +12,7 @@ public class Model implements Serializable{
 
 	int offset = 10;
 
-	//private Level map;
+	private Level map;
 	
 	public Model(int newX, int newY) {
 		this.x = newX;
@@ -20,7 +20,7 @@ public class Model implements Serializable{
 	}
 	
 	public void init() {
-		//this.map = new Level(100, 100);
+		this.map = new Level(100, 100);
 		//move to srv and replace with msg
 		//this.map.loadMap("client/assets/maps/map2.txt");
 	}
@@ -31,7 +31,6 @@ public class Model implements Serializable{
 	}
 	
 	public void update(boolean moveUp, boolean moveDown, boolean moveLeft, boolean moveRight, boolean run, int speed) {
-		//MOVE TO SRV???
 		if (moveUp /*&& checkPos(1)*/) {
 			y -= speed;
 			/*if(map.getCoords(x, y)==1) {
