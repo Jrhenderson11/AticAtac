@@ -23,8 +23,6 @@ public class Quit extends Scene {
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
 
-        //TODO: Are you sure?
-
         this.mainMenu = mainMenu;
 
         root.getChildren().add(canvas);
