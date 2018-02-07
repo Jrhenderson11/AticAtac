@@ -33,7 +33,7 @@ public class Tutorial extends Scene {
         this.displayHeight = SystemSettings.getNativeHeight();
         
         this.level = new Level(50, 50);
-        level.loadMap("assets/maps/map.txt");
+        level.loadMap("client/assets/maps/map.txt");
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
@@ -71,13 +71,16 @@ public class Tutorial extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	//handle movement, reverting moves when detecting collision
+  	        	//left
   	        	if (input.contains(KeyCode.A)) {
   	        		player.move(-2, 0);
   	        		Point p = getMapCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
+  	        		if (level.getGrid()[p.x][p.y] == 1) {   //if the grid coordinate of player is on a wall tile (1) in the level grid.
   	        			player.move(2, 0);
   	        		}
   	        	}
+  	        	//right
   	        	if (input.contains(KeyCode.D)) {
   	        		player.move(2, 0);
   	        		Point p = getMapCoords(player.getPosition());
@@ -85,6 +88,7 @@ public class Tutorial extends Scene {
   	        			player.move(-2, 0);
   	        		}
   	        	}
+  	        	//up
   	        	if (input.contains(KeyCode.W)) {
   	        		player.move(0, -2);
   	        		Point p = getMapCoords(player.getPosition());
@@ -92,6 +96,7 @@ public class Tutorial extends Scene {
   	        			player.move(0, 2);
   	        		}
   	        	}
+  	        	//down
   	        	if (input.contains(KeyCode.S)) {
   	        		player.move(0, 2);
   	        		Point p = getMapCoords(player.getPosition());
@@ -99,6 +104,15 @@ public class Tutorial extends Scene {
   	        			player.move(0, -2);
   	        		}
   	        	}
+  	        	
+  	        	//claim walking territory
+  	        	Point p = getMapCoords(player.getPosition());
+  	        	if (level.getGrid()[p.x][p.y] == 0) {
+  	        		level.updateCoords(p.x, p.y, player.getIdentifier());
+  	        		System.out.println("Updating: " + p.x + ", " + p.y);
+  	        	}
+  	        	
+  	        	//draw scene
   	        	renderer.render(gc);
   	        }
   	    }.start();   
