@@ -1,16 +1,16 @@
-package com.aticatac.lobby.utils;
+package com.aticatac.lobby;
 
 import javafx.scene.paint.Color;
 
 public class ClientInfo {
 
-    private final String ip;
+    private final String id;
     private final String username;
     private boolean ready;
     private Color color;
 
-    public ClientInfo(String ip, String username, boolean ready, Color color) {
-        this.ip = ip;
+    public ClientInfo(String id, String username, boolean ready, Color color) {
+        this.id = id;
         this.username = username;
         this.ready = ready;
         this.color = color;
@@ -24,6 +24,6 @@ public class ClientInfo {
         ready = false;
     }
 
-    // TODO: maybe add connection strength and might want to store socket instead of ip
+    // TODO: maybe add connection strength and might want to store socket instead of id
 
 }

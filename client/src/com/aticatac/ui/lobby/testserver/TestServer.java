@@ -1,9 +1,9 @@
-package com.aticatac.ui.lobbymenu.testserver;
+package com.aticatac.ui.lobby.testserver;
 
-import com.aticatac.lobby.utils.ClientInfo;
-import com.aticatac.lobby.utils.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
-import com.aticatac.lobby.utils.LobbyServer;
+import com.aticatac.lobby.ClientInfo;
+import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.LobbyInfo;
+import com.aticatac.lobby.LobbyServer;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ public class TestServer implements LobbyServer {
 
         this.client = client;
 
+        // Some other clients that have connected
         ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, Color.YELLOW);
         ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, Color.RED);
         ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, Color.BLUE);
@@ -31,9 +32,13 @@ public class TestServer implements LobbyServer {
     }
 
     @Override
-    public Lobby joinLobby(int id, String password) {
+    public Lobby updateLobby(int id) {
+        return null;
+    }
+
+    @Override
+    public void joinLobby(int id, String password) {
         lobbies.get(id).addClient(client);
-        return lobbies.get(id);
     }
 
     @Override
@@ -55,6 +60,16 @@ public class TestServer implements LobbyServer {
     public boolean leaveLobby() {
         lobbies.get(1).removeClient(client);
         return true;
+    }
+
+    @Override
+    public boolean changeColor(Color color) {
+        return false;
+    }
+
+    @Override
+    public ClientInfo myInfo() {
+        return null;
     }
 
     @Override
