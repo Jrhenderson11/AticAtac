@@ -45,10 +45,9 @@ public class GameTestClient extends Application {
 		th.setDaemon(true);
 		th.start();
 
-		client.sendData("join");
-		
-		//simulate joining lobby
-		client.sendData("init");
+		client.connect();
+		//join lobby
+		client.joinLobby();
 		client.setStatus(Globals.IN_LOBBY);
 		//client.sendData("start");
 
@@ -117,9 +116,8 @@ public class GameTestClient extends Application {
 					run = false;
 					speed = 1;
 				} else if (input == KeyCode.J) {
-					client.sendData("start");
-					//client.setStatus(Globals.IN_GAME);
-				}
+					client.startGame();
+			}
 			}
 		});
 

@@ -5,6 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
@@ -20,12 +21,14 @@ public class UDPClient extends Task {
 	private ClientSender sender;
 	private int status;
 	private Lobby lobby;
+	private LobbyInfo lobbyInfo;
 	
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
-		this.status = Globals.IN_GAME;
+		this.status = Globals.IN_LIMBO;
+		this.lobbyInfo = new LobbyInfo(0, 0, 0);
 	}
 
 	@Override
@@ -84,4 +87,29 @@ public class UDPClient extends Task {
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;
 	}
+
+	public LobbyInfo getLobbyInfo() {
+		return this.lobbyInfo;
+	}
+
+	public void setLobbyInfo(LobbyInfo newInfo) {
+		this.lobbyInfo = newInfo;
+	} 	
+	
+	/*===========*/
+	//Current interface stuff
+	
+	public void connect() {
+		sendData("join");
+	}
+	
+	public void joinLobby() {
+		sendData("init");
+	}
+	
+	public void startGame() {
+		sendData("start");
+	}
+	
+	
 }

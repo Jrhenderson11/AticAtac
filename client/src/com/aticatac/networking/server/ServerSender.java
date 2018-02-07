@@ -41,8 +41,9 @@ public class ServerSender extends Thread {
 			for (ConnectionInfo client : clientList) {
 				address = client.getAddress();
 				byte[] buffer;
-
-				if (master.getStatus() == Globals.IN_LOBBY) {
+				if (master.getStatus() == Globals.IN_LIMBO) {
+					buffer = SerializationUtils.serialize(master.getLobbyInfo());
+				} else if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
 					buffer = SerializationUtils.serialize(master.getLobby());
 				} else {

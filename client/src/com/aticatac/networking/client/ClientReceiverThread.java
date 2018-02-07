@@ -8,6 +8,7 @@ import java.net.SocketException;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
@@ -57,8 +58,16 @@ public class ClientReceiverThread extends Thread {
 				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
 			}
-
-			if (master.getStatus() == Globals.IN_LOBBY) {
+			if (master.getStatus() == Globals.IN_LIMBO) {
+				// deserialise into lobby obj
+				try {
+					LobbyInfo newInfo = SerializationUtils.deserialize(packet.getData());
+					master.setLobbyInfo(newInfo);
+				} catch (Exception e) {
+					//System.out.println("cannot deserialise lobby (is it a model?)");
+				}
+				
+			} else if (master.getStatus() == Globals.IN_LOBBY) {
 				// deserialise into lobby obj
 				try {
 					Lobby newLobby = SerializationUtils.deserialize(packet.getData());

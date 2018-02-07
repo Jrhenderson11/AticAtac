@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
@@ -20,13 +21,15 @@ public class UDPServer extends Thread{
 	private ServerSender sender;
 	private Model model;
 	private Lobby lobby;
-		
+	private LobbyInfo lobbyInfo;
+	
 	private int status;
 	
 	public UDPServer() {
 	
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
+		this.lobbyInfo = new LobbyInfo(4, 0, 1);
 	}
 
 	public void run() {
@@ -64,6 +67,10 @@ public class UDPServer extends Thread{
 	
 	public Lobby getLobby() {
 		return this.lobby;
+	}
+	
+	public LobbyInfo getLobbyInfo() {
+		return this.lobbyInfo;
 	}
 	
 	public void startGame() {
