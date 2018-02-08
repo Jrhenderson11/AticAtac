@@ -1,5 +1,6 @@
 package com.aticatac.ui.tutorial;
 
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class Tutorial extends Scene {
@@ -25,33 +27,36 @@ public class Tutorial extends Scene {
 	private int displayWidth;
 	private int displayHeight;
 	private Level level;
+	private Renderer renderer;
 	
 	public Tutorial (Group root) {
         super(root);
         
+        //init display stuff
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
-        
-        this.level = new Level(50, 50);
-        level.loadMap("client/assets/maps/map.txt");
+        this.renderer = new Renderer(displayWidth, displayHeight);
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        Renderer renderer = new Renderer(displayWidth, displayHeight);
         
+        //init world
+        this.level = new Level(50, 50);
+        level.loadMap("client/assets/maps/map.txt");
         World world = new World(level);
-        Player player = new Player(Controller.REAL, 2, Color.YELLOW);
-        player.setPosition(new Point(50, 50));
-        
-        world.addPlayer(player);
         
         renderer.setWorld(world);
+        
+        //init player
+        Player player = new Player(Controller.REAL, 2, Color.YELLOW);
+        player.setPosition(new Point(50, 50));
+        world.addPlayer(player);
         
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
+  		//on key down, keycode is added to input array
   		setOnKeyPressed(new EventHandler<KeyEvent>() {
   			public void handle(KeyEvent e) {
   				KeyCode code = e.getCode();
@@ -60,11 +65,34 @@ public class Tutorial extends Scene {
   				}
   			}
   	    });
-  	 
+  		
+  		//on key release, keycode is removed.
   		setOnKeyReleased(new EventHandler<KeyEvent>() {
   	        public void handle(KeyEvent e) {
   	            KeyCode code = e.getCode();
   	            input.remove(code);
+  	        }
+  	    });
+  		
+  		//updates player looking direction based on mouse pointer when mouse moves.
+  		setOnMouseMoved(new EventHandler<MouseEvent>() {
+  	        @Override
+  	        public void handle(MouseEvent me) {
+  	        	Point p = player.getPosition();
+  	        	double dy = me.getY() - p.y; //y axis goes down
+  	        	double dx = me.getX() - p.x;
+  	        	double r = Math.atan(dy / dx);
+  	        	
+  	        	//r = 0 means player looking to right.
+  	        	//r increases clockwise to 1.5pi, then drops down to -0.5pi.
+  	        	//may fix later but shouldn't affect trig calculations
+  	        	
+  	        	//allows looking to left
+  	        	if (dx < 0)
+  	        		r += Math.PI;
+  	        	
+  	        	player.setLookDirection(r);
+  	        	//System.out.println("dx: " + dx + " | dy: " + dy + " | a: " + player.getLookDirection());
   	        }
   	    });
   		
@@ -109,7 +137,6 @@ public class Tutorial extends Scene {
   	        	Point p = getMapCoords(player.getPosition());
   	        	if (level.getGrid()[p.x][p.y] == 0) {
   	        		level.updateCoords(p.x, p.y, player.getIdentifier());
-  	        		System.out.println("Updating: " + p.x + ", " + p.y);
   	        	}
   	        	
   	        	//draw scene

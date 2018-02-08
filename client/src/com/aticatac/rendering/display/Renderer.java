@@ -198,13 +198,18 @@ public class Renderer {
 	public void renderPlayers(GraphicsContext gc) {
 		int playerSize = 8;
 		double opacity = 0.5;
-		
+		int l = 10; //length of direction pointer
+				
 		for (Player player: world.getPlayers()) {
 			Color color = player.getColour();
 			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+			int px = player.getPosition().x;
+			int py = player.getPosition().y;
+			
 			gc.setStroke(color);
 			gc.setLineWidth(1.0);
-			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
+			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
+			gc.strokeLine(px, py, px + (l * Math.cos(player.getLookDirection())), py + (l * Math.sin(player.getLookDirection())));
 			gc.setStroke(opaqueColor);
 			gc.setLineWidth(3);
 			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
@@ -215,15 +220,16 @@ public class Renderer {
 		int[][] grid = world.getLevel().getGrid();
 		int tileWidth = displayRect.width / world.getLevel().getWidth();
 		int tileHeight = displayRect.height / world.getLevel().getHeight();
-		//double opacity = 0.5;
+		double opacity = 0.5;
+		double brightness = 0.7;
 		
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
 					if (grid[x][y] == player.getIdentifier()) {
 						Color color = player.getColour();
-						//Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-						gc.setFill(color);
+						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
+						gc.setFill(opaqueColor);
 						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 					}
 				}

@@ -16,12 +16,14 @@ public class Player {
     private Color colour;
     private int paintLevel;
     private Point position;
+    private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     
     public Player(Controller controller, int identifier, Color colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
     	this.position = new Point(10, 10);
+    	this.lookDirection = 0.0;
     }
         
     public void makeMovement(char control) {
@@ -77,5 +79,13 @@ public class Player {
 
 	public void setIdentifier(int identifier) {
 		this.identifier = identifier;
+	}
+
+	public Double getLookDirection() {
+		return lookDirection;
+	}
+
+	public void setLookDirection(Double lookDirection) {
+		this.lookDirection = lookDirection;
 	}
 }
