@@ -31,6 +31,11 @@ public class Lobby implements Serializable{
 		return serfs;
 	}
 
+	public ArrayList<ClientInfo> getAll() {
+		ArrayList<ClientInfo> all = new ArrayList<ClientInfo>(serfs);
+		all.add(lobbyLeader);
+		return all;
+	}
 	// Make sure not full
 	public boolean addClient(ClientInfo client) {
 		if (serfs.size() == 3) {

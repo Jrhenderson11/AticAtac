@@ -16,7 +16,7 @@ public class TestServer implements LobbyServer {
     public TestServer(ClientInfo client) {
 
         this.client = client;
-
+        /*
         ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, 2);
         ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, 3);
         ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, 4);
@@ -24,9 +24,9 @@ public class TestServer implements LobbyServer {
         Lobby lobby = new Lobby(jeff);
         lobby.addClient(bob);
         lobby.addClient(ian);
-
+         */
         this.lobbies = new ArrayList<>();
-        lobbies.add(lobby);
+    //    lobbies.add(lobby);
 
     }
 

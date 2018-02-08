@@ -50,7 +50,7 @@ public class ServerSender extends Thread {
 					// serve game object
 					buffer = SerializationUtils.serialize(model);
 				}
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
 
 				try {
 					int len = (packet.getLength() + 100);
@@ -85,7 +85,7 @@ public class ServerSender extends Thread {
 			byte[] buffer;
 
 			buffer = SerializationUtils.serialize(master.getLobby());
-			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getPort());
+			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
 
 			try {
 				int len = (packet.getLength() + 100);

@@ -1,21 +1,26 @@
 package com.aticatac.lobby.utils;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 import javafx.scene.paint.Color;
 
 public class ClientInfo  implements Serializable {
 
-    private final String ip;
-    private final String username;
+	private String username;
+	private InetAddress address;
+	private int desPort;
+	private int originPort;
     private boolean ready;
-    private int color;
-
-    public ClientInfo(String ip, String username, boolean ready, int color) {
-        this.ip = ip;
+    private int colour;	
+  
+    public ClientInfo(String username, boolean ready, int colour, InetAddress newAddress, int newDestPort, int newOriginPort) {
         this.username = username;
         this.ready = ready;
-        this.color = color;
+        this.colour = colour;
+        this.address = newAddress;
+		this.desPort = newDestPort;
+		this.originPort = newOriginPort;
     }
 
     public void ready() {
@@ -26,6 +31,22 @@ public class ClientInfo  implements Serializable {
         ready = false;
     }
 
+    public String getUsername() {
+    	return this.username;
+    }
+	
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	public int getDestPort() {
+		return desPort;
+	}
+	
+	public int getOriginPort() {
+		return originPort;
+	}
+ 
     // TODO: maybe add connection strength and might want to store socket instead of ip
 
 }

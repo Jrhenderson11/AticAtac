@@ -94,6 +94,10 @@ public class GameTestClient extends Application {
 				} else if (input == KeyCode.ESCAPE) {
 					client.halt();
 					client.cancel();
+				} else if (input == KeyCode.R) {
+					client.readyUp();
+				} else if (input == KeyCode.U) {
+					client.unready();
 				}
 
 			}

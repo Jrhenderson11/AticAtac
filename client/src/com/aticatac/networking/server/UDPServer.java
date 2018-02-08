@@ -3,14 +3,11 @@ package com.aticatac.networking.server;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.aticatac.lobby.utils.ClientInfo;
 import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
-
-import javafx.scene.paint.Color;
-
-import com.aticatac.lobby.utils.ClientInfo;
 
 public class UDPServer extends Thread{
 	
@@ -22,7 +19,7 @@ public class UDPServer extends Thread{
 	private Model model;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
-	
+		
 	private int status;
 	
 	public UDPServer() {
@@ -31,6 +28,7 @@ public class UDPServer extends Thread{
 		this.lobbyInfo = new LobbyInfo(4, 0, 1);
 	}
 
+	@Override
 	public void run() {
 		
 		this.model = new Model(0, 0);
@@ -65,8 +63,9 @@ public class UDPServer extends Thread{
 		System.out.println("new lobby created");
 	}
 	
-	public void joinLobby(String name, InetAddress address, int colour) {
-		ClientInfo newClient = new ClientInfo(address.toString(), name, false, colour);
+	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
+		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
+		System.out.println(status == Globals.IN_LIMBO);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
 			this.startLobby(newClient);
@@ -83,6 +82,25 @@ public class UDPServer extends Thread{
 	
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
+	}
+	
+	public ClientInfo getClientInfo(InetAddress address, int port) {
+		
+		for (ClientInfo info : this.lobby.getAll()) {
+			if (info.getAddress().equals(address) && info.getOriginPort() == port) {
+				return info;
+			}
+		}
+		System.out.println("invalid client address to search for");
+		return null;
+	}
+	
+	public void setClientReady(InetAddress origin, int originPort) {
+		this.getClientInfo(origin, originPort).ready();
+	}
+	
+	public void setClientUnReady(InetAddress origin, int originPort) {
+		this.getClientInfo(origin, originPort);
 	}
 	
 	public void startGame() {

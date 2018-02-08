@@ -5,13 +5,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.aticatac.lobby.utils.ClientInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
-
-import javafx.scene.paint.Color;
 
 public class ServerReciever extends Thread {
 
@@ -53,7 +51,7 @@ public class ServerReciever extends Thread {
 			}
 
 			String received = new String(packet.getData(), 0, packet.getLength());
-			processData(received, packet.getAddress());
+			processData(received, packet.getAddress(), packet.getPort());
 			// if recieved end terminate via running = false
 
 		}
@@ -65,11 +63,9 @@ public class ServerReciever extends Thread {
 		this.running = false;
 	}
 
-	public ConnectionInfo getInfo(InetAddress address) {
-		
-		for (ConnectionInfo info:this.clientList) {
-			System.out.println(info.getAddress());
-			if (info.getAddress().equals(address)) {
+	private ConnectionInfo getConnectionInfo(InetAddress origin, int originPort) {
+		for (ConnectionInfo info: this.clientList) {
+			if (info.getAddress().equals(origin) && info.getOriginPort() == originPort) {
 				return info;
 			}
 		}
@@ -77,32 +73,52 @@ public class ServerReciever extends Thread {
 		return null;
 	}
 	
-	private void processData(String data, InetAddress origin) {
+	private void processData(String data, InetAddress origin, int originPort) {
+		int port = Globals.CLIENT_PORT;
 		//System.out.println(data);
 		if (data.equals("join")) {
 			if (clientList.size() < Globals.MAX_CONNECTIONS) {
 				//add to list + send confirmation
 				
 				String newName = "P" + Integer.toString(clientList.size()+1);
-				int port = Globals.CLIENT_PORT + (clientList.size());
-				ConnectionInfo newClient = new ConnectionInfo(newName, origin, port);
+				port = Globals.CLIENT_PORT + (clientList.size());
+				ConnectionInfo newClient = new ConnectionInfo(newName, origin, port, originPort);
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
-				System.out.println("added client: " + origin);
+				System.out.println("added client: " + origin + " to lobby");
 			}
 		} else if (addressList.contains(origin)==false) {
 			//reject as unknown client
 			return;
 		}
-		
+
 		String[] parts = data.split(":");
+		//LOBBY STUFF
 		if (data.equals("init")) {
-			ConnectionInfo info = this.getInfo(origin);
-			master.joinLobby(info.getName(), origin, 2);
+			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
+			master.joinLobby(info.getUsername(), origin, 2,this.getConnectionInfo(origin, originPort).getDestPort(), originPort);
+		
+		} else if (data.equals("ready")) {
+			//SET LOBBY TO READY
+			this.master.setClientReady(origin, originPort);
+		
+		} else if (data.equals("unready")) {
+			//SET TO UNREADY
+			this.master.setClientUnReady(origin, originPort);
+		
+		} else if (parts[0].equals("name")) {
+			this.master.startGame();
+			
+		
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {
+		
+			
 			this.master.halt();
+			
+			
+			//		GAME
 		} else if (parts[0].equals("input")) {
 			//client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
 			boolean up = Boolean.parseBoolean(parts[1]);

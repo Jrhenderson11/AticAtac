@@ -24,13 +24,15 @@ public class UDPClient extends Task implements LobbyServer{
 	private int status;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
-
+	private boolean ready;
+	
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
 		this.status = Globals.IN_LIMBO;
 		this.lobbyInfo = new LobbyInfo(0, 0, 0);
+		this.ready = false;
 	}
 
 	@Override
@@ -126,13 +128,15 @@ public class UDPClient extends Task implements LobbyServer{
 	@Override
 	public void readyUp() {
 		// TODO Auto-generated method stub
-		
+		this.ready = true;
+		this.sendData("ready");
 	}
 
 	@Override
 	public void unready() {
 		// TODO Auto-generated method stub
-		
+		this.ready = false;
+		this.sendData("unready");
 	}
 
 	@Override
