@@ -28,20 +28,15 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class MainMenu extends Scene{
-
-    public MainMenu(Group root, Stage primaryStage) {
+	
+    public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
     
-        // TODO: replace Placeholder
-
         // TODO: get client info
-        LobbyServer server = null;
-		try {
-			server = new UDPClient("name",InetAddress.getByName("127.0.0.1"));
-		} catch (UnknownHostException e) {
-			System.out.println("server not reachable");
-		}
-
+        // UDPClient server = null;
+		System.out.println("MAINMENU");
+        //server = new UDPClient("name",InetAddress.getByName("127.0.0.1"));
+        System.out.println(server == null);
         ArrayList<MenuItem> menuItems = new ArrayList<>();
         menuItems.add(new MenuItem("Find a Lobby", new LobbyBrowser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
@@ -85,6 +80,5 @@ public class MainMenu extends Scene{
         */
 
     }
-
 
 }

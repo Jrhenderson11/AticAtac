@@ -21,7 +21,7 @@ public class UDPClient extends Task implements LobbyServer {
 	private InetAddress address;
 	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
-	private ClientReceiverThread receiver;
+	private ClientReceiver receiver;
 	private ClientSender sender;
 	private int status;
 	private Lobby lobby;
@@ -33,14 +33,14 @@ public class UDPClient extends Task implements LobbyServer {
 		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(0, 0, 0, "");
+		this.lobbyInfo = new LobbyInfo(0, 0, 0, "LOBBY NOT INITIALISED");
 		this.ready = false;
 	}
 
 	@Override
 	public Object call() {
 
-		receiver = new ClientReceiverThread(name, this);
+		receiver = new ClientReceiver(name, this);
 		sender = new ClientSender(name, address, messageQueue);
 
 		Thread sendThread = new Thread(sender);
@@ -100,6 +100,8 @@ public class UDPClient extends Task implements LobbyServer {
 
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
+		//System.out.println(this.lobbyInfo.MAX_PLAYERS);
+		//System.out.println(newInfo.MAX_PLAYERS);
 	}
 
 	/* =========== */
@@ -147,8 +149,8 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
-		// TODO Auto-generated method stub
-		ArrayList lobbies =  new ArrayList<LobbyInfo>();
+		ArrayList<LobbyInfo> lobbies = new ArrayList<LobbyInfo>();
+		
 		lobbies.add(this.lobbyInfo);
 		return lobbies;
 	}

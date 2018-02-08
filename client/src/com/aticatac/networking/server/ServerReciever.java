@@ -35,7 +35,7 @@ public class ServerReciever extends Thread {
 	public void run() {
 		InetAddress origin;
 		running = true;
-		System.out.println("TestServer Listening");
+		System.out.println("Server Listening");
 		while (running) {
 
 			// make packet
@@ -44,7 +44,7 @@ public class ServerReciever extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				System.out.println("IO error in TestServer Receiver Thread");
+				System.out.println("IO error in Server Receiver Thread");
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -84,7 +84,7 @@ public class ServerReciever extends Thread {
 				ConnectionInfo newClient = new ConnectionInfo(newName, origin, port, originPort);
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
-				System.out.println("added client: " + origin + " to lobby");
+				System.out.println("added client: " + origin);
 			}
 		} else if (addressList.contains(origin)==false) {
 			//reject as unknown client

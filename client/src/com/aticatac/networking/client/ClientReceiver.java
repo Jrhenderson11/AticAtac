@@ -7,23 +7,23 @@ import java.net.SocketException;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
-import javafx.concurrent.Task;
-
-public class ClientReceiver extends Task {
+public class ClientReceiver extends Thread {
 
 	private String name;
 	private Model model;
 	private boolean running;
-	private byte[] buffer = new byte[256];
+	private byte[] buffer = new byte[100000];
 	private DatagramSocket socket;
 	private Model oldModel;
 	private int port;
 
 	private UDPClient master;
-		
+	
 	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
 		this.running = false;
@@ -43,33 +43,60 @@ public class ClientReceiver extends Task {
 	}
 
 	@Override
-	public Object call() {
+	public void run() {
 		int count = 0;
 		this.running = true;
 		System.out.println(name + " Listening");
-		
+
 		while (running) {
 
-			// make packet
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				System.out.println("IO error in Client Receiver Thread (TestServer Down)");
+				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
 			}
-			this.model = SerializationUtils.deserialize(packet.getData());
-			
-			if ((model.getX() != oldModel.getX()) && (model.getY() != oldModel.getY())) {
-				count++;
-				System.out.println(count);
+			if (master.getStatus() == Globals.IN_LIMBO) {
+				// deserialise into lobby obj
+				try {
+					LobbyInfo newInfo = SerializationUtils.deserialize(packet.getData());
+					master.setLobbyInfo(newInfo);
+				} catch (Exception e) {
+					//System.out.println("cannot deserialise lobby (is it a model?)");
+				}
+				
+			} else if (master.getStatus() == Globals.IN_LOBBY) {
+				// deserialise into lobby obj
+				try {
+					Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+					master.setLobby(newLobby);
+					if (newLobby.getStarted()==true) {
+						System.out.println("start game");
+						master.setStatus(Globals.IN_GAME);
+					}
+				} catch (Exception e) {
+					//System.out.println("cannot deserialise lobby (is it a model?)");
+				}
+			} else if (master.getStatus() == Globals.IN_GAME) {
+				//make game model
+				try {
+					this.model = SerializationUtils.deserialize(packet.getData());
+				} catch (Exception e) {
+					System.out.println("uh - oh");
+				}
+				if (model == null) {
+				} else {
+				}
+
+				oldModel = model;
 			}
 
-			oldModel = model;
 		}
 		socket.close();
 		System.out.println(name + " r done");
-		return new Object();
+		// return new Object();
 	}
 
 	public void halt() {
