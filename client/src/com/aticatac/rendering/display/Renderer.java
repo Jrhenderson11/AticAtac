@@ -203,13 +203,13 @@ public class Renderer {
 		for (Player player: world.getPlayers()) {
 			Color color = player.getColour();
 			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-			int px = player.getPosition().x;
+			int px = player.getPosition().x; //player position
 			int py = player.getPosition().y;
 			
 			gc.setStroke(color);
 			gc.setLineWidth(1.0);
 			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
-			gc.strokeLine(px, py, px + (l * Math.cos(player.getLookDirection())), py + (l * Math.sin(player.getLookDirection())));
+			gc.strokeLine(px, py, px + (l * Math.sin(player.getLookDirection())), py - (l * Math.cos(player.getLookDirection())));
 			gc.setStroke(opaqueColor);
 			gc.setLineWidth(3);
 			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);

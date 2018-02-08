@@ -81,18 +81,34 @@ public class Tutorial extends Scene {
   	        	Point p = player.getPosition();
   	        	double dy = me.getY() - p.y; //y axis goes down
   	        	double dx = me.getX() - p.x;
-  	        	double r = Math.atan(dy / dx);
+  	        	double r = 0.0;
   	        	
-  	        	//r = 0 means player looking to right.
-  	        	//r increases clockwise to 1.5pi, then drops down to -0.5pi.
-  	        	//may fix later but shouldn't affect trig calculations
+  	        	//upper right angles
+  	        	if (dx > 0 && dy < 0) {
+  	        		r = Math.abs(Math.atan(dx / dy));
+  	        		System.out.println("UR: " + r);
+  	        	}
+  	        		
+  	        	//lower right angles
+  	        	if (dx > 0 && dy > 0) {
+  	        		r = (0.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
+  	        		System.out.println("LR: " + r);
+  	        	}
   	        	
-  	        	//allows looking to left
-  	        	if (dx < 0)
-  	        		r += Math.PI;
+  	        	//lower left angles
+  	        	if (dx < 0 && dy > 0) {
+  	        		r = Math.PI + Math.abs(Math.atan(dx / dy));
+  	        		System.out.println("LL: " + r);
+  	        	}
+  	        	
+  	        	//upper left angles
+  	        	if (dx < 0 && dy < 0) {
+  	        		r = (1.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
+  	        		System.out.println("UL: " + r);
+  	        	}
   	        	
   	        	player.setLookDirection(r);
-  	        	//System.out.println("dx: " + dx + " | dy: " + dy + " | a: " + player.getLookDirection());
+  	        	System.out.println("dx: " + dx + " | dy: " + dy + " | a: " + player.getLookDirection());
   	        }
   	    });
   		
