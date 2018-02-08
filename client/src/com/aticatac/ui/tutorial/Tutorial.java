@@ -86,29 +86,24 @@ public class Tutorial extends Scene {
   	        	//upper right angles
   	        	if (dx > 0 && dy < 0) {
   	        		r = Math.abs(Math.atan(dx / dy));
-  	        		System.out.println("UR: " + r);
   	        	}
   	        		
   	        	//lower right angles
   	        	if (dx > 0 && dy > 0) {
   	        		r = (0.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
-  	        		System.out.println("LR: " + r);
   	        	}
   	        	
   	        	//lower left angles
   	        	if (dx < 0 && dy > 0) {
   	        		r = Math.PI + Math.abs(Math.atan(dx / dy));
-  	        		System.out.println("LL: " + r);
   	        	}
   	        	
   	        	//upper left angles
   	        	if (dx < 0 && dy < 0) {
   	        		r = (1.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
-  	        		System.out.println("UL: " + r);
   	        	}
   	        	
   	        	player.setLookDirection(r);
-  	        	System.out.println("dx: " + dx + " | dy: " + dy + " | a: " + player.getLookDirection());
   	        }
   	    });
   		
