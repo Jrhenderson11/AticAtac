@@ -3,8 +3,8 @@ package com.aticatac.networking.server;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.aticatac.lobby.utils.ClientInfo;
-import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.ClientInfo;
+import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
@@ -25,7 +25,7 @@ public class UDPServer extends Thread{
 	public UDPServer() {
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(4, 0, 1);
+		this.lobbyInfo = new LobbyInfo(4, 0, 1, "lobby1");
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class UDPServer extends Thread{
 	}
 	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
-		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
+		ClientInfo newClient = new ClientInfo("id", name, false, 2, address, destPort, originPort);
 		System.out.println(status == Globals.IN_LIMBO);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
@@ -72,7 +72,7 @@ public class UDPServer extends Thread{
 		} else if (this.status == Globals.IN_LOBBY) {
 			this.lobby.addClient(newClient);
 		}
-		this.lobbyInfo = new LobbyInfo(4, 1 + this.lobby.getPeasants().size(), 1);
+		this.lobbyInfo = new LobbyInfo(4, 1 + this.lobby.getPeasants().size(), 1, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");
 	}
 	

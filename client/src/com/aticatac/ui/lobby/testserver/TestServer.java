@@ -1,13 +1,13 @@
 package com.aticatac.ui.lobby.testserver;
 
+import java.util.ArrayList;
+
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
-import javafx.scene.paint.Color;
+import com.aticatac.lobby.utils.LobbyInfo;
 
-import java.awt.image.AreaAveragingScaleFilter;
-import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class TestServer implements LobbyServer {
 

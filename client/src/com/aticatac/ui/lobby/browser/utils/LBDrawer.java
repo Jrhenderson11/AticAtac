@@ -1,17 +1,19 @@
 package com.aticatac.ui.lobby.browser.utils;
 
-import com.aticatac.lobby.LobbyInfo;
+import java.util.ArrayList;
+
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.ui.lobby.browser.LobbyBrowser;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
-import java.util.ArrayList;
-
 public class LBDrawer {
-    public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
+  
+	public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
 
         gc.save();
 

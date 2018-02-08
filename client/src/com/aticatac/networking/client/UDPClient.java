@@ -5,15 +5,17 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.aticatac.lobby.utils.Lobby;
+import com.aticatac.lobby.ClientInfo;
+import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.LobbyServer;
 import com.aticatac.lobby.utils.LobbyInfo;
-import com.aticatac.lobby.utils.LobbyServer;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
 import javafx.concurrent.Task;
+import javafx.scene.paint.Color;
 
-public class UDPClient extends Task implements LobbyServer{
+public class UDPClient extends Task implements LobbyServer {
 
 	private String name;
 	private InetAddress address;
@@ -25,13 +27,13 @@ public class UDPClient extends Task implements LobbyServer{
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
 	private boolean ready;
-	
+
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(0, 0, 0);
+		this.lobbyInfo = new LobbyInfo(0, 0, 0, "");
 		this.ready = false;
 	}
 
@@ -106,16 +108,15 @@ public class UDPClient extends Task implements LobbyServer{
 	public void connect() {
 		sendData("join");
 	}
-	
+
 	@Override
-	public Lobby joinLobby(int id, String password) {
+	public void joinLobby(int id, String password) {
 		if (this.status == Globals.IN_LIMBO) {
 			sendData("init");
 			this.status = Globals.IN_LOBBY;
 		}
-		return null;
 	}
-	
+
 	@Override
 	public boolean startGame() {
 		if (this.status == Globals.IN_LOBBY) {
@@ -146,6 +147,26 @@ public class UDPClient extends Task implements LobbyServer{
 
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
+		// TODO Auto-generated method stub
+		ArrayList lobbies =  new ArrayList<LobbyInfo>();
+		lobbies.add(this.lobbyInfo);
+		return lobbies;
+	}
+
+	@Override
+	public Lobby updateLobby(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean changeColor(Color color) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ClientInfo myInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}

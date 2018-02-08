@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.aticatac.lobby.utils.ClientInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 

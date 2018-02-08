@@ -9,7 +9,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import com.aticatac.lobby.utils.Lobby;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 
