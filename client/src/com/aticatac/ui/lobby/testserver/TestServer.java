@@ -1,11 +1,12 @@
-package com.aticatac.ui.lobbymenu.testserver;
+package com.aticatac.ui.lobby.testserver;
 
-import com.aticatac.lobby.utils.ClientInfo;
-import com.aticatac.lobby.utils.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
-import com.aticatac.lobby.utils.LobbyServer;
+import com.aticatac.lobby.ClientInfo;
+import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.LobbyInfo;
+import com.aticatac.lobby.LobbyServer;
 import javafx.scene.paint.Color;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class TestServer implements LobbyServer {
@@ -31,9 +32,13 @@ public class TestServer implements LobbyServer {
     }
 
     @Override
-    public Lobby joinLobby(int id, String password) {
+    public Lobby updateLobby(int id) {
+        return null;
+    }
+
+    @Override
+    public void joinLobby(int id, String password) {
         lobbies.get(id).addClient(client);
-        return lobbies.get(id);
     }
 
     @Override
@@ -58,7 +63,23 @@ public class TestServer implements LobbyServer {
     }
 
     @Override
-    public ArrayList<LobbyInfo> getPublicLobbies() {
+    public boolean changeColor(Color color) {
+        return false;
+    }
+
+    @Override
+    public ClientInfo myInfo() {
         return null;
+    }
+
+    @Override
+    public ArrayList<LobbyInfo> getPublicLobbies() {
+
+        ArrayList<LobbyInfo> lobbyInfos = new ArrayList<>();
+        for (int i = 0; i < lobbies.size(); i++) {
+            lobbyInfos.add(new LobbyInfo(4, lobbies.get(i).getPeasants().size() + 1, i, "Testing " + i));
+        }
+
+        return lobbyInfos;
     }
 }

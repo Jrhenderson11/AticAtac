@@ -1,4 +1,4 @@
-package com.aticatac.lobby.utils;
+package com.aticatac.lobby;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -7,14 +7,16 @@ import javafx.scene.paint.Color;
 
 public class ClientInfo  implements Serializable {
 
-	private String username;
+    private final String id;
+    private final String username;
 	private InetAddress address;
 	private int desPort;
 	private int originPort;
     private boolean ready;
     private int colour;	
   
-    public ClientInfo(String username, boolean ready, int colour, InetAddress newAddress, int newDestPort, int newOriginPort) {
+    public ClientInfo(String id, String username, boolean ready, int colour, InetAddress newAddress, int newDestPort, int newOriginPort) {
+        this.id = id;
         this.username = username;
         this.ready = ready;
         this.colour = colour;
