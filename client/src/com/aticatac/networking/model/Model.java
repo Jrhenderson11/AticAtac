@@ -84,7 +84,6 @@ public class Model implements Serializable{
 		} else
 			return false;
 	}
-
 	
 	public int getX() {
 		return this.x;

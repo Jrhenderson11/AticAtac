@@ -34,10 +34,6 @@ public class Main extends Application{
 		th.start();
 
 		client.connect();
-		//join lobby
-		//client.joinLobby();
-		//client.setStatus(Globals.IN_LOBBY);
-		//client.sendData("start");
 
 		System.out.println("Client started and connected");
 		return client;
