@@ -2,7 +2,7 @@ package com.aticatac.ui.mainmenu;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.LobbyServer;
-import com.aticatac.ui.lobby.browser.LobbyBrowser;
+import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.testserver.TestServer;
 import com.aticatac.ui.mainmenu.handlers.*;
 import com.aticatac.ui.mainmenu.utils.MenuItem;
@@ -33,7 +33,7 @@ public class MainMenu extends Scene{
         LobbyServer server = new TestServer(new ClientInfo("127.0.0.1", "Tom", false, Color.GREEN));
 
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", new LobbyBrowser(new Group(), server, this, primaryStage)));
+        menuItems.add(new MenuItem("Find a Lobby", new Browser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
         menuItems.add(new MenuItem("Tutorial", new Tutorial(new Group())));
         menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));

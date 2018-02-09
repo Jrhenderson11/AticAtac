@@ -6,7 +6,6 @@ import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
 import javafx.scene.paint.Color;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class TestServer implements LobbyServer {
@@ -34,12 +33,13 @@ public class TestServer implements LobbyServer {
 
     @Override
     public Lobby updateLobby(int id) {
-        return null;
+        return lobbies.get(id);
     }
 
     @Override
-    public void joinLobby(int id, String password) {
+    public boolean joinLobby(int id, String password) {
         lobbies.get(id).addClient(client);
+        return true;
     }
 
     @Override

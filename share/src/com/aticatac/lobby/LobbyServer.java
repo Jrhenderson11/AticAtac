@@ -10,7 +10,7 @@ public interface LobbyServer {
     Lobby updateLobby(int id);
 
     // Only give full testserver info once client actually joins
-    void joinLobby(int id, String password);
+    boolean joinLobby(int id, String password);
 
     // rup or default
     void readyUp();
