@@ -1,12 +1,15 @@
 package com.aticatac.rendering.tests;
 
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.components.DisplayComponent;
 import com.aticatac.rendering.display.GameWindow;
 import com.aticatac.rendering.display.RenderLayer;
+import com.aticatac.utils.Controller;
 import com.aticatac.world.Level;
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 import javafx.animation.AnimationTimer;
