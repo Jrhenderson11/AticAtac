@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import com.aticatac.world.Level;
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -92,12 +93,16 @@ public class Renderer {
 		
 		//render the level
 		//renderMapBW(g);
+		renderTerritory(g);
 		renderMapNeon(g, Color.RED);
 		
 		//render any other components in the layers
 		for (RenderLayer layer: layers) {
 			layer.render(g, displayRect);
 		}
+		
+		//render players
+		renderPlayers(g);
 	}
 	
 	public void renderMapBW(GraphicsContext g) {
@@ -118,8 +123,8 @@ public class Renderer {
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
-		int glowRadius = 4;
-		int glowArc = 7;
+		int glowRadius = 2;
+		int glowArc = 3;
 		int barWidth = 1;
 		
 		//setup color
@@ -151,7 +156,7 @@ public class Renderer {
 					g.fillRoundRect(drawX, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
 				}
 				//east bar (b ^ d)
 				if ((grid[x+1][y] == 1) ^ (grid[x+1][y+1] == 1)) {
@@ -162,7 +167,7 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
+					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
 				}
 				//south bar (c ^ d)
 				if ((grid[x][y+1] == 1) ^ (grid[x+1][y+1] == 1)) {
@@ -173,7 +178,7 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, barWidth * 2, tileHeight + (barWidth * 2));
+					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
 				}
 				//west bar (a ^ c)
 				if ((grid[x][y] == 1) ^ (grid[x][y+1] == 1)) {
@@ -184,7 +189,49 @@ public class Renderer {
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
-					g.fillRect(drawX - barWidth, drawY - barWidth, tileWidth + (barWidth * 2), barWidth * 2);
+					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
+				}
+			}
+		}
+	}
+	
+	public void renderPlayers(GraphicsContext gc) {
+		int playerSize = 8;
+		double opacity = 0.5;
+		int l = 10; //length of direction pointer
+				
+		for (Player player: world.getPlayers()) {
+			Color color = player.getColour();
+			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+			int px = player.getPosition().x; //player position
+			int py = player.getPosition().y;
+			
+			gc.setStroke(color);
+			gc.setLineWidth(1.0);
+			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
+			gc.strokeLine(px, py, px + (l * Math.sin(player.getLookDirection())), py - (l * Math.cos(player.getLookDirection())));
+			gc.setStroke(opaqueColor);
+			gc.setLineWidth(3);
+			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
+		}
+	};
+	
+	public void renderTerritory(GraphicsContext gc) {
+		int[][] grid = world.getLevel().getGrid();
+		int tileWidth = displayRect.width / world.getLevel().getWidth();
+		int tileHeight = displayRect.height / world.getLevel().getHeight();
+		double opacity = 0.5;
+		double brightness = 0.7;
+		
+		for (int x = 0; x < grid.length; x++) {
+			for (int y = 0; y < grid[0].length; y++) {
+				for (Player player: world.getPlayers()) {
+					if (grid[x][y] == player.getIdentifier()) {
+						Color color = player.getColour();
+						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
+						gc.setFill(opaqueColor);
+						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+					}
 				}
 			}
 		}

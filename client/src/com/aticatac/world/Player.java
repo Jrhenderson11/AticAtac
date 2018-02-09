@@ -1,6 +1,10 @@
 package com.aticatac.world;
 
+import java.awt.Point;
+
 import com.aticatac.utils.Controller;
+
+import javafx.scene.paint.Color;
 
 public class Player {
 	private final static int MINIMUM_PAINT_FOR_SHOOT = 5;
@@ -9,15 +13,17 @@ public class Player {
 	
     private Controller controller;
     private int identifier;
-    private String colour;
+    private Color colour;
     private int paintLevel;
-    private int x;
-    private int y;
+    private Point position;
+    private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     
-    public Player(Controller controller, int identifier, String colour) {
+    public Player(Controller controller, int identifier, Color colour) {
     	this.controller = controller;
-    	this.identifier = identifier;
+    	this.setIdentifier(identifier);
     	this.colour = colour;
+    	this.position = new Point(10, 10);
+    	this.lookDirection = 0.0;
     }
         
     public void makeMovement(char control) {
@@ -45,4 +51,41 @@ public class Player {
     	this.paintLevel = this.paintLevel - PAINT_DECREASE;
     	// make a sensible decrease to paint level
     }
+
+	public Color getColour() {
+		return colour;
+	}
+
+	public void setColour(Color colour) {
+		this.colour = colour;
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+	
+	public void move(int dX, int dY) {
+		this.position.x += dX;
+		this.position.y += dY;
+	}
+
+	public int getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(int identifier) {
+		this.identifier = identifier;
+	}
+
+	public Double getLookDirection() {
+		return lookDirection;
+	}
+
+	public void setLookDirection(Double lookDirection) {
+		this.lookDirection = lookDirection;
+	}
 }
