@@ -1,22 +1,37 @@
 package com.aticatac.ui.lobby.browser.utils;
 
+
+import static java.lang.StrictMath.abs;
+import static java.lang.StrictMath.sin;
+
 import java.util.ArrayList;
 
 import com.aticatac.lobby.utils.LobbyInfo;
-import com.aticatac.ui.lobby.browser.LobbyBrowser;
+import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 
+
 public class LBDrawer {
-  
-	public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
+
+    private static ArrayList<Rectangle> hitboxs;
+
+    // TODO: 100% not where this should be, but whatever.
+    public static ArrayList<Rectangle> getHitboxs() {
+        return hitboxs;
+    }
+
+    public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
 
         gc.save();
 
+        // Probably bad code, I should've used an object, but nevermind
+        hitboxs = new ArrayList<>();
         for (int i = offset; i < lobbies.size(); i++) {
             drawLobbyInfo(gc, i, lobbies.get(i), now);
         }
@@ -29,7 +44,7 @@ public class LBDrawer {
 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
-        boolean selected = i == LobbyBrowser.getSelected();
+        boolean selected = i == Browser.getSelected();
 
         // Name, ID, Current players
         gc.save();
@@ -60,15 +75,21 @@ public class LBDrawer {
         gc.strokeText(players, x + 3 * width / 9, y + height / 13);
         gc.fillText(players, x + 3 * width / 9, y + height / 13);
 
+        // JOIN
+
         if (selected) {
-            gc.setFill(Color.LIGHTGREEN);
+            double animation = (double) now / 500000000;
+            gc.setFill(Color.rgb(0, 200 + (int) (55 * abs(sin(animation))), 0));
         } else {
             gc.setFill(Color.GREEN);
         }
 
         gc.setStroke(Color.BLACK);
-        gc.fillRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
-        gc.strokeRect(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
+        Rectangle hitbox = new Rectangle(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
+        gc.fillRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+        gc.strokeRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+        hitboxs.add(hitbox);
 
 
         gc.setFont(UIDrawer.LOBBYBROWSTEXT);

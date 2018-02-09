@@ -1,14 +1,11 @@
 package com.aticatac.ui.mainmenu;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.aticatac.lobby.LobbyServer;
 import com.aticatac.networking.client.UDPClient;
-import com.aticatac.ui.lobby.browser.LobbyBrowser;
+import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.mainmenu.handlers.MainMenuAnimation;
 import com.aticatac.ui.mainmenu.handlers.MainMenuKeyPressed;
 import com.aticatac.ui.mainmenu.handlers.MainMenuKeyReleased;
@@ -38,7 +35,7 @@ public class MainMenu extends Scene{
         //server = new UDPClient("name",InetAddress.getByName("127.0.0.1"));
         System.out.println(server == null);
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", new LobbyBrowser(new Group(), server, this, primaryStage)));
+        menuItems.add(new MenuItem("Find a Lobby", new Browser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
         menuItems.add(new MenuItem("Tutorial", new Tutorial(new Group())));
         menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));

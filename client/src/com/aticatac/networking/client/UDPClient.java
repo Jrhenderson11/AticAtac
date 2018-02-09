@@ -112,11 +112,14 @@ public class UDPClient extends Task implements LobbyServer {
 	}
 
 	@Override
-	public void joinLobby(int id, String password) {
+	public boolean joinLobby(int id, String password) {
 		if (this.status == Globals.IN_LIMBO) {
 			sendData("init");
 			this.status = Globals.IN_LOBBY;
+			return true;
 		}
+		return false;
+		
 	}
 
 	@Override
