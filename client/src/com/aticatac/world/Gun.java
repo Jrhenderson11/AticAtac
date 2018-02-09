@@ -1,12 +1,9 @@
-package com.aticatac.keypress;
-import javafx.application.Application;
+package com.aticatac.world;
+
 import javafx.event.EventHandler;
 import javafx.event.EventType;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 public class Gun{
 	private int x;

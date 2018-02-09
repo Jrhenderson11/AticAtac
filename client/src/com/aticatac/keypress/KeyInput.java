@@ -2,6 +2,8 @@ package com.aticatac.keypress;
 
 import java.util.ArrayList;
 
+import com.aticatac.world.Bullet;
+import com.aticatac.world.Gun;
 import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
