@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
+import com.aticatac.world.items.Bullet;
+import com.aticatac.world.items.Collidable;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -95,6 +97,7 @@ public class Renderer {
 		//renderMapBW(g);
 		renderTerritory(g);
 		renderMapNeon(g, Color.RED);
+		renderBullets(g);
 		
 		//render any other components in the layers
 		for (RenderLayer layer: layers) {
@@ -105,6 +108,8 @@ public class Renderer {
 		renderPlayers(g);
 	}
 	
+	
+
 	public void renderMapBW(GraphicsContext g) {
 		//render the level
 		g.setFill(Color.BLACK);
@@ -234,6 +239,13 @@ public class Renderer {
 					}
 				}
 			}
+		}
+	}
+	
+	private void renderBullets(GraphicsContext g) {
+		for (Bullet bullet: world.getBullets()) {
+			g.setFill(world.getPlayerColour(bullet.getShooter()));
+			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
 		}
 	}
 	
