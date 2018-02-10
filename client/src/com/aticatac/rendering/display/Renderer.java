@@ -206,7 +206,7 @@ public class Renderer {
 		int l = 10; //length of direction pointer
 				
 		for (Player player: world.getPlayers()) {
-			Color color = player.getColour();
+			Color color = Color.BLUE;//player.getColour();
 			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 			int px = player.getPosition().x; //player position
 			int py = player.getPosition().y;
@@ -232,7 +232,7 @@ public class Renderer {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
 					if (grid[x][y] == player.getIdentifier()) {
-						Color color = player.getColour();
+						Color color = Color.BLUE;//player.getColour();
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
 						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
@@ -244,7 +244,8 @@ public class Renderer {
 	
 	private void renderBullets(GraphicsContext g) {
 		for (Bullet bullet: world.getBullets()) {
-			g.setFill(world.getPlayerColour(bullet.getShooter()));
+			//g.setFill(world.getPlayerColour(bullet.getShooter()));
+			g.setFill(Color.BLUE);
 			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
 		}
 	}

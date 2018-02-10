@@ -7,7 +7,8 @@ import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
+import com.aticatac.world.Level;
+import com.aticatac.world.World;
 
 public class UDPServer extends Thread{
 	
@@ -16,7 +17,7 @@ public class UDPServer extends Thread{
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
 	private ServerSender sender;
-	private Model model;
+	private World model;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
 		
@@ -30,8 +31,9 @@ public class UDPServer extends Thread{
 
 	@Override
 	public void run() {
-		
-		this.model = new Model(0, 0);
+		Level level = new Level(100, 100);
+		level.randomiseMap();
+		this.model = new World(level);
 		this.receiver = new ServerReciever(model, clientList, this); 
 		this.sender = new ServerSender(model, clientList, this);
 		receiver.start();

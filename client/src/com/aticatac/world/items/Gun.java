@@ -1,11 +1,12 @@
 package com.aticatac.world.items;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-public abstract class Gun {
+public abstract class Gun implements Serializable{
 
 	
 	/**

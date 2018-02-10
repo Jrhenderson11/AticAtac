@@ -11,15 +11,16 @@ import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
+import com.aticatac.world.World;
 
 public class ClientReceiver extends Thread {
 
 	private String name;
-	private Model model;
+	private World model;
 	private boolean running;
 	private byte[] buffer = new byte[100000];
 	private DatagramSocket socket;
-	private Model oldModel;
+	
 	private int port;
 
 	private UDPClient master;
@@ -27,7 +28,6 @@ public class ClientReceiver extends Thread {
 	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
 		this.running = false;
-		this.oldModel = new Model(0, 0);
 		// select next open port
 		this.port = Globals.CLIENT_PORT;
 		while (true) {
@@ -64,8 +64,10 @@ public class ClientReceiver extends Thread {
 					LobbyInfo newInfo = SerializationUtils.deserialize(packet.getData());
 					master.setLobbyInfo(newInfo);
 				} catch (Exception e) {
-					//System.out.println("cannot deserialise lobby (is it a model?)");
+					
+					System.out.println("cannot deserialise lobbyinfo (is it a model?)");
 				}
+				System.out.println("getting info");
 				
 			} else if (master.getStatus() == Globals.IN_LOBBY) {
 				// deserialise into lobby obj
@@ -77,8 +79,9 @@ public class ClientReceiver extends Thread {
 						master.setStatus(Globals.IN_GAME);
 					}
 				} catch (Exception e) {
-					//System.out.println("cannot deserialise lobby (is it a model?)");
+					System.out.println("cannot deserialise lobby (is it a model?)");
 				}
+				System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
 				//make game model
 				try {
@@ -86,12 +89,11 @@ public class ClientReceiver extends Thread {
 				} catch (Exception e) {
 					System.out.println("uh - oh");
 				}
+				//System.out.println("in game");
 				if (model == null) {
 				} else {
 				}
-
-				oldModel = model;
-			}
+	}
 
 		}
 		socket.close();
@@ -104,7 +106,7 @@ public class ClientReceiver extends Thread {
 		socket.close();
 	}
 
-	public Model getModel() {
+	public World getModel() {
 		return this.model;
 	}
 

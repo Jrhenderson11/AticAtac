@@ -10,17 +10,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
+import com.aticatac.world.World;
 
 public class ServerSender extends Thread {
 	
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
-	private Model model;
+	private World model;
 	private boolean running;
 	private DatagramSocket socket;
 	private UDPServer master;
 	
-	public ServerSender(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
+	public ServerSender(World newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;

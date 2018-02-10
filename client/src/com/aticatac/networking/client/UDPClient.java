@@ -10,7 +10,7 @@ import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyServer;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
+import com.aticatac.world.World;
 
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
@@ -52,8 +52,6 @@ public class UDPClient extends Task implements LobbyServer {
 			receiver.join();
 		} catch (Exception e) {
 		}
-		// sender.cancel();
-		// receiver.cancel();
 
 		// System.out.println(name + " stopped");
 		return new Object();
@@ -74,7 +72,7 @@ public class UDPClient extends Task implements LobbyServer {
 		// receiver.cancel();
 	}
 
-	public Model getModel() {
+	public World getModel() {
 		return this.receiver.getModel();
 	}
 

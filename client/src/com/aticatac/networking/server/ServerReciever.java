@@ -5,22 +5,25 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
+import com.aticatac.world.World;
+
+import javafx.scene.input.KeyCode;
 
 public class ServerReciever extends Thread {
 
 	private DatagramSocket socket;
-	private Model model;
+	private World model;
 	private boolean running;
 	private byte[] buffer = new byte[256];
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private CopyOnWriteArrayList<InetAddress> addressList;
 	private UDPServer master;
 	
-	public ServerReciever(Model newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
+	public ServerReciever(World newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
@@ -112,21 +115,22 @@ public class ServerReciever extends Thread {
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {
-		
-			
+				
 			this.master.halt();
-			
-			
+				
 			//		GAME
 		} else if (parts[0].equals("input")) {
+			System.out.println(data);
 			//client.sendData("input:"+moveUp + ":"+moveDown + ":"+moveLeft + ":"+moveRight + ":" + run + ":"+speed);
-			boolean up = Boolean.parseBoolean(parts[1]);
-			boolean down = Boolean.parseBoolean(parts[2]);
-			boolean left = Boolean.parseBoolean(parts[3]);
-			boolean right = Boolean.parseBoolean(parts[4]);
-			boolean run = Boolean.parseBoolean(parts[5]);
-			int speed = Integer.parseInt(parts[6]);
-			model.update(up, down, left, right, run, speed);
+			ArrayList<KeyCode> input = new ArrayList<KeyCode>();
+			for (String letter: parts[1].replaceAll("\\[", "").replaceAll("\\]", "").split(",")) {
+				
+				input.add(KeyCode.getKeyCode(letter));
+				
+			}
+			double dir = Double.parseDouble(parts[parts.length-1]); 
+			model.handleInput(input, dir);
+			model.update();
 		}
 	}
 }

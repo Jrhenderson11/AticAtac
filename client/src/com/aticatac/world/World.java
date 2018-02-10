@@ -2,17 +2,23 @@ package com.aticatac.world;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.items.Bullet;
 import com.aticatac.world.items.Collidable;
+import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.SplatGun;
+import com.aticatac.world.items.SprayGun;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
-
-public class World {
+public class World implements Serializable {
 	private Collection<Player> players;
 	private Collection<Bullet> bullets;
 	private Level level;
@@ -26,23 +32,93 @@ public class World {
 		this.bullets = new LinkedList<Bullet>();
 	}
 
+	//sets up world
+	public void init() {
+		
+        Player player = new Player(Controller.REAL, 2, 2);
+        player.setPosition(new Point(50, 50));
+        this.addPlayer(player);
+	}
+	
 	public Level getLevel() {
 		return level;
 	}
 
-	//calls the update method for all Collideables
-	//this is currently used for moving the bullets.
+	// calls the update method for all Collideables
+	// this is currently used for moving the bullets.
 	public void update() {
-		//update bullets
-		for (Collidable collidable: bullets) {
+		// update bullets
+		for (Collidable collidable : bullets) {
 			collidable.update(this);
 		}
-		//update players
-		for (Player player: players) {
+		// update players
+		for (Player player : players) {
 			player.update();
 		}
 	}
-	
+
+	public void handleInput(ArrayList<KeyCode> input, double dir) {
+		for (Player player : this.players) {
+
+			// left
+			if (input.contains(KeyCode.A)) {
+				player.move(-2, 0);
+				Point p = this.displayPositionToCoords(player.getPosition());
+				if (level.getGrid()[p.x][p.y] == 1) { // if the grid coordinate
+					player.move(2, 0);
+				}
+			}
+			// right
+			if (input.contains(KeyCode.D)) {
+				player.move(2, 0);
+				Point p = this.displayPositionToCoords(player.getPosition());
+				if (level.getGrid()[p.x][p.y] == 1) {
+					player.move(-2, 0);
+				}
+			}
+			// up
+			if (input.contains(KeyCode.W)) {
+				player.move(0, -2);
+				Point p = this.displayPositionToCoords(player.getPosition());
+				if (level.getGrid()[p.x][p.y] == 1) {
+					player.move(0, 2);
+				}
+			}
+			// down
+			if (input.contains(KeyCode.S)) {
+				player.move(0, 2);
+				Point p = this.displayPositionToCoords(player.getPosition());
+				if (level.getGrid()[p.x][p.y] == 1) {
+					player.move(0, -2);
+				}
+			}
+
+			// Gun spawn in, using for testing, remove in game
+			// Shoot gun
+			if (input.contains(KeyCode.I)) {
+				player.setGun(new ShootGun(player));
+				input.remove(KeyCode.I);
+			}
+			// Splat gun
+			if (input.contains(KeyCode.O)) {
+				player.setGun(new SplatGun(player));
+				input.remove(KeyCode.O);
+
+			}
+			// Spray gun
+			if (input.contains(KeyCode.P)) {
+				player.setGun(new SprayGun(player));
+				input.remove(KeyCode.P);
+			}
+
+			Point p = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[p.x][p.y] == 0) {
+				level.updateCoords(p.x, p.y, player.getIdentifier());
+			}
+		}
+
+	}
+
 	public Collection<Bullet> getBullets() {
 		return bullets;
 	}
@@ -50,30 +126,31 @@ public class World {
 	public boolean addBullet(Bullet collidable) {
 		return bullets.add(collidable);
 	}
-	
+
 	public boolean removeBullet(Bullet bullet) {
 		return bullets.remove(bullet);
 	}
-	
+
 	public Collection<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public boolean addPlayer(Player player) {
 		return players.add(player);
 	}
-	
-	public Color getPlayerColour(int playerIdentifier) {
-		for (Player player: players) {
+
+	public int getPlayerColour(int playerIdentifier) {
+		for (Player player : players) {
 			if (player.getIdentifier() == playerIdentifier) {
 				return player.getColour();
 			}
 		}
-		return null; 
+		return 0;
 	}
-	
+
 	/**
-	 * Gets the corresponding map coordinate from the given position within the specified size of the display.
+	 * Gets the corresponding map coordinate from the given position within the
+	 * specified size of the display.
 	 */
 	public Point displayPositionToCoords(Point displayPosition, Dimension displaySize) {
 		int tileWidth = displaySize.width / level.getWidth();
@@ -85,22 +162,24 @@ public class World {
 	 * As above but with the game's default dislpay dimension.
 	 */
 	public Point displayPositionToCoords(Point displayPosition) {
-		return displayPositionToCoords(displayPosition, new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
+		return displayPositionToCoords(displayPosition,
+				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
 	}
-	
+
 	/**
-	 * Gets the position of center of the given coordinates 
+	 * Gets the position of center of the given coordinates
 	 */
 	public Point coordsToDisplayPosition(Point coords, Dimension displaySize) {
 		int tileWidth = displaySize.width / level.getWidth();
 		int tileHeight = displaySize.height / level.getHeight();
 		return new Point((coords.x * tileWidth) + (tileWidth / 2), (coords.y * tileHeight) + (tileHeight / 2));
 	}
-	
+
 	/**
 	 * As above but with the game's default display dimension
 	 */
 	public Point coordsToDisplayPosition(Point coords) {
-		return coordsToDisplayPosition(coords, new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
+		return coordsToDisplayPosition(coords,
+				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
 	}
 }

@@ -2,10 +2,11 @@ package com.aticatac.world.items;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import com.aticatac.world.World;
 
-public abstract class Bullet implements Collidable {
+public abstract class Bullet implements Collidable, Serializable{
 	
 	/**
 	 * The maximum range of the gun

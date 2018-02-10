@@ -149,7 +149,7 @@ public class GameTestClient extends Application {
 				} else {
 
 					// update model
-					model = client.getModel();
+				//	model = client.getModel();
 					client.sendData("input:" + moveUp + ":" + moveDown + ":" + moveLeft + ":" + moveRight + ":" + run
 							+ ":" + speed);
 
