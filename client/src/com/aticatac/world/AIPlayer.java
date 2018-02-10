@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class AIPlayer extends Player {
 
-	private static final int PERCENTAGE_TO_MOVE = 85;
+	private final int PERCENTAGE_TO_MOVE = 85;
 	private Level level;
 	private LinkedList<Point> currentPath;
 
@@ -20,21 +20,44 @@ public class AIPlayer extends Player {
 		this.level = level;
 	}
 
-	// @Override
-	public char getAction(Point[] otherPlayers) {
-		int[][] reducedMap = this.level.getReducedMap(this.identifier);
+	public void makeDecision(Point[] otherPlayers) {
+		// int[][] reducedMap = level.getReducedMap(identifier);
 
-		if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
-			// If the area is mostly covered by the players own paint
-			if (!this.currentPath.isEmpty()) {
-				Point point = this.closestFreePoint();
+		boolean foundTarget = false;
+
+		if (!currentPath.isEmpty()) {
+			for (Point player : otherPlayers) {
+				if (level.hasLOS(position, player) && inRange(player, gun)) {
+					// Spray or spit gun
+					Point target = player.getLocation();
+					double angle = calculateLookDirection(target);
+					setLookDirection(angle);
+					// Decide between spray and spit weapon depending on ammunition levels of each??
+					gun.shoot(target);
+					foundTarget = true;
+					break;
+				}
+			}
+			if(!foundTarget) {
+				Point point = closestFreePoint();
 				pathToFreePoint(point);
-				this.doAction('p');
+				doAction('p');
+			}
+		}else {
+			doAction('p');
+		}
+
+		/*if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
+			// If the area is mostly covered by the players own paint
+			if (!currentPath.isEmpty()) {
+				Point point = closestFreePoint();
+				pathToFreePoint(point);
+				doAction('p');
 			}
 		} else {
 			// boolean foundTarget = false;
 			for (Point player : otherPlayers) {
-				if (inRange(player, gun)) {
+				if (level.hasLOS(position, player) && inRange(player, gun)) {
 					// Spray or spit gun
 					Point target = player.getLocation();
 					double angle = calculateLookDirection(target);
@@ -45,13 +68,13 @@ public class AIPlayer extends Player {
 					break;
 				}
 			}
+			
 			/*
 			 * if(!foundTarget) { // If no player is in the range of either of the guns,
-			 * uses the splat gun Point direction = getQuadrant(gun); this.doAction('s',
+			 * uses the splat gun Point direction = getQuadrant(gun); doAction('s',
 			 * gun, direction); }
-			 */
-		}
-		return 0;
+			 
+		 */
 	}
 
 	public double calculateLookDirection(Point target) {
@@ -64,17 +87,17 @@ public class AIPlayer extends Player {
 			angle = Math.atan(Math.abs(target.getY() - position.getY()) / Math.abs(target.getX() - position.getX()));
 		}
 
-		if (target.getY() >= position.getY() && target.getX() < position.getX()) {
+		if (target.getY() <= position.getY() && target.getX() < position.getX()) {
 			// If in quadrant II
 			return (Math.PI - angle);
-		} else if (target.getY() < position.getY() && target.getX() <= position.getX()) {
-			// If in quadrant III or if pi/2 in neg y direction
+		} else if (target.getY() > position.getY() && target.getX() <= position.getX()) {
+			// If in quadrant III or if pi/2 in pos y direction
 			return (Math.PI + angle);
-		} else if (target.getY() < position.getY() && target.getX() > position.getX()) {
+		} else if (target.getY() > position.getY() && target.getX() > position.getX()) {
 			// If in quadrant IV
 			return ((2 * Math.PI) - angle);
 		}
-		// Otherwise it is in quadrant I or pi/2 in pos y direction
+		// Otherwise it is in quadrant I or pi/2 in neg y direction
 		return angle;
 	}
 
@@ -128,7 +151,7 @@ public class AIPlayer extends Player {
 		// if this is odd then it is easy, even not so much
 		for (int i = -(splatCoverage / 2); i < (splatCoverage / 2) + 1; i++) {
 			for (int j = -(splatCoverage / 2); j < (splatCoverage / 2) + 1; j++) {
-				coord = this.level.getCoords(p.x + i, p.y + j);
+				coord = level.getCoords(p.x + i, p.y + j);
 				if (coord != identifier && coord != 1 && coord != -1) {
 					x++;
 				}
@@ -157,14 +180,8 @@ public class AIPlayer extends Player {
 	public void doAction(char c) {
 		assert (c == 'p');
 		// Only should be called with 'p'
-		Point current = currentPath.poll();
-		Point next;
-		while (!this.currentPath.isEmpty()) {
-			next = currentPath.poll();
-			move(next.x - current.x, next.y - current.y);
-			current = next;
-		}
-
+		Point next = currentPath.poll();
+		move(next.x - position.x, next.y - position.y);
 	}
 
 	public Point closestFreePoint() {
@@ -175,7 +192,7 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			for (int j = -i; j < i; j += 2) {
 				for (int k = -i; k < i; k += 2) {
-					if (this.level.getCoords(position.x + j, position.y + k) == 0) {
+					if (level.getCoords(position.x + j, position.y + k) == 0) {
 						foundClosest = true;
 						t = new Point(position.x + j, position.y + k);
 						break;
@@ -189,12 +206,6 @@ public class AIPlayer extends Player {
 
 	// get the path that the ai player will take to reach the free Point
 	public void pathToFreePoint(Point endPoint) {
-		currentPath = (new AStar(this.getCurrentPoint(), endPoint, this.level, this.identifier)).getPath();
+		currentPath = (new AStar(getPosition(), endPoint, level, identifier)).getPath();
 	}
-
-	private Point getCurrentPoint() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
