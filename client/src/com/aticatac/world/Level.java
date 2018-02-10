@@ -144,9 +144,9 @@ public class Level {
 		//increase outwards from either side center point
 		for (int i = 0; i < length/2; i++) {
 			int x1 = (int) (posX + (i * Math.sin(direction))); //one direction
-			int y1 = (int) (posY + (i * Math.cos(direction)));
+			int y1 = (int) (posY - (i * Math.cos(direction)));
 			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); //the opposite direction
-			int y2 = (int) (posY + (i * Math.cos(direction + Math.PI))); 
+			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI))); 
 			updateCoords(x1, y1, colour);
 			updateCoords(x2, y2, colour);
 		}
