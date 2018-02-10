@@ -32,14 +32,14 @@ public class World implements Serializable {
 		this.bullets = new LinkedList<Bullet>();
 	}
 
-	//sets up world
+	// sets up world
 	public void init() {
-		
-        Player player = new Player(Controller.REAL, 2, 2);
-        player.setPosition(new Point(50, 50));
-        this.addPlayer(player);
+
+		Player player = new Player(Controller.REAL, 2, 2);
+		player.setPosition(new Point(50, 50));
+		this.addPlayer(player);
 	}
-	
+
 	public Level getLevel() {
 		return level;
 	}
@@ -58,64 +58,74 @@ public class World implements Serializable {
 	}
 
 	public void handleInput(ArrayList<KeyCode> input, double dir) {
-		for (Player player : this.players) {
+		// TODO: replace with specific player
 
-			// left
-			if (input.contains(KeyCode.A)) {
-				player.move(-2, 0);
-				Point p = this.displayPositionToCoords(player.getPosition());
-				if (level.getGrid()[p.x][p.y] == 1) { // if the grid coordinate
-					player.move(2, 0);
-				}
-			}
-			// right
-			if (input.contains(KeyCode.D)) {
-				player.move(2, 0);
-				Point p = this.displayPositionToCoords(player.getPosition());
-				if (level.getGrid()[p.x][p.y] == 1) {
-					player.move(-2, 0);
-				}
-			}
-			// up
-			if (input.contains(KeyCode.W)) {
-				player.move(0, -2);
-				Point p = this.displayPositionToCoords(player.getPosition());
-				if (level.getGrid()[p.x][p.y] == 1) {
-					player.move(0, 2);
-				}
-			}
-			// down
-			if (input.contains(KeyCode.S)) {
-				player.move(0, 2);
-				Point p = this.displayPositionToCoords(player.getPosition());
-				if (level.getGrid()[p.x][p.y] == 1) {
-					player.move(0, -2);
-				}
-			}
-
-			// Gun spawn in, using for testing, remove in game
-			// Shoot gun
-			if (input.contains(KeyCode.I)) {
-				player.setGun(new ShootGun(player));
-				input.remove(KeyCode.I);
-			}
-			// Splat gun
-			if (input.contains(KeyCode.O)) {
-				player.setGun(new SplatGun(player));
-				input.remove(KeyCode.O);
-
-			}
-			// Spray gun
-			if (input.contains(KeyCode.P)) {
-				player.setGun(new SprayGun(player));
-				input.remove(KeyCode.P);
-			}
-
+		Player player = (Player) players.toArray()[0];
+		// left
+		if (input.contains(KeyCode.A)) {
+	
+			player.move(-2, 0);
 			Point p = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[p.x][p.y] == 0) {
-				level.updateCoords(p.x, p.y, player.getIdentifier());
+			if (level.getGrid()[p.x][p.y] == 1) {
+				player.move(2, 0);
 			}
 		}
+		// System.out.println(input.size());
+		// right
+		if (input.contains(KeyCode.D)) {
+		
+			player.move(2, 0);
+			Point p = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[p.x][p.y] == 1) {
+				player.move(-2, 0);
+			}
+		}
+		// System.out.println(input.size());
+		// up
+		if (input.contains(KeyCode.W)) {
+		
+			player.move(0, -2);
+			Point p = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[p.x][p.y] == 1) {
+				player.move(0, 2);
+			}
+		}
+		// System.out.println(input.size());
+		// down
+		if (input.contains(KeyCode.S)) {
+		
+			player.move(0, 2);
+			Point p = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[p.x][p.y] == 1) {
+				player.move(0, -2);
+			}
+		}
+		// System.out.println(input.size());
+
+		// Gun spawn in, using for testing, remove in game
+		// Shoot gun
+		if (input.contains(KeyCode.I)) {
+			player.setGun(new ShootGun(player));
+			// input.remove(KeyCode.I);
+		}
+		// Splat gun
+		if (input.contains(KeyCode.O)) {
+			player.setGun(new SplatGun(player));
+			// input.remove(KeyCode.O);
+
+		}
+		// Spray gun
+		if (input.contains(KeyCode.P)) {
+			player.setGun(new SprayGun(player));
+			// input.remove(KeyCode.P);
+		}
+
+		Point p = this.displayPositionToCoords(player.getPosition());
+		if (level.getGrid()[p.x][p.y] == 0) {
+			level.updateCoords(p.x, p.y, player.getIdentifier());
+		}
+
+		
 
 	}
 

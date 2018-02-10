@@ -47,7 +47,7 @@ public class ClientReceiver extends Thread {
 		int count = 0;
 		this.running = true;
 		System.out.println(name + " Listening");
-
+		int numFail=0;
 		while (running) {
 
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -79,6 +79,10 @@ public class ClientReceiver extends Thread {
 						master.setStatus(Globals.IN_GAME);
 					}
 				} catch (Exception e) {
+					numFail++;
+					if (numFail>20) { 
+						master.setStatus(Globals.IN_GAME);
+					}
 					System.out.println("cannot deserialise lobby (is it a model?)");
 				}
 				System.out.println("in lobby");

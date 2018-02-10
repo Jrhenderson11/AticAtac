@@ -135,10 +135,8 @@ public class TutorialNetworked extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	System.out.println(client.getStatus());
   	        	client.sendData("input:" + input.toString() + ":0");
   	        	World world = client.getModel();
-  	        	System.out.println(world==null);
   	        	renderer.setWorld(world);
   	        	
   	        	//draw scene
