@@ -145,8 +145,8 @@ public class Level {
 		for (int i = 0; i < length/2; i++) {
 			int x1 = (int) (posX + (i * Math.sin(direction))); //one direction
 			int y1 = (int) (posY + (i * Math.cos(direction)));
-			int x2 = (int) (posX - (i * Math.sin(direction + Math.PI))); //the opposite direction
-			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI))); 
+			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); //the opposite direction
+			int y2 = (int) (posY + (i * Math.cos(direction + Math.PI))); 
 			updateCoords(x1, y1, colour);
 			updateCoords(x2, y2, colour);
 		}
@@ -159,19 +159,19 @@ public class Level {
 		for (int x = 0; x <= radius; x++) {
 			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
 				if (posY + y < (height - 1)) {
-					if (posX + x < (width - 1) && grid[posY + y][posX + x]!=blockVal) {
-						grid[posY + y][posX + x] = fillVal;
+					if (posX + x < (width - 1) && grid[posX + x][posY + y]!=blockVal) {
+						grid[posX + x][posY + y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posY + y][posX - x]!=blockVal) {
-						grid[posY + y][posX - x] = fillVal;
+					if ((posX - x > 0) && grid[posX - x][posY + y]!=blockVal) {
+						grid[posX - x][posY + y] = fillVal;
 					}
 				}
-				if ((posY - y > 0) && grid[posY - y][posX + x]!=blockVal) {
+				if ((posY - y > 0) && grid[posX + x][posY - y]!=blockVal) {
 					if (posX + x < (width - 1)) {
-						grid[posY - y][posX + x] = fillVal;
+						grid[posX + x][posY - y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posY - y][posX - x]!=blockVal) {
-						grid[posY - y][posX - x] = fillVal;
+					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {
+						grid[posX - x][posY - y] = fillVal;
 					}
 				}
 			}
