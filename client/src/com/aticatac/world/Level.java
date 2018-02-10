@@ -104,6 +104,25 @@ public class Level {
 		}
 		return count;
 	}
+
+	//returns whether 1 x,y pos can see another (direct line with no walls in between)
+	public boolean hasLOS(int x1, int y1, int x2, int y2) {
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+		float m = dy / dx;
+		int step = 1;
+		if (dx<0) {
+			step = -1;
+		}
+
+		for (int x=0; x!= dx; x+=step) {
+			int y = (int) m*x;
+			if (grid[x][y]==1) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public void updateCoords(int x, int y, int val) {
 		this.grid[x][y] = val;
