@@ -133,6 +133,24 @@ public class Level {
 		//placeholder: make circle radius 5
 		this.makeCircle(posX, posY, 5, colour, 1);
 	}
+	
+	public void makeSpray(int posX, int posY, double direction, int colour) {
+		//placeholder: make spray of length 6, with the center at the given position
+		int length = 6;
+		
+		//paint center point
+		updateCoords(posX, posY, colour);
+		
+		//increase outwards from either side center point
+		for (int i = 0; i < length/2; i++) {
+			int x1 = (int) (posX + (i * Math.sin(direction))); //one direction
+			int y1 = (int) (posY + (i * Math.cos(direction)));
+			int x2 = (int) (posX - (i * Math.sin(direction + Math.PI))); //the opposite direction
+			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI))); 
+			updateCoords(x1, y1, colour);
+			updateCoords(x2, y2, colour);
+		}
+	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
 		int width = grid.length;

@@ -69,4 +69,20 @@ public class World {
 	public Point displayPositionToCoords(Point displayPosition) {
 		return displayPositionToCoords(displayPosition, new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
 	}
+	
+	/**
+	 * Gets the position of center of the given coordinates 
+	 */
+	public Point coordsToDisplayPosition(Point coords, Dimension displaySize) {
+		int tileWidth = displaySize.width / level.getWidth();
+		int tileHeight = displaySize.height / level.getHeight();
+		return new Point((coords.x * tileWidth) + (tileWidth / 2), (coords.y * tileHeight) + (tileHeight / 2));
+	}
+	
+	/**
+	 * As above but with the game's default display dimension
+	 */
+	public Point coordsToDisplayPosition(Point coords) {
+		return coordsToDisplayPosition(coords, new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
+	}
 }
