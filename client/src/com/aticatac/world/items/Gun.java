@@ -1,63 +1,101 @@
 package com.aticatac.world.items;
 
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import java.awt.Point;
 
-public class Gun{
-	private int x;
-	private int y;
-	private int speed;
-	private Scene scene;
-	private double targetX;
-	private double targetY;
-	private boolean aimRunning;
+import com.aticatac.world.Player;
+import com.aticatac.world.World;
 
-	public Gun(Scene pScene){
-		scene = pScene;
-		speed = 1;
-		aimRunning = false;
-	}
+public abstract class Gun {
 
-	public void aim(){
-		
-		scene.setOnMousePressed(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent event) {
-				EventType<MouseEvent> e =  MouseEvent.MOUSE_CLICKED;
-				aimRunning = true;
-				System.out.println("X: " + event.getX() + "\nY:" + event.getY());
-				targetX =  event.getX();
-				targetY = event.getY();
-			}
-		});
-		
-	}
+	/**
+	 * The maximum range of the gun
+	 */
+	protected final int range;
+	/**
+	 * The duration of the 'cooldown' between shots
+	 */
+	protected final int cooldownTime;
+	/**
+	 * The current tick of the cooldown
+	 */
+	private int currentCooldown;
+	/**
+	 * The Player using the gun
+	 */
+	private Player user;
 	
-	public double[] calcDirection(double pX, double pY){
-		double xDiff, yDiff, angle;
-		xDiff = pX - targetX;
-		yDiff = targetY - pY;
-		
-		angle = Math.atan2(xDiff, yDiff);
-		
-		double velocityX = speed*Math.cos(angle);
-		double velocityY = speed*Math.sin(angle);
-		
-		double[] velocity = {velocityX, velocityY};
-
-		return velocity;
-		
+	
+	// -----------
+	// Constructor
+	// -----------
+	
+	
+	/**
+	 * @param user The Player using the gun
+	 * @param range The maximum range of the gun
+	 * @param cooldownTime The cooldown between shots
+	 */
+	public Gun(Player user, int range, int cooldownTime) {
+		this.range = range;
+		this.cooldownTime = cooldownTime;
+		this.currentCooldown = 0;
+		this.user = user;
 	}
 	
-	public boolean isAimRunning(){
-		return aimRunning;
+	
+	// -------
+	// Methods
+	// -------
+	
+	/**
+	 * Fires a bullet.
+	 * 
+	 * Implementations should
+	 * * check ready() before firing
+	 * * add itself to the given world
+	 * 
+	 * @param direction The direction the bullet is fired
+	 * @param target The target tile coordinate (where the player clicked when firing)
+	 * @param world The world to add the bullet to.
+	 * @return True if the gun was not in cooldown and fired a bullet.
+	 */
+	public abstract boolean fire(double direction, Point target, World world);
+	
+	/**
+	 * Checks whether the gun is in cooldown or not
+	 * @return True if the gun is not in cooldown and ready to fire.
+	 */
+	public boolean ready() {
+		return currentCooldown <= 0;
 	}
 	
+	/**
+	 * Called by World.update(), ticks the cooldown timer
+	 */
+	public void update() {
+		currentCooldown--;
+	}
+	
+	/**
+	 * Sets the gun into cooldown, meaning it cannot fire until the duration is up
+	 */
+	public void resetCooldown() {
+		currentCooldown = cooldownTime;
+	}
 
 
+	// -------------------
+	// Getters and Setters
+	// -------------------
 	
 	
+	public Player getUser() {
+		return user;
+	}
+
+
+	public void setUser(Player user) {
+		this.user = user;
+	}
 	
 }

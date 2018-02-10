@@ -30,7 +30,7 @@ public class World {
 	//this is currently used for moving the bullets.
 	public void update() {
 		for (Collidable collidable: collidables) {
-			collidable.update(this); //passes 
+			collidable.update(this);
 		}
 	}
 	

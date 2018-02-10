@@ -5,29 +5,24 @@ import java.awt.Rectangle;
 
 import com.aticatac.world.World;
 
-/**
- * Base Class for a generic bullet
- * @author dave
- *
- */
-public class Bullet implements Collidable {
+public abstract class Bullet implements Collidable {
 	
 	/**
 	 * Direction the bullet was fired in. Stored in radians, where 'north' (up) is 0 rads, increasing in value clockwise.
 	 */
-	private double direction;
+	protected double direction;
 	/**
 	 * Distance the bullet travels evey update.
 	 */
-	private int moveSpeed;
+	protected int moveSpeed;
 	/**
 	 * Rectangle defining the collision boundaries.
 	 */
-	private Rectangle rect;
+	protected Rectangle rect;
 	/**
 	 * The player that fired the bullet.
 	 */
-	private int shooter;
+	protected int shooter;
 	
 	
 	// -----------
@@ -51,7 +46,7 @@ public class Bullet implements Collidable {
 	/**
 	 * Moves the bullet in the initialised direction, distance depends on moveSpeed
 	 */
-	private void move() {
+	public void move() {
 		int dx = (int) (moveSpeed * Math.sin(direction));
 		int dy = (int) (moveSpeed * Math.cos(direction));
 		translate(dx, dy);
@@ -68,7 +63,7 @@ public class Bullet implements Collidable {
 	}
 	
 	/**
-	 * Updates the world, will call 'kill' if it collides with any other Collideables or hits a wall.
+	 * Updates the bullet within world, will call 'kill' if it collides with any other Collideables or hits a wall.
 	 * @param world The world object this bullet exists within, used for collision
 	 */
 	@Override
