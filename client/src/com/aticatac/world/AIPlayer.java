@@ -32,24 +32,50 @@ public class AIPlayer extends Player {
 				this.doAction('p');
 			}
 		} else {
-			//boolean foundTarget = false;
-			for(Point player: otherPlayers) {
-				if(inRange(player, gun)) {
+			// boolean foundTarget = false;
+			for (Point player : otherPlayers) {
+				if (inRange(player, gun)) {
 					// Spray or spit gun
 					Point target = player.getLocation();
+					double angle = calculateLookDirection(target);
+					setLookDirection(angle);
 					// Decide between spray and spit weapon depending on ammunition levels of each??
 					gun.shoot(target);
-					//foundTarget = true;
+					// foundTarget = true;
 					break;
 				}
 			}
-			/*if(!foundTarget) {
-				// If no player is in the range of either of the guns, uses the splat gun
-				Point direction = getQuadrant(gun);
-				this.doAction('s', gun, direction);
-			}*/
+			/*
+			 * if(!foundTarget) { // If no player is in the range of either of the guns,
+			 * uses the splat gun Point direction = getQuadrant(gun); this.doAction('s',
+			 * gun, direction); }
+			 */
 		}
 		return 0;
+	}
+
+	public double calculateLookDirection(Point target) {
+		double angle;
+		if (target.getX() == position.getX()) {
+			// To avoid division by 0 when finding tan^-1
+			angle = Math.PI / 2;
+		} else {
+			// tan^-1(opp/adj)
+			angle = Math.atan(Math.abs(target.getY() - position.getY()) / Math.abs(target.getX() - position.getX()));
+		}
+
+		if (target.getY() >= position.getY() && target.getX() < position.getX()) {
+			// If in quadrant II
+			return (Math.PI - angle);
+		} else if (target.getY() < position.getY() && target.getX() <= position.getX()) {
+			// If in quadrant III or if pi/2 in neg y direction
+			return (Math.PI + angle);
+		} else if (target.getY() < position.getY() && target.getX() > position.getX()) {
+			// If in quadrant IV
+			return ((2 * Math.PI) - angle);
+		}
+		// Otherwise it is in quadrant I or pi/2 in pos y direction
+		return angle;
 	}
 
 	// Splat - Fires a paint explosive a !! certain range that covers an !! area
