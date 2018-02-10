@@ -49,7 +49,7 @@ public abstract class Bullet implements Collidable {
 	public void move() {
 		int dx = (int) (moveSpeed * Math.sin(direction));
 		int dy = (int) (moveSpeed * Math.cos(direction));
-		translate(dx, dy);
+		translate(dx, -dy); //y axis goes down so -dy
 	}
 	
 	/**
@@ -80,9 +80,9 @@ public abstract class Bullet implements Collidable {
 			hit(world, before); //paint splat on floor just before the wall it hits
 		}
 		
-		//check for collision with collideables.
-		for (Collidable collidable: world.getCollidables()) {
-			if (collidable.getRect().intersects(this.getRect())) {
+		//check for collision with collideables. Currently only other Bullets.
+		for (Collidable collidable: world.getBullets()) {
+			if (collidable != this && collidable.getRect().intersects(this.getRect())) {
 				hit(world, after); //splat where the bullet hits
 			}
 		}
@@ -103,7 +103,7 @@ public abstract class Bullet implements Collidable {
 	 * @param world
 	 */
 	public void kill(World world) {
-		world.removeCollidable(this); 
+		world.removeBullet(this); 
 		//garbage collector should delete this object as it will now be unreachable
 	}
 	

@@ -6,11 +6,15 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import com.aticatac.utils.SystemSettings;
+import com.aticatac.world.items.Bullet;
 import com.aticatac.world.items.Collidable;
+
+import javafx.scene.paint.Color;
+
 
 public class World {
 	private Collection<Player> players;
-	private Collection<Collidable> collidables;
+	private Collection<Bullet> bullets;
 	private Level level;
 
 	int[][] map;
@@ -19,7 +23,7 @@ public class World {
 		this.level = level;
 		map = getLevel().getGrid();
 		this.players = new LinkedList<Player>();
-		this.collidables = new LinkedList<Collidable>();
+		this.bullets = new LinkedList<Bullet>();
 	}
 
 	public Level getLevel() {
@@ -29,21 +33,26 @@ public class World {
 	//calls the update method for all Collideables
 	//this is currently used for moving the bullets.
 	public void update() {
-		for (Collidable collidable: collidables) {
+		//update bullets
+		for (Collidable collidable: bullets) {
 			collidable.update(this);
+		}
+		//update players
+		for (Player player: players) {
+			player.update();
 		}
 	}
 	
-	public Collection<Collidable> getCollidables() {
-		return collidables;
+	public Collection<Bullet> getBullets() {
+		return bullets;
 	}
 
-	public boolean addCollidable(Collidable collidable) {
-		return collidables.add(collidable);
+	public boolean addBullet(Bullet collidable) {
+		return bullets.add(collidable);
 	}
 	
-	public boolean removeCollidable(Collidable collideable) {
-		return collidables.remove(collideable);
+	public boolean removeBullet(Bullet bullet) {
+		return bullets.remove(bullet);
 	}
 	
 	public Collection<Player> getPlayers() {
@@ -52,6 +61,15 @@ public class World {
 	
 	public boolean addPlayer(Player player) {
 		return players.add(player);
+	}
+	
+	public Color getPlayerColour(int playerIdentifier) {
+		for (Player player: players) {
+			if (player.getIdentifier() == playerIdentifier) {
+				return player.getColour();
+			}
+		}
+		return null; 
 	}
 	
 	/**

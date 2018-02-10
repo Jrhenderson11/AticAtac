@@ -48,7 +48,7 @@ public class SplatGun extends Gun {
 			resetCooldown();
 			SplatBullet bullet = new SplatBullet(direction, getUser().getPosition(), getUser().getIdentifier());
 			bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
-			return world.addCollidable(bullet);
+			return world.addBullet(bullet);
 		} else return false;
 	}
 

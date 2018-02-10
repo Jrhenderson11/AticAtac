@@ -43,9 +43,9 @@ public class ShootGun extends Gun {
 	public boolean fire(double direction, Point target, World world) {
 		if (ready()) {
 			resetCooldown();
-			SprayBullet bullet = new SprayBullet(direction, getUser().getPosition(), getUser().getIdentifier());
+			ShootBullet bullet = new ShootBullet(direction, getUser().getPosition(), getUser().getIdentifier());
 			bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
-			return world.addCollidable(bullet);
+			return world.addBullet(bullet);
 		} else return false;
 	}
 

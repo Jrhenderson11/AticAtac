@@ -11,6 +11,8 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.SplatGun;
+import com.aticatac.world.items.SprayGun;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -163,13 +165,13 @@ public class Tutorial extends Scene {
   	        	}
   	        	//Splat gun
   	        	if (input.contains(KeyCode.O)) {
-  	        		player.setGun(new ShootGun(player));
+  	        		player.setGun(new SplatGun(player));
   	        		input.remove(KeyCode.O);
   	        		
   	        	}
   	        	//Spray gun
   	        	if (input.contains(KeyCode.P)) {
-  	        		player.setGun(new ShootGun(player));
+  	        		player.setGun(new SprayGun(player));
   	        		input.remove(KeyCode.P);
   	        	}
   	        	
@@ -178,6 +180,9 @@ public class Tutorial extends Scene {
   	        	if (level.getGrid()[p.x][p.y] == 0) {
   	        		level.updateCoords(p.x, p.y, player.getIdentifier());
   	        	}
+  	        	
+  	        	//update world
+  	        	world.update();
   	        	
   	        	//draw scene
   	        	renderer.render(gc);
