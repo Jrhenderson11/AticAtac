@@ -1,11 +1,15 @@
 package com.aticatac.world;
 
+import java.awt.Point;
+
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
 public class Gun{
+	private static final int MINIMUM_PAINT = 10;
+	
 	private int paintLevel;
 	private int x;
 	private int y;
@@ -32,6 +36,7 @@ public class Gun{
 				System.out.println("X: " + event.getX() + "\nY:" + event.getY());
 				targetX =  event.getX();
 				targetY = event.getY();
+				shoot(new Point((int) targetX,(int) targetY));
 			}
 		});
 		
@@ -65,5 +70,9 @@ public class Gun{
 		paintLevel += 5;
 	}
 	
-	
+	public void shoot(Point target) {
+		if(paintLevel >= MINIMUM_PAINT) {
+			// TODO: code to shoot
+		}
+	}
 }

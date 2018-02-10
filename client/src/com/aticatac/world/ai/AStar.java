@@ -20,13 +20,13 @@ public class AStar {
 	private Level level;
 	private Map<Point, Double> cost;
 	private Map<Point, Point> parent;
-	private int colour;
+	private int identifier;
 
 	public AStar(Point startPoint, Point finishPoint, Level level, int identifier) {
 		this.startPoint = startPoint;
 		this.finishPoint = finishPoint;
 		this.level = level;
-		this.colour = colour;
+		this.identifier = identifier;
 		this.cost = new HashMap<>();
 		this.parent = new HashMap<>();
 	}
@@ -64,7 +64,7 @@ public class AStar {
 
 			for (Point t : this.removeInvalid(getNeighbours(current))) {
 				if (!visited.contains(t)) {
-					if (this.level.getCoords(t.x, t.y) == this.colour) {
+					if (this.level.getCoords(t.x, t.y) == this.identifier) {
 						cost.put(t, cost.get(current) + 1);
 					} else {
 						// If the tile is covered in another player's colour, they will run over it

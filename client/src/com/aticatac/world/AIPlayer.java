@@ -139,8 +139,8 @@ public class AIPlayer extends Player {
 		int i = 0;
 		// is there a way to do this more efficently??
 		while (!foundClosest) {
-			for (int j = -i; j < i; j++) {
-				for (int k = -i; k < i; k++) {
+			for (int j = -i; j < i; j+=2) {
+				for (int k = -i; k < i; k+=2) {
 					if (this.level.getCoords(position.x + j, position.y + k) == 0) {
 						foundClosest = true;
 						t = new Point(position.x + j, position.y + k);
@@ -148,7 +148,7 @@ public class AIPlayer extends Player {
 					}
 				}
 			}
-			i++;
+			i+=2;
 		}
 		return t;
 	}
