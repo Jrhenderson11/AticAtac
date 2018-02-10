@@ -1,6 +1,5 @@
 package com.aticatac.ui.tutorial;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -31,6 +30,7 @@ public class Tutorial extends Scene {
 	private int displayHeight;
 	private Level level;
 	private Renderer renderer;
+	private boolean tips;
 	
 	public Tutorial (Group root) {
         super(root);
@@ -39,6 +39,7 @@ public class Tutorial extends Scene {
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);
+        this.tips = true;
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
@@ -174,6 +175,13 @@ public class Tutorial extends Scene {
   	        		player.setGun(new SprayGun(player));
   	        		input.remove(KeyCode.P);
   	        	}
+  	        	if (input.contains(KeyCode.H)) {
+  	        		if (tips)
+  	        			tips = false;
+  	        		else
+  	        			tips = true;
+  	        		input.remove(KeyCode.H);
+  	        	}
   	        	
   	        	//claim walking territory
   	        	Point p = world.displayPositionToCoords(player.getPosition());
@@ -186,6 +194,14 @@ public class Tutorial extends Scene {
   	        	
   	        	//draw scene
   	        	renderer.render(gc);
+  	        	
+  	        	//draw help tips
+  	        	if (tips) {
+  	        		gc.setFill(Color.WHITE);
+  	        		gc.fillText("Use WASD keys to move\nAim with mouse\nClick"
+  							+ " to shoot\nPress H to hide/show this message\n\n Cheats:"
+  							+ "\nI - ShootGun\nO - SplatGun\nP - SprayGun", 100, 150);
+  	        	}
   	        }
   	    }.start();   
 	}
