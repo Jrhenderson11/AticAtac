@@ -150,6 +150,24 @@ public class Level {
 		// placeholder: make circle radius 5
 		this.makeCircle(posX, posY, 5, colour, 1);
 	}
+	
+	public void makeSpray(int posX, int posY, double direction, int colour) {
+		//placeholder: make spray of length 6, with the center at the given position
+		int length = 6;
+		
+		//paint center point
+		updateCoords(posX, posY, colour);
+		
+		//increase outwards from either side center point
+		for (int i = 0; i < length/2; i++) {
+			int x1 = (int) (posX + (i * Math.sin(direction))); //one direction
+			int y1 = (int) (posY - (i * Math.cos(direction)));
+			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); //the opposite direction
+			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI))); 
+			updateCoords(x1, y1, colour);
+			updateCoords(x2, y2, colour);
+		}
+	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
 		int width = grid.length;
@@ -158,19 +176,19 @@ public class Level {
 		for (int x = 0; x <= radius; x++) {
 			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
 				if (posY + y < (height - 1)) {
-					if (posX + x < (width - 1) && grid[posY + y][posX + x] != blockVal) {
-						grid[posY + y][posX + x] = fillVal;
+					if (posX + x < (width - 1) && grid[posX + x][posY + y]!=blockVal) {
+						grid[posX + x][posY + y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posY + y][posX - x] != blockVal) {
-						grid[posY + y][posX - x] = fillVal;
+					if ((posX - x > 0) && grid[posX - x][posY + y]!=blockVal) {
+						grid[posX - x][posY + y] = fillVal;
 					}
 				}
-				if ((posY - y > 0) && grid[posY - y][posX + x] != blockVal) {
+				if ((posY - y > 0) && grid[posX + x][posY - y]!=blockVal) {
 					if (posX + x < (width - 1)) {
-						grid[posY - y][posX + x] = fillVal;
+						grid[posX + x][posY - y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posY - y][posX - x] != blockVal) {
-						grid[posY - y][posX - x] = fillVal;
+					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {
+						grid[posX - x][posY - y] = fillVal;
 					}
 				}
 			}
