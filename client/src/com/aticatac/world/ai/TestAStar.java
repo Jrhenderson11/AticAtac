@@ -1,7 +1,8 @@
 package com.aticatac.world.ai;
 
 import java.awt.Point;
-import java.util.ArrayList;
+import java.util.LinkedList;
+
 import com.aticatac.world.Level;
 
 public class TestAStar {
@@ -24,7 +25,7 @@ public class TestAStar {
 		}
 		
 		AStar aStar = new AStar(new Point(1,1), new Point(2,4), level, 2);
-		ArrayList<Point> path = aStar.getPath();
+		LinkedList<Point> path = aStar.getPath();
 		for(Point p: path) {
 			System.out.println(p.x + "\t" + p.y);
 		}

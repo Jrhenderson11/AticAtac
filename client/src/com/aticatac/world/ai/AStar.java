@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -34,8 +35,8 @@ public class AStar {
 		return Math.abs(point.x - finishPoint.x) + Math.abs(point.y - finishPoint.y);
 	}
 
-	public ArrayList<Point> getPath() {
-		ArrayList<Point> path = new ArrayList<>();
+	public LinkedList<Point> getPath() {
+	LinkedList<Point> path = new LinkedList<>();
 		cost.put(startPoint, 0.0);
 
 		Queue<Point> opened = new PriorityQueue<>(11, new Comparator<Point>() {
@@ -105,8 +106,8 @@ public class AStar {
 
 	private ArrayList<Point> getNeighbours(Point p) {
 		ArrayList<Point> neighbours = new ArrayList<>();
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = -2; i < 3; i+=2) {
+			for (int j = -2; j < 3; j+=2) {
 				if (i != 0 && j != 0) {
 					neighbours.add(new Point(p.x + i, p.y + j));
 				}
