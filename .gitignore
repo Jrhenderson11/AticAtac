@@ -1,6 +1,8 @@
 .metadata
+*/**/.DS_Store
 .idea/
 bin/
+*.iml
 tmp/
 *.tmp
 *.bak

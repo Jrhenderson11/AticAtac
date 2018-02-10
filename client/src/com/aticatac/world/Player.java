@@ -2,50 +2,38 @@ package com.aticatac.world;
 
 import java.awt.Point;
 
-import com.aticatac.keypress.Gun;
 import com.aticatac.utils.Controller;
 
+import javafx.scene.paint.Color;
+
 public class Player {
+	private final static int MINIMUM_PAINT_FOR_SHOOT = 5;
+	private final static int PAINT_DECREASE = 5;
+	private final static int BASE_PAINT_INCREASE = 5;
 	
-	protected Gun splat;
-	protected Gun spit;
-	protected Gun spray;
-	
-    private Controller controller;
-    private int identifier;
-    protected int colour;
-    protected int x;
-    protected int y;
+	protected Controller controller;
+    protected int identifier;
+    protected Color colour;
+    private int paintLevel;
+    protected Point position;
+    protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     
-    public Player(Controller controller, int identifier, int colour) {
+    public Player(Controller controller, int identifier, Color colour) {
     	this.controller = controller;
-    	this.identifier = identifier;
+    	this.setIdentifier(identifier);
     	this.colour = colour;
-    	
-    	this.spit = new Gun(null);
-    	//this.spit = new SpitGun();
-    	this.splat = new Gun(null);
-    	//this.splat = new SplatGun();
-    	this.spray = new Gun(null);
-    	//this.spray = new SprayGun();
+    	this.position = new Point(10, 10);
+    	this.lookDirection = 0.0;
     }
         
-    public void doAction(char control) {
-    	assert(control == 'm');
-    	// this method should only be called to move
+    public void makeMovement(char control) {
     	// Send a request to renderer to move
     }
     
-    public void doAction(char control, Gun g) {
-    	assert(control == 's');
-    	if(g instanceof /*Spit*/Gun) {
-    		
-    		
-    		this.spit.decreasePaintLevel();
-    	}else if (g instanceof /*Splat*/Gun) {
-    		
-    	}else if (g instanceof /*Spray*/Gun) {
-    		
+    public void shoot() {
+    	if(this.paintLevel >= MINIMUM_PAINT_FOR_SHOOT) {
+    		// Send a request to renderer to shoot
+        	this.decreasePaintLevel();
     	}
     }
     
@@ -54,7 +42,50 @@ public class Player {
     	return 0;
     }
     
-    public Point getCurrentPoint() {
-    	return new Point(x, y);
+    public void increasePaintLevel(int multiplier) {
+    	this.paintLevel = multiplier * BASE_PAINT_INCREASE;
+    	// increase paint depending on multiplier from possession in world
     }
+    
+    public void decreasePaintLevel() {
+    	this.paintLevel = this.paintLevel - PAINT_DECREASE;
+    	// make a sensible decrease to paint level
+    }
+
+	public Color getColour() {
+		return colour;
+	}
+
+	public void setColour(Color colour) {
+		this.colour = colour;
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+	
+	public void move(int dX, int dY) {
+		this.position.x += dX;
+		this.position.y += dY;
+	}
+
+	public int getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(int identifier) {
+		this.identifier = identifier;
+	}
+
+	public Double getLookDirection() {
+		return lookDirection;
+	}
+
+	public void setLookDirection(Double lookDirection) {
+		this.lookDirection = lookDirection;
+	}
 }

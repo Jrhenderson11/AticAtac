@@ -2,50 +2,49 @@ package com.aticatac.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Queue;
+import java.util.LinkedList;
 
-import com.aticatac.world.Player;
-import com.aticatac.keypress.Gun;
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
+
+import javafx.scene.paint.Color;
 
 public class AIPlayer extends Player {
 
 	private static final int PERCENTAGE_TO_MOVE = 85;
+	private boolean moving;
 	private Level level;
-	private Queue<Point> currentPath;
 
-	public AIPlayer(Controller controller, Level level, int identifier, int colour) {
+	public AIPlayer(Controller controller, Level level, int identifier, Color colour) {
 		super(controller, identifier, colour);
 		this.level = level;
-		this.currentPath = null;
+		moving = false;
 	}
 
 	@Override
 	public char getAction() {
-		int[][] reducedMap = this.level.getReducedMap(this.colour);
+		int[][] reducedMap = this.level.getReducedMap(this.identifier);
 
 		if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
 			// If the area is mostly covered by the players own paint
-			if (this.currentPath.isEmpty()) {
-				Point point = this.closestFreePoint();
-				pathToFreePoint(point);
+			if (!this.moving) {
+				Point Point = this.closestFreePoint();
 				this.doAction('p');
 			}
 		} else if (this.inRange()) {
-
 			// If AI player is in range of another player
 			// Decide between spray and spit weapon depending on ammunition levels of each??
+			this.stop();
+			this.shoot();
 		} else {
-			Point direction = getQuadrant(this.splat);
-			this.doAction('s', this.splat, direction);
+			Point direction = getQuadrant(null);
+			this.doAction('s');
 			// splat to this point
 		}
 		return 0;
 	}
 
-	// Splat - Fires a paint explosive a !! certain range that covers an !! area
-	// with
+	// Splat - Fires a paint explosive a !! certain range that covers an !! area with
 	// paint on impact. Medium paint usage
 	// Spray - Fires paint that covers the ground and hits any opponents in a
 	// straight line.
@@ -66,11 +65,11 @@ public class AIPlayer extends Player {
 
 	public Point getQuadrant(Gun g) {
 		Point[] options = new Point[4];
-		int range = g.getRange();
-		options[0] = new Point(this.x, this.y + range);
-		options[1] = new Point(this.x + range, this.y);
-		options[2] = new Point(this.x, this.y - range);
-		options[3] = new Point(this.x - range, this.y);
+		int range = 3; /*g.getRange();*/
+		options[0] = new Point(position.x, position.y + range);
+		options[1] = new Point(position.x + range, position.y);
+		options[2] = new Point(position.x, position.y - range);
+		options[3] = new Point(position.x - range, position.y);
 
 		int bestCover = 0;
 		Point bestPoint = null;
@@ -84,48 +83,44 @@ public class AIPlayer extends Player {
 		}
 		return bestPoint;
 	}
-
+	
 	public int getCoverage(Gun g, Point p) {
-		int splatCoverage = g.getSplatCoverage();
+		int splatCoverage = 3; /*g.getSplatCoverage();*/
 		// 3x3 area would probs be best
 		int x = 0;
 		int coord;
 		// if this is odd then it is easy, even not so much
-		for (int i = -(splatCoverage / 2); i < (splatCoverage / 2) + 1; i++) {
-			for (int j = -(splatCoverage / 2); j < (splatCoverage / 2) + 1; j++) {
-				coord = this.level.getCoords(p.x + i, p.y + j);
-				if (coord != this.colour && coord != 1 && coord != -1) {
-					x++;
+		for (int i = -(splatCoverage/2); i < (splatCoverage/2)+1; i++) {
+			for (int j = -(splatCoverage/2); j < (splatCoverage/2)+1; j++) {
+				coord = this.level.getCoords(p.x + i, p.y + j); 
+				if (coord != this.identifier && coord != 1) {
+					x++;					
 				}
 			}
 		}
 		return x;
 	}
 
+	public void stop() {
+		this.moving = false;
+	}
+
 	public boolean inRange() {
 		return false;
 	}
 
-	public void doAction(char c, Gun g, Point direction) {
+	public void doAction(char c) {
 		assert (c == 's');
-		
 		// Only should be called with 's'
 		// Shoot gun
+		//this.decreasePaintLevel(g);
 	}
 
-
-	public void doAction(char c) {
+	public void doAction(char c, ArrayList<Point> pathToFreePoint) {
 		assert (c == 'p');
-		Point current = currentPath.poll();
-		Point next;
-		while(!this.currentPath.isEmpty()) {
-			next = currentPath.poll();
-			move(next.x - current.x, next.y - current.y);
-			current = next;
-		}
-		
 		// Only should be called with 'p'
 
+		this.moving = true;
 		// Use a class similar to KeyInput to move
 	}
 
@@ -137,10 +132,14 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			for (int j = -i; j < i; j++) {
 				for (int k = -i; k < i; k++) {
-					if (this.level.getCoords(x + j, y + k) == 0) {
-						foundClosest = true;
-						t = new Point(x + j, y + k);
-						break;
+					try {
+						if (this.level.getCoords(position.x + j, position.y + k) == 0) {
+							foundClosest = true;
+							t = new Point(position.x + j, position.y + k);
+							break;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -150,8 +149,13 @@ public class AIPlayer extends Player {
 	}
 
 	// get the path that the ai player will take to reach the free Point
-	public void pathToFreePoint(Point endPoint) {
-		this.currentPath = (new AStar(this.getCurrentPoint(), endPoint, this.level, this.colour)).getPath();
+	public LinkedList<Point> pathToFreePoint(Point endPoint) {
+		return (new AStar(this.getCurrentPoint(), endPoint, this.level, this.identifier)).getPath();
+	}
+
+	private Point getCurrentPoint() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

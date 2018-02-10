@@ -22,7 +22,7 @@ public class AStar {
 	private Map<Point, Point> parent;
 	private int colour;
 
-	public AStar(Point startPoint, Point finishPoint, Level level, int colour) {
+	public AStar(Point startPoint, Point finishPoint, Level level, int identifier) {
 		this.startPoint = startPoint;
 		this.finishPoint = finishPoint;
 		this.level = level;

@@ -45,7 +45,7 @@ public class Level {
 	}
 
 	public int[][] getReducedMap(int playercolour) {
-		//returns a map: 1 indicates this square is playercolor, 0 means it is not
+		//returns a map: 1 indicates this square is playercolour, 0 means it is not
 		int[][] redMap = new int[10][10];
 
 		int chunkwidth = width/10;
@@ -91,7 +91,6 @@ public class Level {
 		
 		return redMap;
 	}
-
 	
 	// used to determine who has control of map by counting tiles of one colour
 	public int getNumTiles(int val) {
@@ -105,7 +104,7 @@ public class Level {
 		}
 		return count;
 	}
-
+	
 	public void updateCoords(int x, int y, int val) {
 		this.grid[x][y] = val;
 	}
@@ -128,6 +127,38 @@ public class Level {
 			grid[0][y] = 1;
 			grid[width - 1][y] = 1;
 		}
+	}
+
+	public void makeSplat(int posX, int posY, int colour) {
+		//placeholder: make circle radius 5
+		this.makeCircle(posX, posY, 5, colour, 1);
+	}
+
+	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
+		int width = grid.length;
+		int height = grid[0].length;
+
+		for (int x = 0; x <= radius; x++) {
+			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
+				if (posY + y < (height - 1)) {
+					if (posX + x < (width - 1) && grid[posY + y][posX + x]!=blockVal) {
+						grid[posY + y][posX + x] = fillVal;
+					}
+					if ((posX - x > 0) && grid[posY + y][posX - x]!=blockVal) {
+						grid[posY + y][posX - x] = fillVal;
+					}
+				}
+				if ((posY - y > 0) && grid[posY - y][posX + x]!=blockVal) {
+					if (posX + x < (width - 1)) {
+						grid[posY - y][posX + x] = fillVal;
+					}
+					if ((posX - x > 0) && grid[posY - y][posX - x]!=blockVal) {
+						grid[posY - y][posX - x] = fillVal;
+					}
+				}
+			}
+		}
+
 	}
 
 	// filehandling

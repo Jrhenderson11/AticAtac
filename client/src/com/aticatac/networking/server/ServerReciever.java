@@ -37,7 +37,7 @@ public class ServerReciever extends Thread {
 	public void run() {
 		InetAddress origin;
 		running = true;
-		System.out.println("Server Listening");
+		System.out.println("TestServer Listening");
 		while (running) {
 
 			// make packet
@@ -46,7 +46,7 @@ public class ServerReciever extends Thread {
 			try {
 				socket.receive(packet);
 			} catch (IOException e) {
-				System.out.println("IO error in Server Receiver Thread");
+				System.out.println("IO error in TestServer Receiver Thread");
 				e.printStackTrace();
 				System.exit(-1);
 			}
