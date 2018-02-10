@@ -8,7 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
 public class Gun{
-	private static final int MINIMUM_PAINT = 10;
+	private final int MINIMUM_PAINT = 10;
+	private final int MAXIMUM_RANGE = 5;
 	
 	private int paintLevel;
 	private int x;
@@ -74,5 +75,9 @@ public class Gun{
 		if(paintLevel >= MINIMUM_PAINT) {
 			// TODO: code to shoot
 		}
+	}
+	
+	public int getRange() {
+		return MAXIMUM_RANGE;
 	}
 }

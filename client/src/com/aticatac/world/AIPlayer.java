@@ -12,18 +12,16 @@ import javafx.scene.paint.Color;
 public class AIPlayer extends Player {
 
 	private static final int PERCENTAGE_TO_MOVE = 85;
-	private boolean moving;
 	private Level level;
 	private LinkedList<Point> currentPath;
 
 	public AIPlayer(Controller controller, Level level, int identifier, Color colour) {
 		super(controller, identifier, colour);
 		this.level = level;
-		moving = false;
 	}
 
-	@Override
-	public char getAction() {
+	// @Override
+	public char getAction(Point[] otherPlayers) {
 		int[][] reducedMap = this.level.getReducedMap(this.identifier);
 
 		if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
@@ -33,15 +31,23 @@ public class AIPlayer extends Player {
 				pathToFreePoint(point);
 				this.doAction('p');
 			}
-		} else if (this.inRange()) {
-			// If AI player is in range of another player
-			// Decide between spray and spit weapon depending on ammunition levels of each??
-			this.stop();
-			this.shoot();
 		} else {
-			Point direction = getQuadrant(null);
-			this.doAction('s', gun, direction);
-			// splat to this point
+			//boolean foundTarget = false;
+			for(Point player: otherPlayers) {
+				if(inRange(player, gun)) {
+					// Spray or spit gun
+					Point target = player.getLocation();
+					// Decide between spray and spit weapon depending on ammunition levels of each??
+					gun.shoot(target);
+					//foundTarget = true;
+					break;
+				}
+			}
+			/*if(!foundTarget) {
+				// If no player is in the range of either of the guns, uses the splat gun
+				Point direction = getQuadrant(gun);
+				this.doAction('s', gun, direction);
+			}*/
 		}
 		return 0;
 	}
@@ -68,7 +74,7 @@ public class AIPlayer extends Player {
 
 	public Point getQuadrant(Gun g) {
 		Point[] options = new Point[4];
-		int range = 3; /* g.getRange(); */
+		int range = g.getRange();
 		options[0] = new Point(position.x, position.y + range);
 		options[1] = new Point(position.x + range, position.y);
 		options[2] = new Point(position.x, position.y - range);
@@ -92,6 +98,7 @@ public class AIPlayer extends Player {
 		// 3x3 area would probs be best
 		int x = 0;
 		int coord;
+
 		// if this is odd then it is easy, even not so much
 		for (int i = -(splatCoverage / 2); i < (splatCoverage / 2) + 1; i++) {
 			for (int j = -(splatCoverage / 2); j < (splatCoverage / 2) + 1; j++) {
@@ -104,25 +111,26 @@ public class AIPlayer extends Player {
 		return x;
 	}
 
-	public void stop() {
-		this.moving = false;
-	}
-
-	public boolean inRange() {
+	public boolean inRange(Point player, Gun gun) {
+		int range = gun.getRange();
+		if (Math.sqrt((Math.pow(player.getX() - position.getX(), 2))
+				+ Math.pow(player.getY() - position.getY(), 2)) <= range) {
+			// If the point lies inside the circle created by the range
+			return true;
+		}
 		return false;
 	}
 
 	public void doAction(char c, Gun gun, Point direction) {
 		assert (c == 's');
+
 		// Only should be called with 's'
 		// Shoot gun
-		// this.decreasePaintLevel(g);
 	}
 
 	public void doAction(char c) {
 		assert (c == 'p');
 		// Only should be called with 'p'
-
 		Point current = currentPath.poll();
 		Point next;
 		while (!this.currentPath.isEmpty()) {
@@ -139,8 +147,8 @@ public class AIPlayer extends Player {
 		int i = 0;
 		// is there a way to do this more efficently??
 		while (!foundClosest) {
-			for (int j = -i; j < i; j+=2) {
-				for (int k = -i; k < i; k+=2) {
+			for (int j = -i; j < i; j += 2) {
+				for (int k = -i; k < i; k += 2) {
 					if (this.level.getCoords(position.x + j, position.y + k) == 0) {
 						foundClosest = true;
 						t = new Point(position.x + j, position.y + k);
@@ -148,7 +156,7 @@ public class AIPlayer extends Player {
 					}
 				}
 			}
-			i+=2;
+			i += 2;
 		}
 		return t;
 	}
