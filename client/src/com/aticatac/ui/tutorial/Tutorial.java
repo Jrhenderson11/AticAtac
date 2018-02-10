@@ -114,7 +114,7 @@ public class Tutorial extends Scene {
   	        	//left
   	        	if (input.contains(KeyCode.A)) {
   	        		player.move(-2, 0);
-  	        		Point p = getMapCoords(player.getPosition());
+  	        		Point p = world.displayPositionToCoords(player.getPosition());
   	        		if (level.getGrid()[p.x][p.y] == 1) {   //if the grid coordinate of player is on a wall tile (1) in the level grid.
   	        			player.move(2, 0);
   	        		}
@@ -122,7 +122,7 @@ public class Tutorial extends Scene {
   	        	//right
   	        	if (input.contains(KeyCode.D)) {
   	        		player.move(2, 0);
-  	        		Point p = getMapCoords(player.getPosition());
+  	        		Point p = world.displayPositionToCoords(player.getPosition());
   	        		if (level.getGrid()[p.x][p.y] == 1) {
   	        			player.move(-2, 0);
   	        		}
@@ -130,7 +130,7 @@ public class Tutorial extends Scene {
   	        	//up
   	        	if (input.contains(KeyCode.W)) {
   	        		player.move(0, -2);
-  	        		Point p = getMapCoords(player.getPosition());
+  	        		Point p = world.displayPositionToCoords(player.getPosition());
   	        		if (level.getGrid()[p.x][p.y] == 1) {
   	        			player.move(0, 2);
   	        		}
@@ -138,14 +138,14 @@ public class Tutorial extends Scene {
   	        	//down
   	        	if (input.contains(KeyCode.S)) {
   	        		player.move(0, 2);
-  	        		Point p = getMapCoords(player.getPosition());
+  	        		Point p = world.displayPositionToCoords(player.getPosition());
   	        		if (level.getGrid()[p.x][p.y] == 1) {
   	        			player.move(0, -2);
   	        		}
   	        	}
   	        	
   	        	//claim walking territory
-  	        	Point p = getMapCoords(player.getPosition());
+  	        	Point p = world.displayPositionToCoords(player.getPosition());
   	        	if (level.getGrid()[p.x][p.y] == 0) {
   	        		level.updateCoords(p.x, p.y, player.getIdentifier());
   	        	}
@@ -154,16 +154,5 @@ public class Tutorial extends Scene {
   	        	renderer.render(gc);
   	        }
   	    }.start();   
-	}
-	
-	/**
-	 * Get the map coordinates from the on screen display position
-	 * @param displayPosition
-	 * @return
-	 */
-	private Point getMapCoords(Point displayPosition) {
-		int tileWidth = displayWidth / level.getWidth();
-		int tileHeight = displayHeight / level.getHeight();
-		return new Point((displayPosition.x / tileWidth), (displayPosition.y / tileHeight));
 	}
 }

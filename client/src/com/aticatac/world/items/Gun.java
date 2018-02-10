@@ -1,4 +1,4 @@
-package com.aticatac.world;
+package com.aticatac.world.items;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
