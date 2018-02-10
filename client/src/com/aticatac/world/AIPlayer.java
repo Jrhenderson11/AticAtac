@@ -14,6 +14,7 @@ public class AIPlayer extends Player {
 	private static final int PERCENTAGE_TO_MOVE = 85;
 	private boolean moving;
 	private Level level;
+	private LinkedList<Point> currentPath;
 
 	public AIPlayer(Controller controller, Level level, int identifier, Color colour) {
 		super(controller, identifier, colour);
@@ -27,8 +28,9 @@ public class AIPlayer extends Player {
 
 		if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
 			// If the area is mostly covered by the players own paint
-			if (!this.moving) {
-				Point Point = this.closestFreePoint();
+			if (!this.currentPath.isEmpty()) {
+				Point point = this.closestFreePoint();
+				pathToFreePoint(point);
 				this.doAction('p');
 			}
 		} else if (this.inRange()) {
@@ -38,13 +40,14 @@ public class AIPlayer extends Player {
 			this.shoot();
 		} else {
 			Point direction = getQuadrant(null);
-			this.doAction('s');
+			this.doAction('s', gun, direction);
 			// splat to this point
 		}
 		return 0;
 	}
 
-	// Splat - Fires a paint explosive a !! certain range that covers an !! area with
+	// Splat - Fires a paint explosive a !! certain range that covers an !! area
+	// with
 	// paint on impact. Medium paint usage
 	// Spray - Fires paint that covers the ground and hits any opponents in a
 	// straight line.
@@ -65,7 +68,7 @@ public class AIPlayer extends Player {
 
 	public Point getQuadrant(Gun g) {
 		Point[] options = new Point[4];
-		int range = 3; /*g.getRange();*/
+		int range = 3; /* g.getRange(); */
 		options[0] = new Point(position.x, position.y + range);
 		options[1] = new Point(position.x + range, position.y);
 		options[2] = new Point(position.x, position.y - range);
@@ -83,18 +86,18 @@ public class AIPlayer extends Player {
 		}
 		return bestPoint;
 	}
-	
+
 	public int getCoverage(Gun g, Point p) {
-		int splatCoverage = 3; /*g.getSplatCoverage();*/
+		int splatCoverage = 3; /* g.getSplatCoverage(); */
 		// 3x3 area would probs be best
 		int x = 0;
 		int coord;
 		// if this is odd then it is easy, even not so much
-		for (int i = -(splatCoverage/2); i < (splatCoverage/2)+1; i++) {
-			for (int j = -(splatCoverage/2); j < (splatCoverage/2)+1; j++) {
-				coord = this.level.getCoords(p.x + i, p.y + j); 
-				if (coord != this.identifier && coord != 1) {
-					x++;					
+		for (int i = -(splatCoverage / 2); i < (splatCoverage / 2) + 1; i++) {
+			for (int j = -(splatCoverage / 2); j < (splatCoverage / 2) + 1; j++) {
+				coord = this.level.getCoords(p.x + i, p.y + j);
+				if (coord != identifier && coord != 1 && coord != -1) {
+					x++;
 				}
 			}
 		}
@@ -109,19 +112,25 @@ public class AIPlayer extends Player {
 		return false;
 	}
 
-	public void doAction(char c) {
+	public void doAction(char c, Gun gun, Point direction) {
 		assert (c == 's');
 		// Only should be called with 's'
 		// Shoot gun
-		//this.decreasePaintLevel(g);
+		// this.decreasePaintLevel(g);
 	}
 
-	public void doAction(char c, ArrayList<Point> pathToFreePoint) {
+	public void doAction(char c) {
 		assert (c == 'p');
 		// Only should be called with 'p'
 
-		this.moving = true;
-		// Use a class similar to KeyInput to move
+		Point current = currentPath.poll();
+		Point next;
+		while (!this.currentPath.isEmpty()) {
+			next = currentPath.poll();
+			move(next.x - current.x, next.y - current.y);
+			current = next;
+		}
+
 	}
 
 	public Point closestFreePoint() {
@@ -132,14 +141,10 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			for (int j = -i; j < i; j++) {
 				for (int k = -i; k < i; k++) {
-					try {
-						if (this.level.getCoords(position.x + j, position.y + k) == 0) {
-							foundClosest = true;
-							t = new Point(position.x + j, position.y + k);
-							break;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					if (this.level.getCoords(position.x + j, position.y + k) == 0) {
+						foundClosest = true;
+						t = new Point(position.x + j, position.y + k);
+						break;
 					}
 				}
 			}
@@ -149,8 +154,8 @@ public class AIPlayer extends Player {
 	}
 
 	// get the path that the ai player will take to reach the free Point
-	public LinkedList<Point> pathToFreePoint(Point endPoint) {
-		return (new AStar(this.getCurrentPoint(), endPoint, this.level, this.identifier)).getPath();
+	public void pathToFreePoint(Point endPoint) {
+		currentPath = (new AStar(this.getCurrentPoint(), endPoint, this.level, this.identifier)).getPath();
 	}
 
 	private Point getCurrentPoint() {

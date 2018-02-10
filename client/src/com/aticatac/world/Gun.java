@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
 public class Gun{
+	private int paintLevel;
 	private int x;
 	private int y;
 	private int speed;
@@ -18,6 +19,7 @@ public class Gun{
 		scene = pScene;
 		speed = 1;
 		aimRunning = false;
+		paintLevel = 100;
 	}
 
 	public void aim(){
@@ -55,9 +57,13 @@ public class Gun{
 		return aimRunning;
 	}
 	
-
-
+	public void decreasePaintLevel() {
+		paintLevel -= 10;
+	}
 	
+	public void increasePaintLevel() {
+		paintLevel += 5;
+	}
 	
 	
 }

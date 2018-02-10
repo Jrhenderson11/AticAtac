@@ -7,14 +7,12 @@ import com.aticatac.utils.Controller;
 import javafx.scene.paint.Color;
 
 public class Player {
-	private final static int MINIMUM_PAINT_FOR_SHOOT = 5;
-	private final static int PAINT_DECREASE = 5;
-	private final static int BASE_PAINT_INCREASE = 5;
+	
+	protected Gun gun;
 	
 	protected Controller controller;
     protected int identifier;
     protected Color colour;
-    private int paintLevel;
     protected Point position;
     protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     
