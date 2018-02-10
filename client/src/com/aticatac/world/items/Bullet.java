@@ -8,6 +8,10 @@ import com.aticatac.world.World;
 public abstract class Bullet implements Collidable {
 	
 	/**
+	 * The maximum range of the gun
+	 */
+	protected final int range;
+	/**
 	 * Direction the bullet was fired in. Stored in radians, where 'north' (up) is 0 rads, increasing in value clockwise.
 	 */
 	protected double direction;
@@ -23,6 +27,10 @@ public abstract class Bullet implements Collidable {
 	 * The player that fired the bullet.
 	 */
 	protected int shooter;
+	/**
+	 * How far the bullet has traveled.
+	 */
+	protected int travel;
 	
 	
 	// -----------
@@ -30,11 +38,13 @@ public abstract class Bullet implements Collidable {
 	// -----------
 	
 	
-	public Bullet(double direction, int moveSpeed, Rectangle rect, int shooter) {
+	public Bullet(int range, double direction, int moveSpeed, Rectangle rect, int shooter) {
+		this.range = range;
 		this.direction = direction;
 		this.moveSpeed = moveSpeed;
 		this.shooter = shooter;
 		this.rect = rect;
+		this.travel = 0;
 	}
 	
 	
@@ -50,6 +60,7 @@ public abstract class Bullet implements Collidable {
 		int dx = (int) (moveSpeed * Math.sin(direction));
 		int dy = (int) (moveSpeed * Math.cos(direction));
 		translate(dx, -dy); //y axis goes down so -dy
+		travel += moveSpeed;
 	}
 	
 	/**
@@ -74,6 +85,11 @@ public abstract class Bullet implements Collidable {
 		move();
 		
 		Point after = world.displayPositionToCoords(rect.getLocation());
+		
+		//check for range limit
+		if (travel > range) {
+			hit(world, after);
+		}
 		
 		//check for wall collision after movement
 		if (world.getLevel().getCoords(after.x, after.y) == 1) {

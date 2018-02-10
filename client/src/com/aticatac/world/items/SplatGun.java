@@ -8,10 +8,6 @@ import com.aticatac.world.World;
 public class SplatGun extends Gun {
 
 	/**
-	 * The range of the bullets
-	 */
-	public static final int RANGE = 12;
-	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 30;
@@ -27,7 +23,7 @@ public class SplatGun extends Gun {
 	 * @param user The user of the gun
 	 */
 	public SplatGun(Player user) {
-		super(user, RANGE, COOLDOWNTIME);
+		super(user, COOLDOWNTIME);
 	}
 
 	

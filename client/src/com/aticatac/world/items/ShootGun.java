@@ -9,10 +9,6 @@ import com.aticatac.world.World;
 public class ShootGun extends Gun {
 	
 	/**
-	 * The range of the bullets
-	 */
-	public static final int RANGE = 60;
-	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 5;
@@ -23,8 +19,12 @@ public class ShootGun extends Gun {
 	// ------------
 	
 	
+	/**
+	 * Creates a gun of 'Shoot' type.
+	 * @param user The user of the gun
+	 */
 	public ShootGun(Player user) {
-		super(user, RANGE, COOLDOWNTIME);
+		super(user, COOLDOWNTIME);
 	}
 	
 	

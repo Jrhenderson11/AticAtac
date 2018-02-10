@@ -7,10 +7,7 @@ import com.aticatac.world.World;
 
 public abstract class Gun {
 
-	/**
-	 * The maximum range of the gun
-	 */
-	protected final int range;
+	
 	/**
 	 * The duration of the 'cooldown' between shots
 	 */
@@ -35,8 +32,7 @@ public abstract class Gun {
 	 * @param range The maximum range of the gun
 	 * @param cooldownTime The cooldown between shots
 	 */
-	public Gun(Player user, int range, int cooldownTime) {
-		this.range = range;
+	public Gun(Player user, int cooldownTime) {
 		this.cooldownTime = cooldownTime;
 		this.currentCooldown = 0;
 		this.user = user;

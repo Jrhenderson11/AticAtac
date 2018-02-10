@@ -9,9 +9,13 @@ import com.aticatac.world.World;
 public class SprayBullet extends Bullet {
 	
 	/**
+	 * The range of the bullets
+	 */
+	public static final int RANGE = 350;
+	/**
 	 * Default movement speed
 	 */
-	public static final int MOVESPEED = 6;
+	public static final int MOVESPEED = 10;
 	/**
 	 * Default collision rect dimensions
 	 */
@@ -30,7 +34,7 @@ public class SprayBullet extends Bullet {
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
 	public SprayBullet(double direction, Point startPosition, int shooter) {
-		super(direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+		super(RANGE, direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 
 	

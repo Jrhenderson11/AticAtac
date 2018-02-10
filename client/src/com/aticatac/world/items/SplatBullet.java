@@ -9,6 +9,10 @@ import com.aticatac.world.World;
 public class SplatBullet extends Bullet {
 	
 	/**
+	 * The range of the bullets
+	 */
+	public static final int RANGE = 200;
+	/**
 	 * Default movement speed
 	 */
 	public static final int MOVESPEED = 6;
@@ -30,7 +34,7 @@ public class SplatBullet extends Bullet {
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
 	public SplatBullet(double direction, Point startPosition, int shooter) {
-		super(direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+		super(RANGE, direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 
 	
