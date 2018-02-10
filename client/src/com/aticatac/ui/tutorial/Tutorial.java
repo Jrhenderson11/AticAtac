@@ -10,6 +10,7 @@ import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
+import com.aticatac.world.items.ShootGun;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -107,6 +108,16 @@ public class Tutorial extends Scene {
   	        }
   	    });
   		
+  		//handle shooting with mouse
+  		setOnMouseClicked(new EventHandler<MouseEvent>() {
+  	        @Override
+  	        public void handle(MouseEvent me) {
+  	        	if (player.getGun() != null) {
+  	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
+  	        	}
+  	        }
+  		});
+  		
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
@@ -142,6 +153,24 @@ public class Tutorial extends Scene {
   	        		if (level.getGrid()[p.x][p.y] == 1) {
   	        			player.move(0, -2);
   	        		}
+  	        	}
+  	        	
+  	        	//Gun spawn in, using for testing, remove in game
+  	        	//Shoot gun
+  	        	if (input.contains(KeyCode.I)) {
+  	        		player.setGun(new ShootGun(player));
+  	        		input.remove(KeyCode.I);
+  	        	}
+  	        	//Splat gun
+  	        	if (input.contains(KeyCode.O)) {
+  	        		player.setGun(new ShootGun(player));
+  	        		input.remove(KeyCode.O);
+  	        		
+  	        	}
+  	        	//Spray gun
+  	        	if (input.contains(KeyCode.P)) {
+  	        		player.setGun(new ShootGun(player));
+  	        		input.remove(KeyCode.P);
   	        	}
   	        	
   	        	//claim walking territory
