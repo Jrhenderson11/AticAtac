@@ -1,3 +1,4 @@
+
 package com.aticatac.keypress;
 
 import java.util.ArrayList;
@@ -266,4 +267,9 @@ public class KeyInput extends Application {
 			return false;
 	}
 
+<<<<<<< HEAD
 }
+=======
+
+}
+>>>>>>> fb7325a2b0d7bc97b08a5a411b9aa9053612140c

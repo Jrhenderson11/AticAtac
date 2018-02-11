@@ -1,14 +1,15 @@
 package com.aticatac.ui.lobby.browser.handlers;
 
-import com.aticatac.lobby.LobbyInfo;
+import java.util.ArrayList;
+
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.ui.lobby.browser.Browser;
+
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 public class LBKeyPressed implements EventHandler<KeyEvent> {
     private final Scene back;

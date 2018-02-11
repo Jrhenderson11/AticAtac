@@ -7,10 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Level {
+public class Level implements Serializable{
 
 	private int[][] grid;
 
@@ -101,7 +102,7 @@ public class Level {
 		}
 		return count;
 	}
-
+	
 	// returns whether 1 x,y pos can see another (direct line with no walls in
 	// between)
 	public boolean hasLOS(Point player, Point target) {
@@ -122,8 +123,15 @@ public class Level {
 		return true;
 	}
 
-	public void updateCoords(int x, int y, int val) {
-		this.grid[x][y] = val;
+	//updates coords with input restrictions and no overwriting walls
+	public boolean updateCoords(int x, int y, int val) {
+		if (x < width && y < height && x >= 0 && y >= 0) {
+			if (grid[x][y] != 1) {
+				this.grid[x][y] = val;
+				return true;
+			}
+		} 
+		return false;
 	}
 
 	private void fillmap(int fillval) {
@@ -153,7 +161,7 @@ public class Level {
 	
 	public void makeSpray(int posX, int posY, double direction, int colour) {
 		//placeholder: make spray of length 6, with the center at the given position
-		int length = 6;
+		int length = 8;
 		
 		//paint center point
 		updateCoords(posX, posY, colour);
@@ -170,9 +178,9 @@ public class Level {
 	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
-		int width = grid.length;
-		int height = grid[0].length;
-
+		if (posX > width-1 || posX <0 || posY > height-1 || posY < 0) {
+			return;
+		}
 		for (int x = 0; x <= radius; x++) {
 			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
 				if (posY + y < (height - 1)) {
@@ -183,8 +191,9 @@ public class Level {
 						grid[posX - x][posY + y] = fillVal;
 					}
 				}
-				if ((posY - y > 0) && grid[posX + x][posY - y]!=blockVal) {
-					if (posX + x < (width - 1)) {
+
+				if ((posY - y > 0)) {
+					if ((posX + x < (width-1)) && grid[posX + x][posY - y]!=blockVal) {
 						grid[posX + x][posY - y] = fillVal;
 					}
 					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {

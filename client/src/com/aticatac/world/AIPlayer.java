@@ -28,7 +28,7 @@ public class AIPlayer extends Player {
 	private Random r;
 	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS;
 
-	public AIPlayer(Controller controller, World world, int identifier, Color colour) {
+	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
 		this.world = world;
 		this.level = world.getLevel();
@@ -36,7 +36,7 @@ public class AIPlayer extends Player {
 	}
 
 	public void makeDecision() {
-		int[][] reducedMap = level.getReducedMap(identifier);
+		int[][] reducedMap = level.getReducedMap(colour);
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
@@ -144,7 +144,7 @@ public class AIPlayer extends Player {
 		for (int i = -splatCoverage; i < splatCoverage + 1; i++) {
 			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
 				coord = level.getCoords(p.x + i, p.y + j);
-				if (coord != identifier && coord != 1 && coord != -1) {
+				if (coord != colour && coord != 1 && coord != -1) {
 					x++;
 				}
 			}
@@ -197,6 +197,6 @@ public class AIPlayer extends Player {
 
 	// get the path that the ai player will take to reach the free Point
 	public void pathToFreePoint(Point endPoint) {
-		currentPath = (new AStar(getPosition(), endPoint, level, identifier)).getPath();
+		currentPath = (new AStar(getPosition(), endPoint, level, colour)).getPath();
 	}
 }

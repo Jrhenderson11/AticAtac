@@ -1,6 +1,7 @@
 package com.aticatac.world;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import com.aticatac.utils.Controller;
 import com.aticatac.world.items.Gun;
@@ -10,14 +11,16 @@ import javafx.scene.paint.Color;
 public class Player {
     
     protected Controller controller;
-    protected int identifier;
-    protected Color colour;
+    protected String identifier;
+    protected int colour;
     protected int paintLevel;
     protected Point position;
     protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     protected Gun gun;
     
-    public Player(Controller controller, int identifier, Color colour) {
+    
+   
+    public Player(Controller controller, String identifier, int colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
@@ -42,11 +45,11 @@ public class Player {
     	return 0;
     }
 
-	public Color getColour() {
+	public int getColour() {
 		return colour;
 	}
 
-	public void setColour(Color colour) {
+	public void setColour(int colour) {
 		this.colour = colour;
 	}
 
@@ -63,11 +66,11 @@ public class Player {
 		this.position.y += dY;
 	}
 
-	public int getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(int identifier) {
+	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
