@@ -3,7 +3,7 @@ package com.aticatac.ui.utils;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
-public class Button {
+public abstract class Button implements Drawable{
     private Rectangle hitbox;
     private String text;
 
@@ -12,6 +12,8 @@ public class Button {
         this.text = text;
 
     }
+
+    public abstract void click();
 
     public Rectangle getHitbox() {
         return hitbox;

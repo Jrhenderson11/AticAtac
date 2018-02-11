@@ -69,7 +69,7 @@ public class Browser extends Scene {
         if (selected == -1) return;
 
         if (server.joinLobby(selected, "")) {
-            stage.setScene(new Displayer(new Group(), server.updateLobby(selected)));
+            stage.setScene(new Displayer(new Group(), selected, server));
         } else {
             System.err.println("Server rejected join");
         }

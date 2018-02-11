@@ -10,5 +10,6 @@ public class QuitKeyPressed implements EventHandler<KeyEvent>{
     public void handle(KeyEvent event) {
         KeyCode pressed = event.getCode();
 
+
     }
 }
