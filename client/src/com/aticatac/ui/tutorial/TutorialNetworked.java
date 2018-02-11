@@ -38,6 +38,7 @@ public class TutorialNetworked extends Scene {
 	private void skipLobby() {
 		client.joinLobby(1, "password");
         client.startGame();
+        client.setStatus(Globals.IN_GAME);
         System.out.println("waiting for network");
         while (client.getStatus() != Globals.IN_GAME) {}
 	}
