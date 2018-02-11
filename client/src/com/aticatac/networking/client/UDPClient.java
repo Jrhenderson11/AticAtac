@@ -7,8 +7,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
-import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.world.World;
 

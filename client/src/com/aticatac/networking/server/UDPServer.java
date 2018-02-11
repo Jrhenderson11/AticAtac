@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.utils.Controller;
 import com.aticatac.world.Level;

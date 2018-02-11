@@ -2,8 +2,6 @@ package com.aticatac.lobby;
 
 import java.util.ArrayList;
 
-import com.aticatac.lobby.utils.LobbyInfo;
-
 import javafx.scene.paint.Color;
 
 public interface LobbyServer {

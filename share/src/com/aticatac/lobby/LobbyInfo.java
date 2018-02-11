@@ -1,4 +1,4 @@
-package com.aticatac.lobby.utils;
+package com.aticatac.lobby;
 
 import java.io.Serializable;
 

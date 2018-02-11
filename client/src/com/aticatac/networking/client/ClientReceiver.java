@@ -8,7 +8,7 @@ import java.net.SocketException;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 import com.aticatac.world.World;

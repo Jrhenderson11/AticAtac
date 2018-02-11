@@ -6,7 +6,7 @@ import static java.lang.StrictMath.sin;
 
 import java.util.ArrayList;
 
-import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
