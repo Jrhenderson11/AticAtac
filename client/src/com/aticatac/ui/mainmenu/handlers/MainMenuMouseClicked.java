@@ -21,6 +21,7 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
         this.animation = animation;
     }
 
+    
     @Override
     public void handle(MouseEvent event) {
 
@@ -28,7 +29,6 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
 
         if (selectedId == -1) return;
         else {
-            animation.stop();
             stage.setScene(menuItems.get(selectedId).choose());
         }
 

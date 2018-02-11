@@ -1,29 +1,46 @@
 package com.aticatac.world;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import com.aticatac.utils.Controller;
+import com.aticatac.world.items.Gun;
 
 import javafx.scene.paint.Color;
 
-public class Player {
+public class Player implements Serializable{
 	private final static int MINIMUM_PAINT_FOR_SHOOT = 5;
 	private final static int PAINT_DECREASE = 5;
 	private final static int BASE_PAINT_INCREASE = 5;
 	
     private Controller controller;
-    private int identifier;
-    private Color colour;
+    private String identifier;
+    private int colour;
     private int paintLevel;
     private Point position;
     private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
+    private Gun gun;
     
-    public Player(Controller controller, int identifier, Color colour) {
+    
+    
+    /**
+     * @param controller
+     * @param identifier
+     * @param colour
+     */
+    public Player(Controller controller, String identifier, int colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
     	this.position = new Point(10, 10);
     	this.lookDirection = 0.0;
+    }
+    
+    public void update() {
+    	//regenerate paint and other things
+    	if (gun != null) {
+    		gun.update(); //updates gun, used for gun cooldowns
+    	}
     }
         
     public void makeMovement(char control) {
@@ -52,11 +69,11 @@ public class Player {
     	// make a sensible decrease to paint level
     }
 
-	public Color getColour() {
+	public int getColour() {
 		return colour;
 	}
 
-	public void setColour(Color colour) {
+	public void setColour(int colour) {
 		this.colour = colour;
 	}
 
@@ -73,11 +90,11 @@ public class Player {
 		this.position.y += dY;
 	}
 
-	public int getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(int identifier) {
+	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
@@ -87,5 +104,13 @@ public class Player {
 
 	public void setLookDirection(Double lookDirection) {
 		this.lookDirection = lookDirection;
+	}
+
+	public Gun getGun() {
+		return gun;
+	}
+
+	public void setGun(Gun gun) {
+		this.gun = gun;
 	}
 }
