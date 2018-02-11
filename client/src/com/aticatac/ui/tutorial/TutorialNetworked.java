@@ -45,10 +45,12 @@ public class TutorialNetworked extends Scene {
 	}
 	
 	public TutorialNetworked (Group root, UDPClient newClient) {
-        super(root);
+		super(root);
         this.client = newClient;
         this.init = false;
         //init display stuff
+        System.out.println("TUTORIAL STARTED");
+
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);

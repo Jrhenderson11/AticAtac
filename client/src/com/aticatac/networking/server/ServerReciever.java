@@ -13,6 +13,10 @@ import com.aticatac.world.World;
 
 import javafx.scene.input.KeyCode;
 
+/**
+ * @author james
+ *
+ */
 public class ServerReciever extends Thread {
 
 	private DatagramSocket socket;
@@ -75,6 +79,11 @@ public class ServerReciever extends Thread {
 		return null;
 	}
 
+	/**
+	 * @param data
+	 * @param origin
+	 * @param originPort
+	 */
 	private void processData(String data, InetAddress origin, int originPort) {
 		int port = Globals.CLIENT_PORT;
 		// System.out.println(data);

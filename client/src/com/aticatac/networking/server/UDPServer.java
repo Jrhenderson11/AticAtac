@@ -117,17 +117,18 @@ public class UDPServer extends Thread{
 	}
 	
 	public void startGame() {
-	if (this.status == Globals.IN_LOBBY) {
-		System.out.println("Game started");
-		this.lobby.setStarted();
-		for (int i=0; i<5;i++) {
+		//TODO: check all clients are ready
+		if (this.status == Globals.IN_LOBBY) {
+			System.out.println("Game started");
+			this.lobby.setStarted();
+			for (int i = 0; i < 5; i++) {
+				this.sender.sendAllLobby();
+			}
+			// sleep to ensure clients are actually sent a lobby object
+			this.status = Globals.IN_GAME;
+		} else {
 			this.sender.sendAllLobby();
 		}
-		//sleep to ensure clients are actually sent a lobby object
-		this.status = Globals.IN_GAME;
-	} else {
-		this.sender.sendAllLobby();
-	}
 		
 	}
 	

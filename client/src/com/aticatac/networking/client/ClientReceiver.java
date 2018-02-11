@@ -67,7 +67,7 @@ public class ClientReceiver extends Thread {
 					
 					System.out.println("cannot deserialise lobbyinfo (is it a model?)");
 				}
-				System.out.println("getting info");
+				//System.out.println("getting info");
 				
 			} else if (master.getStatus() == Globals.IN_LOBBY) {
 				// deserialise into lobby obj
@@ -85,7 +85,7 @@ public class ClientReceiver extends Thread {
 					}
 					System.out.println("cannot deserialise lobby (is it a model?)");
 				}
-				System.out.println("in lobby");
+				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
 				//make game model
 				try {

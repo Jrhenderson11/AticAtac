@@ -3,6 +3,7 @@ package com.aticatac.ui.mainmenu;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.aticatac.networking.client.UDPClient;
 import com.aticatac.ui.lobby.browser.Browser;
@@ -29,21 +30,18 @@ public class MainMenu extends Scene {
 
 	public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
+        
+     //   Supplier something = (() -> new Placeholder(new Group()));
     
-        // TODO: get client info
-        // UDPClient server = null;
-		System.out.println("MAINMENU");
-        //server = new UDPClient("name",InetAddress.getByName("127.0.0.1"));
-        System.out.println(server == null);
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", new Browser(new Group(), server, this, primaryStage)));
-        menuItems.add(new MenuItem("Create a Lobby", new Placeholder(new Group())));
-        menuItems.add(new MenuItem("Tutorial", new Tutorial(new Group())));
-        menuItems.add(new MenuItem("TutorialNetworked", new TutorialNetworked(new Group(), server)));
-        menuItems.add(new MenuItem("Settings", new Placeholder(new Group())));
-        menuItems.add(new MenuItem("Statistics", new Placeholder(new Group())));
-        menuItems.add(new MenuItem("Credits", new Placeholder(new Group())));
-        menuItems.add(new MenuItem("Quit", new Quit(new Group(), this, primaryStage)));
+        menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
+        menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group())));
+        menuItems.add(new MenuItem("TutorialNetworked", () -> new TutorialNetworked(new Group(), server)));
+        menuItems.add(new MenuItem("Settings", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Credits", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Quit", () -> new Quit(new Group(), this, primaryStage)));
 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();

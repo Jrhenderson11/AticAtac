@@ -44,20 +44,16 @@ public class Tutorial extends Scene {
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        /* ================ */
-        // 	MOVE TO SRV
-        this.level = new Level(100, 100);
-        level.randomiseMap();
-        //level.loadMap("client/assets/maps/map.txt");
+        this.level = new Level(50, 50);
+        //level.randomiseMap();
+        level.loadMap("client/assets/maps/map.txt");
         World world = new World(level);
-        /* ================ */
         
         renderer.setWorld(world);
-        /* ================ */
-        //	MOVE TO SRV
         Player player = new Player(Controller.REAL, 2, 2);
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
+        
         /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
@@ -126,8 +122,6 @@ public class Tutorial extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	/* ================ */
-  	        	// MOVE TO SRV
   	        	//handle movement, reverting moves when detecting collision
   	        	//left
   	        	if (input.contains(KeyCode.A)) {
