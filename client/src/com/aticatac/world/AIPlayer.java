@@ -38,6 +38,11 @@ public class AIPlayer extends Player {
 		this.r = new Random();
 	}
 
+	@Override
+	public void update() {
+		makeDecision();
+	}
+	
 	public void makeDecision() {
 		int[][] reducedMap = level.getReducedMap(colour);
 		boolean foundTarget = false;
