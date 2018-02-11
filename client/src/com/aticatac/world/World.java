@@ -174,7 +174,7 @@ public class World implements Serializable {
 
 	public Player getPlayerById(String id) {
 		for (Player p: this.getPlayers()) {
-			if (p.getIdentifier()==id) {
+			if (p.getIdentifier().equals(id)) {
 				return p;
 			} 
 		}

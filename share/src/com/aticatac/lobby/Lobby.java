@@ -1,6 +1,7 @@
 package com.aticatac.lobby;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 //TODO: ClientInfo, Lobby, LobbyInfo all need to be shared by the server project @James
 
@@ -62,7 +63,18 @@ public class Lobby implements Serializable {
 
 	public ClientInfo getClientByID(String id) {
 		for (ClientInfo i : this.getAll()) {
-			if (i.getID() == id) {
+			if (i.getID().equals(id)) {
+				return i;
+			}
+		}
+		return null;
+	}
+
+	public ClientInfo getClientBySocket(InetAddress origin, int sourcePort) {
+		for (ClientInfo i : this.getAll()) {
+			if (i.getAddress().toString().replaceAll(" ", "").replaceAll("\n", "")
+					.equals(origin.toString().replaceAll("localhost", "").replaceAll(" ", "").replaceAll("\n", ""))
+					&& i.getOriginPort() == sourcePort) {
 				return i;
 			}
 		}

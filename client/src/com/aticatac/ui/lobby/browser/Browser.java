@@ -43,7 +43,7 @@ public class Browser extends Scene {
         this.setOnMouseClicked(new LBMouseClicked());
 
         // TODO: add click listeners and key movement
-        AnimationTimer animation = new LBAnimation(gc, server , server.myInfo());
+        AnimationTimer animation = new LBAnimation(gc, server);
         animation.start();
 
     }

@@ -26,6 +26,7 @@ public class UDPClient extends Task implements LobbyServer {
 	private int status;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
+	private ClientInfo myInfo;
 	private boolean ready;
 
 	public UDPClient(String newName, InetAddress newAddress) {
@@ -90,6 +91,7 @@ public class UDPClient extends Task implements LobbyServer {
 
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;
+		this.myInfo = lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
 
 	public LobbyInfo getLobbyInfo() {
@@ -178,7 +180,17 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public ClientInfo myInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println(this.lobby==null);
+		/*		System.out.println("lobby players:" + this.lobby.getAll().size());
+		
+		for (ClientInfo i : this.lobby.getAll()) {
+			System.out.println(i.getAddress());
+			System.out.println(i.getOriginPort());
+			System.out.println("---------------");
+			System.out.println(this.address.toString().replaceAll("localhost", ""));
+			System.out.println(this.sender.getPort());
+			System.out.println("===================");
+		}*/
+		return this.lobby.getClientBySocket(this.address, this.sender.getPort());//lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
 }

@@ -19,19 +19,22 @@ public class ClientSender extends Task {
 	private DatagramSocket socket;
 	private boolean running;
 	private BlockingQueue<String> messageQueue;
+	private int port;
 
 	public ClientSender(String newName, InetAddress newServer, BlockingQueue newQueue) {
 		this.name = newName;
 		this.server = newServer;
 		try {
 			this.socket = new DatagramSocket();
+			this.port = socket.getLocalPort();
 		} catch (SocketException e) {
 			System.out.println("client sender cannot acquire socket");
 			e.printStackTrace();
 		}
+
 		this.messageQueue = newQueue;
 	}
-	
+
 	@Override
 	public Object call() {
 		System.out.println("sender started");
@@ -46,7 +49,7 @@ public class ClientSender extends Task {
 			// send message once got
 			buffer = message.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.SERVER_PORT);
-			
+
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
@@ -62,5 +65,9 @@ public class ClientSender extends Task {
 
 	public void halt() {
 		this.running = false;
+	}
+
+	public int getPort() {
+		return this.port;
 	}
 }

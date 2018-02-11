@@ -84,6 +84,11 @@ public class ClientReceiver extends Thread {
 						master.setStatus(Globals.IN_GAME);
 					}
 					System.out.println("cannot deserialise lobby (is it a model?)" + numFail);
+					try {
+						this.model = SerializationUtils.deserialize(packet.getData());
+						this.master.setStatus(Globals.IN_GAME);
+					} catch (Exception e2) {
+					}
 				}
 				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
