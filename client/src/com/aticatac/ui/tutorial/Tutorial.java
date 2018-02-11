@@ -16,9 +16,11 @@ import com.aticatac.world.items.SprayGun;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -35,6 +37,12 @@ public class Tutorial extends Scene {
 	public Tutorial (Group root) {
         super(root);
         
+        //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
+        //Image image = new Image("assets/sprites/crosshair.png");
+        
+        Image image = new Image("file:assets/sprites/crosshair.png");
+        this.setCursor(new ImageCursor(image));
+        
         //init display stuff
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
@@ -46,7 +54,8 @@ public class Tutorial extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
         //level.randomiseMap();
-        level.loadMap("client/assets/maps/map.txt");
+        System.out.println("getting map");
+        level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
