@@ -305,7 +305,8 @@ public class Level implements Serializable{
 		}
 
 		this.makeWalls();
-		makeRect(1, 1, 10, 10, 0);
+		//ensure upper left corner is free
+		makeRect(1, 1, 30, 30, 0);
 	}
 
 	// random methods
