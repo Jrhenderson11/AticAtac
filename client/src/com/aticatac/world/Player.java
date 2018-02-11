@@ -21,8 +21,6 @@ public class Player implements Serializable{
     protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     protected Gun gun;
     
-    
-    
     /**
      * @param controller
      * @param identifier
