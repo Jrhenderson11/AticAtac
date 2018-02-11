@@ -11,6 +11,9 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 import com.aticatac.world.Level;
+import com.aticatac.world.ai.utils.Translations;
+
+import javafx.util.Pair;
 
 public class AStar {
 	private static final double SLOW_COST = 1.5;
@@ -22,6 +25,8 @@ public class AStar {
 	private Map<Point, Point> parent;
 	private int identifier;
 
+	private ArrayList<Pair<Integer, Integer>> translations;
+
 	public AStar(Point startPoint, Point finishPoint, Level level, int identifier) {
 		this.startPoint = startPoint;
 		this.finishPoint = finishPoint;
@@ -29,6 +34,7 @@ public class AStar {
 		this.identifier = identifier;
 		this.cost = new HashMap<>();
 		this.parent = new HashMap<>();
+		this.translations = Translations.TRANSLATIONS;
 	}
 
 	public int getH(Point point, Point finishPoint) {
@@ -36,7 +42,7 @@ public class AStar {
 	}
 
 	public LinkedList<Point> getPath() {
-	LinkedList<Point> path = new LinkedList<>();
+		LinkedList<Point> path = new LinkedList<>();
 		cost.put(startPoint, 0.0);
 
 		Queue<Point> opened = new PriorityQueue<>(11, new Comparator<Point>() {
@@ -62,9 +68,9 @@ public class AStar {
 				break;
 			}
 
-			for (Point t : this.removeInvalid(getNeighbours(current))) {
+			for (Point t : removeInvalid(getNeighbours(current))) {
 				if (!visited.contains(t)) {
-					if (this.level.getCoords(t.x, t.y) == this.identifier) {
+					if (level.getCoords(t.x, t.y) == identifier) {
 						cost.put(t, cost.get(current) + 1);
 					} else {
 						// If the tile is covered in another player's colour, they will run over it
@@ -85,7 +91,6 @@ public class AStar {
 			current = parentPoint;
 		}
 		path.add(current);
-		path.add(startPoint);
 		Collections.reverse(path);
 
 		return path;
@@ -95,7 +100,7 @@ public class AStar {
 		ArrayList<Point> validNeighbours = new ArrayList<>();
 		int wall;
 		for (Point p : neighbours) {
-			wall = this.level.getCoords(p.x, p.y);
+			wall = level.getCoords(p.x, p.y);
 			// Remove those which are off the grid or collide with a wall
 			if (wall != 1 && wall != -1) {
 				validNeighbours.add(p);
@@ -103,14 +108,19 @@ public class AStar {
 		}
 		return validNeighbours;
 	}
-
+	
 	private ArrayList<Point> getNeighbours(Point p) {
 		ArrayList<Point> neighbours = new ArrayList<>();
-		for (int i = -2; i < 3; i+=2) {
-			for (int j = -2; j < 3; j+=2) {
-				if (i != 0 && j != 0) {
-					neighbours.add(new Point(p.x + i, p.y + j));
-				}
+		Point current;
+		int val;
+		Pair<Integer, Integer> translation;
+		for (int i = 0; i < 8; i++) {
+			translation = translations.get(i);
+			// Key is x translation, Value is y translation
+			current = new Point(p.x + translation.getKey(), p.y + translation.getValue());
+			val = level.getCoords(current.x,current.y);
+			if(val != 1 && val != -1) {
+				neighbours.add(current);
 			}
 		}
 		return neighbours;

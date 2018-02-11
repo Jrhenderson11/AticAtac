@@ -134,14 +134,15 @@ public class AIPlayer extends Player {
 	}
 
 	public int getCoverage(Gun g, Point p) {
-		int splatCoverage = 8; /* g.getSplatCoverage(); */
+		int splatCoverage = 5; /* g.getSplatCoverage(); */
 		// Hard coded in, need to get from gun
+		// Radius = 5
 		int x = 0;
 		int coord;
 
 		// if this is odd then it is easy, even not so much
-		for (int i = -(splatCoverage / 2); i < (splatCoverage / 2) + 1; i++) {
-			for (int j = -(splatCoverage / 2); j < (splatCoverage / 2) + 1; j++) {
+		for (int i = -splatCoverage; i < splatCoverage + 1; i++) {
+			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
 				coord = level.getCoords(p.x + i, p.y + j);
 				if (coord != identifier && coord != 1 && coord != -1) {
 					x++;
@@ -173,11 +174,12 @@ public class AIPlayer extends Player {
 
 		Point current = position;
 		Point translated;
+		Pair<Integer, Integer> translation;
 
 		while (!foundClosest) {
 			visited.add(current);
 			for (int i = 0; i < 8; i++) {
-				Pair<Integer, Integer> translation = translations.get(i);
+				translation = translations.get(i);
 				// Key is x translation, Value is y translation
 				translated = new Point(current.x + translation.getKey(), current.y + translation.getValue());
 				if (level.getCoords(translated.x, translated.y) == 0) {

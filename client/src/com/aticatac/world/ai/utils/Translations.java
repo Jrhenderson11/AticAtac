@@ -1,6 +1,7 @@
 package com.aticatac.world.ai.utils;
 
 import java.util.ArrayList;
+
 import javafx.util.Pair;
 
 public class Translations {
