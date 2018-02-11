@@ -7,20 +7,26 @@ import java.util.Random;
 
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
+import com.aticatac.world.ai.utils.Translations;
 import com.aticatac.world.items.Gun;
 import com.aticatac.world.items.ShootGun;
 import com.aticatac.world.items.SplatGun;
 import com.aticatac.world.items.SprayGun;
 
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 public class AIPlayer extends Player {
 
 	private final int PERCENTAGE_TO_MOVE = 85;
+	private final int RANGE_TO_SHOOT = 100;
+
 	private Level level;
 	private World world;
+
 	private LinkedList<Point> currentPath;
 	private Random r;
+	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS;
 
 	public AIPlayer(Controller controller, World world, int identifier, Color colour) {
 		super(controller, identifier, colour);
@@ -29,16 +35,18 @@ public class AIPlayer extends Player {
 		this.r = new Random();
 	}
 
-	public void makeDecision(Point[] otherPlayers) {
+	public void makeDecision() {
 		int[][] reducedMap = level.getReducedMap(identifier);
 		boolean foundTarget = false;
+		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
 		if (!currentPath.isEmpty()) {
-			for (Point player : otherPlayers) {
-				if (level.hasLOS(position, player) && inRange(player, gun)) {
+			for (Player player : otherPlayers) {
+				if (!player.equals(this) && level.hasLOS(position, player.getPosition())
+						&& inRange(player.getPosition())) {
 					// Spray or spit gun
 					foundTarget = true;
-					Point target = player.getLocation();
+					Point target = player.getPosition();
 					double angle = calculateLookDirection(target);
 					setLookDirection(angle);
 					// For now this is random which one it chooses but in the future
@@ -105,7 +113,8 @@ public class AIPlayer extends Player {
 
 	public Point getQuadrant(Gun g) {
 		Point[] options = new Point[4];
-		int range = 300; // g.getRange();
+		// Hard coded for now, need to get from the gun
+		int range = 200; // g.getRange();
 		options[0] = new Point(position.x, position.y + range);
 		options[1] = new Point(position.x + range, position.y);
 		options[2] = new Point(position.x, position.y - range);
@@ -125,8 +134,8 @@ public class AIPlayer extends Player {
 	}
 
 	public int getCoverage(Gun g, Point p) {
-		int splatCoverage = 3; /* g.getSplatCoverage(); */
-		// 3x3 area would probs be best
+		int splatCoverage = 8; /* g.getSplatCoverage(); */
+		// Hard coded in, need to get from gun
 		int x = 0;
 		int coord;
 
@@ -142,11 +151,9 @@ public class AIPlayer extends Player {
 		return x;
 	}
 
-	public boolean inRange(Point player, Gun gun) {
-		// int range = gun.getRange();
-		int range = 200;
+	public boolean inRange(Point player) {
 		if (Math.sqrt((Math.pow(player.getX() - position.getX(), 2))
-				+ Math.pow(player.getY() - position.getY(), 2)) <= range) {
+				+ Math.pow(player.getY() - position.getY(), 2)) <= RANGE_TO_SHOOT) {
 			// If the point lies inside the circle created by the range
 			return true;
 		}
@@ -159,23 +166,31 @@ public class AIPlayer extends Player {
 	}
 
 	public Point closestFreePoint() {
+		LinkedList<Point> toOpen = new LinkedList<>();
+		ArrayList<Point> visited = new ArrayList<>();
+
 		boolean foundClosest = false;
-		Point t = null;
-		int i = 0;
-		// is there a way to do this more efficently??
+
+		Point current = position;
+		Point translated;
+
 		while (!foundClosest) {
-			for (int j = -i; j < i; j += 2) {
-				for (int k = -i; k < i; k += 2) {
-					if (level.getCoords(position.x + j, position.y + k) == 0) {
-						foundClosest = true;
-						t = new Point(position.x + j, position.y + k);
-						break;
-					}
+			visited.add(current);
+			for (int i = 0; i < 8; i++) {
+				Pair<Integer, Integer> translation = translations.get(i);
+				// Key is x translation, Value is y translation
+				translated = new Point(current.x + translation.getKey(), current.y + translation.getValue());
+				if (level.getCoords(translated.x, translated.y) == 0) {
+					foundClosest = true;
+					return translated;
+				} else if (!visited.contains(translated) && !toOpen.contains(translated)
+						&& level.getCoords(translated.x, translated.y) != 1) {
+					toOpen.add(translated);
 				}
 			}
-			i += 2;
+			current = toOpen.poll();
 		}
-		return t;
+		return null;
 	}
 
 	// get the path that the ai player will take to reach the free Point

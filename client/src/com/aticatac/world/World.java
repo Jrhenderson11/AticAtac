@@ -29,6 +29,10 @@ public class World {
 	public Level getLevel() {
 		return level;
 	}
+	
+	public int getNumPlayers() {
+		return players.size();
+	}
 
 	public void movementHandler(int x, int y) {
 
