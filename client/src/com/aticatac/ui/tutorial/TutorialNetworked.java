@@ -129,6 +129,7 @@ public class TutorialNetworked extends Scene {
   	        	client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
   	        	World world = client.getModel();
   	        	renderer.setWorld(world);
+  	        	//NULL PTR EXCEPTION HERE
   	        	player.setPosition(((Player) world.getPlayers().toArray()[0]).getPosition());
   	        	//draw scene
   	        	renderer.render(gc);

@@ -76,8 +76,11 @@ public class UDPServer extends Thread{
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
 			this.startLobby(newClient);
-		} else if (this.status == Globals.IN_LOBBY) {
+		} else {
+			System.out.println("adding " + newClient.getID() + " to lobby");
 			this.lobby.addClient(newClient);
+			Player newPlayer = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+			this.model.addPlayer(newPlayer);
 		}
 		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");

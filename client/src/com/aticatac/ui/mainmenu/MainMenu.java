@@ -36,7 +36,7 @@ public class MainMenu extends Scene {
         menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group())));
-        menuItems.add(new MenuItem("TutorialNetworked", () -> new TutorialNetworked(new Group(), server)));
+        menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));
         menuItems.add(new MenuItem("Settings", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Credits", () -> new Placeholder(new Group())));
