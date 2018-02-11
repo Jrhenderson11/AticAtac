@@ -9,7 +9,6 @@ import com.aticatac.utils.Controller;
 import com.aticatac.world.items.Gun;
 import com.aticatac.world.ai.AStar;
 import com.aticatac.world.ai.utils.Translations;
-import com.aticatac.world.items.Gun;
 import com.aticatac.world.items.ShootGun;
 import com.aticatac.world.items.SplatGun;
 import com.aticatac.world.items.SprayGun;
@@ -18,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 public class AIPlayer extends Player {
-	
 
 	private final int PERCENTAGE_TO_MOVE = 85;
 	private final int RANGE_TO_SHOOT = 100;
