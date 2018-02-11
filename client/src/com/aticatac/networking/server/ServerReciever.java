@@ -120,13 +120,13 @@ public class ServerReciever extends Thread {
 
 			// GAME
 		} else if (parts[0].equals("input")) {
-		
+			System.out.println(data);
 			ArrayList<KeyCode> input = new ArrayList<KeyCode>();
 			for (String letter : parts[1].replaceAll("\\[", "").replaceAll(" ", "").replaceAll("\\]", "").split(",")) {
 				input.add(KeyCode.getKeyCode(letter));
 			}
 
-			double dir = Double.parseDouble(parts[parts.length - 1]);
+			double dir = Double.parseDouble(parts[parts.length - 1]) / 1000;
 			model.handleInput(input, dir);
 			model.update();
 		}

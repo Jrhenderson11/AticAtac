@@ -125,7 +125,7 @@ public class World implements Serializable {
 			level.updateCoords(p.x, p.y, player.getIdentifier());
 		}
 
-		
+		player.setLookDirection(dir);
 
 	}
 

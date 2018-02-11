@@ -32,9 +32,8 @@ public class TutorialNetworked extends Scene {
 	private int displayHeight;
 	private Level level;
 	private Renderer renderer;
-	private boolean tips;
 	private UDPClient client;
-	
+	private World world;
 	
 	public TutorialNetworked (Group root, UDPClient newClient) {
         super(root);
@@ -45,7 +44,6 @@ public class TutorialNetworked extends Scene {
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);
-        this.tips = true;
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
@@ -118,7 +116,8 @@ public class TutorialNetworked extends Scene {
   	        		r = (1.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
   	        	}
   	        	
-  	        	//dir = Double.valueOf(r);
+  	        	player.setLookDirection(r);
+  	        	
   	        }
   	    });
   		
@@ -135,20 +134,12 @@ public class TutorialNetworked extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	client.sendData("input:" + input.toString() + ":0");
+  	        	client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
   	        	World world = client.getModel();
   	        	renderer.setWorld(world);
-  	        	
+  	        	player.setPosition(((Player) world.getPlayers().toArray()[0]).getPosition());
   	        	//draw scene
   	        	renderer.render(gc);
-  	        	
-  	        	//draw help tips
-  	        	if (tips) {
-  	        		gc.setFill(Color.WHITE);
-  	        		gc.fillText("Use WASD keys to move\nAim with mouse\nClick"
-  							+ " to shoot\nPress H to hide/show this message\n\n Cheats:"
-  							+ "\nI - ShootGun\nO - SplatGun\nP - SprayGun", 100, 150);
-  	        	}
   	        }
   	    }.start();   
 	}
