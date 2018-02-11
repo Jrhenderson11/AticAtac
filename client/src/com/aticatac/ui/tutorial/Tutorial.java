@@ -46,11 +46,11 @@ public class Tutorial extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
         //level.randomiseMap();
-        level.loadMap("client/assets/maps/map.txt");
+        level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
-        Player player = new Player(Controller.REAL, 2, 2);
+        Player player = new Player(Controller.REAL, "player", 2);
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
         
@@ -184,7 +184,7 @@ public class Tutorial extends Scene {
   	        	//claim walking territory
   	        	Point p = world.displayPositionToCoords(player.getPosition());
   	        	if (level.getGrid()[p.x][p.y] == 0) {
-  	        		level.updateCoords(p.x, p.y, player.getIdentifier());
+  	        		level.updateCoords(p.x, p.y, player.getColour());
   	        	}
 
   	        	/* ================ */

@@ -14,14 +14,21 @@ public class Player implements Serializable{
 	private final static int BASE_PAINT_INCREASE = 5;
 	
     private Controller controller;
-    private int identifier;
+    private String identifier;
     private int colour;
     private int paintLevel;
     private Point position;
     private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
     private Gun gun;
     
-    public Player(Controller controller, int identifier, int colour) {
+    
+    
+    /**
+     * @param controller
+     * @param identifier
+     * @param colour
+     */
+    public Player(Controller controller, String identifier, int colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
@@ -83,11 +90,11 @@ public class Player implements Serializable{
 		this.position.y += dY;
 	}
 
-	public int getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(int identifier) {
+	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
