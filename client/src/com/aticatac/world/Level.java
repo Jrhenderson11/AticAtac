@@ -305,9 +305,17 @@ public class Level implements Serializable{
 		}
 
 		this.makeWalls();
+		makeRect(1, 1, 10, 10, 0);
 	}
 
 	// random methods
+	/** Make a rectangle
+	 * @param posX top left x coord
+	 * @param posY top left y coord
+	 * @param xLen width to make rect
+	 * @param yLen height to make rect
+	 * @param tile int value to fill rect with
+	 */
 	private void makeRect(int posX, int posY, int xLen, int yLen, int tile) {
 
 		for (int y = posY; (y - posY < yLen) && (y < height) && (y > 0); y++) {
