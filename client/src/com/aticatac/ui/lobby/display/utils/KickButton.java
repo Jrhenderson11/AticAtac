@@ -4,10 +4,10 @@ import com.aticatac.ui.utils.Button;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
-public class ReadyStartButton extends Button {
+public class KickButton extends Button {
 
-    public ReadyStartButton(Rectangle hitbox, String text) {
-        super(hitbox, text);
+    public KickButton(Rectangle hitbox) {
+        super(hitbox, "Kick");
     }
 
     @Override

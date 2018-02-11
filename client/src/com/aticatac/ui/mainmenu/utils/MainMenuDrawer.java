@@ -73,7 +73,7 @@ public class MainMenuDrawer {
             gc.setFont(UIDrawer.OPTION_TEXT);
             gc.setTextAlign(TextAlignment.CENTER);
             double x = width / 2;
-            double y = (i + 2) * height / 9;
+            double y = (i + 3) * height / (items.size() + 3);
             gc.strokeText(item.getName(), x, y);
             gc.fillText(item.getName(), x, y);
 

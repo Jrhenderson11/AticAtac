@@ -80,10 +80,10 @@ public class ClientReceiver extends Thread {
 					}
 				} catch (Exception e) {
 					numFail++;
-					if (numFail>2000000000) { 
+					if (numFail>20000) { 
 						master.setStatus(Globals.IN_GAME);
 					}
-					System.out.println("cannot deserialise lobby (is it a model?)");
+					System.out.println("cannot deserialise lobby (is it a model?)" + numFail);
 				}
 				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
@@ -91,7 +91,7 @@ public class ClientReceiver extends Thread {
 				try {
 					this.model = SerializationUtils.deserialize(packet.getData());
 				} catch (Exception e) {
-					System.out.println("uh - oh");
+					//System.out.println("uh - oh");
 				}
 				//System.out.println("in game");
 				if (model == null) {
