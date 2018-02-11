@@ -1,6 +1,7 @@
 package com.aticatac.ui.quit;
 
 import com.aticatac.ui.quit.handlers.QuitAnimation;
+import com.aticatac.ui.quit.handlers.QuitKeyPressed;
 import com.aticatac.ui.quit.utils.Option;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
@@ -30,7 +31,6 @@ public class Quit extends Scene {
 
 
         ArrayList<Option> options = new ArrayList<>();
-        AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
 
         Function<Void, Void> yes = nothing -> {
             System.exit(0);
@@ -38,13 +38,16 @@ public class Quit extends Scene {
         };
 
         Function<Void, Void> no = nothing -> {
-            animation.stop(); // TODO: might have to remove this, also this code is a little dodgey. I don't like pointers
             primaryStage.setScene(mainMenu);
             return null;
         };
 
         options.add(new Option(yes, "Yes"));
         options.add(new Option(no, "No"));
+
+        this.setOnKeyPressed(new QuitKeyPressed());
+
+        AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
 
         animation.start();
 
