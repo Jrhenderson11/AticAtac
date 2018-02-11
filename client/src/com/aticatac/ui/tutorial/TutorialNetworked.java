@@ -125,9 +125,7 @@ public class TutorialNetworked extends Scene {
   		setOnMouseClicked(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
-  	        	if (player.getGun() != null) {
-  	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
-  	        	}
+  	        	client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
   	        }
   		});
   		

@@ -129,6 +129,8 @@ public class ServerReciever extends Thread {
 			double dir = Double.parseDouble(parts[parts.length - 1]) / 1000;
 			model.handleInput(input, dir);
 			model.update();
+		} else if(parts[0].equals("click")) {
+			model.shoot(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 		}
 	}
 }

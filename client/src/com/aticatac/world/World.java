@@ -129,6 +129,16 @@ public class World implements Serializable {
 
 	}
 
+	public void shoot(int targetX, int targetY) {
+		// TODO: replace with specific player
+
+		Player player = (Player) players.toArray()[0];
+
+		if (player.getGun() != null) {
+      		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
+      	}
+	}
+	
 	public Collection<Bullet> getBullets() {
 		return bullets;
 	}
