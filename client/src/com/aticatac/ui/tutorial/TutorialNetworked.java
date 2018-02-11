@@ -34,35 +34,32 @@ public class TutorialNetworked extends Scene {
 	private Renderer renderer;
 	private UDPClient client;
 	private World world;
-	private boolean init;
 	
 	private void skipLobby() {
 		client.joinLobby(1, "password");
         client.startGame();
         System.out.println("waiting for network");
         while (client.getStatus() != Globals.IN_GAME) {}
-	    this.init = true;      
 	}
 	
 	public TutorialNetworked (Group root, UDPClient newClient) {
 		super(root);
         this.client = newClient;
-        this.init = false;
         //init display stuff
-        System.out.println("TUTORIAL STARTED");
-
+        this.skipLobby();
+        System.out.println("skip lobby");
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);
-        
+        System.out.println("added renderer");
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
         
-        Player player = new Player(Controller.REAL, 2, 2);
+        Player player = new Player(Controller.REAL, "id", 2);
         player.setPosition(new Point(50, 50));
-        
+        System.out.println("added player");
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
@@ -129,10 +126,6 @@ public class TutorialNetworked extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	
-  	        	if (!init) {
-  	        		skipLobby();
-  	        	}
   	        	client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
   	        	World world = client.getModel();
   	        	renderer.setWorld(world);

@@ -22,6 +22,7 @@ public class World implements Serializable {
 	private Collection<Player> players;
 	private Collection<Bullet> bullets;
 	private Level level;
+	private final Point[] startLocs = {new Point(50, 50), new Point(100, 100)};
 
 	int[][] map;
 
@@ -33,13 +34,11 @@ public class World implements Serializable {
 	}
 
 	// sets up world
-	public void init() {
-
-		Player player = new Player(Controller.REAL, 2, 2);
+	public void init(Player player) {
 		player.setPosition(new Point(50, 50));
 		this.addPlayer(player);
 	}
-
+	
 	public Level getLevel() {
 		return level;
 	}
@@ -48,8 +47,8 @@ public class World implements Serializable {
 	// this is currently used for moving the bullets.
 	public void update() {
 		// update bullets
-		for (Collidable collidable : bullets) {
-			collidable.update(this);
+		for (int i=0; i<bullets.size(); i++) {
+			((Bullet) bullets.toArray()[i]).update(this);
 		}
 		// update players
 		for (Player player : players) {
@@ -57,10 +56,8 @@ public class World implements Serializable {
 		}
 	}
 
-	public void handleInput(ArrayList<KeyCode> input, double dir) {
-		// TODO: replace with specific player
-
-		Player player = (Player) players.toArray()[0];
+	public void handleInput(ArrayList<KeyCode> input, double dir, String id) {
+		Player player = this.getPlayerById(id);
 		// left
 		if (input.contains(KeyCode.A)) {
 	
@@ -122,7 +119,7 @@ public class World implements Serializable {
 
 		Point p = this.displayPositionToCoords(player.getPosition());
 		if (level.getGrid()[p.x][p.y] == 0) {
-			level.updateCoords(p.x, p.y, player.getIdentifier());
+			level.updateCoords(p.x, p.y, player.getColour());
 		}
 
 		player.setLookDirection(dir);
@@ -159,13 +156,22 @@ public class World implements Serializable {
 		return players.add(player);
 	}
 
-	public int getPlayerColour(int playerIdentifier) {
+	public int getPlayerColour(String playerIdentifier) {
 		for (Player player : players) {
 			if (player.getIdentifier() == playerIdentifier) {
 				return player.getColour();
 			}
 		}
 		return 0;
+	}
+
+	public Player getPlayerById(String id) {
+		for (Player p: this.getPlayers()) {
+			if (p.getIdentifier()==id) {
+				return p;
+			} 
+		}
+		return null;
 	}
 
 	/**

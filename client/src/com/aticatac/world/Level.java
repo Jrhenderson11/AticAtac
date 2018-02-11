@@ -106,12 +106,8 @@ public class Level implements Serializable{
 		return count;
 	}
 	
-	public void updateCoords(int x, int y, int val) {
-		this.grid[x][y] = val;
-	}
-	
 	//updates coords with input restrictions and no overwriting walls
-	public boolean safeUpdateCoords(int x, int y, int val) {
+	public boolean updateCoords(int x, int y, int val) {
 		if (x < width && y < height && x >= 0 && y >= 0) {
 			if (grid[x][y] != 1) {
 				this.grid[x][y] = val;
@@ -151,7 +147,7 @@ public class Level implements Serializable{
 		int length = 8;
 		
 		//paint center point
-		safeUpdateCoords(posX, posY, colour);
+		updateCoords(posX, posY, colour);
 		
 		//increase outwards from either side center point
 		for (int i = 0; i < length/2; i++) {
@@ -159,8 +155,8 @@ public class Level implements Serializable{
 			int y1 = (int) (posY - (i * Math.cos(direction)));
 			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); //the opposite direction
 			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI))); 
-			safeUpdateCoords(x1, y1, colour);
-			safeUpdateCoords(x2, y2, colour);
+			updateCoords(x1, y1, colour);
+			updateCoords(x2, y2, colour);
 		}
 	}
 
@@ -178,8 +174,9 @@ public class Level implements Serializable{
 						grid[posX - x][posY + y] = fillVal;
 					}
 				}
-				if ((posY - y > 0) ) {
-					if ((posX + x < (width - 1)) && grid[posX + x][posY - y]!=blockVal) {
+
+				if ((posY - y > 0)) {
+					if ((posX + x < (width-1)) && grid[posX + x][posY - y]!=blockVal) {
 						grid[posX + x][posY - y] = fillVal;
 					}
 					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {

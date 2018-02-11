@@ -231,7 +231,7 @@ public class Renderer {
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
-					if (grid[x][y] == player.getIdentifier()) {
+					if (grid[x][y] == player.getColour()) {
 						Color color = Color.BLUE;//player.getColour();
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);

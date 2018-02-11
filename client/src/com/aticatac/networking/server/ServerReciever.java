@@ -107,7 +107,7 @@ public class ServerReciever extends Thread {
 		// LOBBY STUFF
 		if (data.equals("init")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
-			master.joinLobby(info.getUsername(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
+			master.joinLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);
 
 		} else if (data.equals("ready")) {
@@ -119,11 +119,11 @@ public class ServerReciever extends Thread {
 			this.master.setClientUnReady(origin, originPort);
 
 		} else if (parts[0].equals("name")) {
-			this.master.startGame();
+			//this.master.startGame();
 
 		} else if (data.equals("leavelobby")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
-			master.leaveLobby(info.getUsername(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
+			master.leaveLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);
 		} else if (data.equals("start")) {
 			this.master.startGame();
@@ -140,7 +140,7 @@ public class ServerReciever extends Thread {
 			}
 
 			double dir = Double.parseDouble(parts[parts.length - 1]) / 1000;
-			model.handleInput(input, dir);
+			model.handleInput(input, dir, this.getConnectionInfo(origin, originPort).getID());
 			model.update();
 		} else if(parts[0].equals("click")) {
 			model.shoot(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
