@@ -9,13 +9,13 @@ import javafx.scene.paint.Color;
 
 public class Player {
     
-    private Controller controller;
-    private int identifier;
-    private Color colour;
-    private int paintLevel;
-    private Point position;
-    private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
-    private Gun gun;
+    protected Controller controller;
+    protected int identifier;
+    protected Color colour;
+    protected int paintLevel;
+    protected Point position;
+    protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
+    protected Gun gun;
     
     public Player(Controller controller, int identifier, Color colour) {
     	this.controller = controller;

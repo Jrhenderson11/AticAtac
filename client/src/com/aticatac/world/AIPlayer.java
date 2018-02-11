@@ -3,9 +3,14 @@ package com.aticatac.world;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
+import com.aticatac.world.items.Gun;
+import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.SplatGun;
+import com.aticatac.world.items.SprayGun;
 
 import javafx.scene.paint.Color;
 
@@ -13,68 +18,53 @@ public class AIPlayer extends Player {
 
 	private final int PERCENTAGE_TO_MOVE = 85;
 	private Level level;
+	private World world;
 	private LinkedList<Point> currentPath;
+	private Random r;
 
-	public AIPlayer(Controller controller, Level level, int identifier, Color colour) {
+	public AIPlayer(Controller controller, World world, int identifier, Color colour) {
 		super(controller, identifier, colour);
-		this.level = level;
+		this.world = world;
+		this.level = world.getLevel();
+		this.r = new Random();
 	}
 
 	public void makeDecision(Point[] otherPlayers) {
-		// int[][] reducedMap = level.getReducedMap(identifier);
-
+		int[][] reducedMap = level.getReducedMap(identifier);
 		boolean foundTarget = false;
 
 		if (!currentPath.isEmpty()) {
 			for (Point player : otherPlayers) {
 				if (level.hasLOS(position, player) && inRange(player, gun)) {
 					// Spray or spit gun
+					foundTarget = true;
 					Point target = player.getLocation();
 					double angle = calculateLookDirection(target);
 					setLookDirection(angle);
-					// Decide between spray and spit weapon depending on ammunition levels of each??
-					gun.shoot(target);
-					foundTarget = true;
+					// For now this is random which one it chooses but in the future
+					// we can have a way to decide which one will do more damage
+					if (r.nextInt() % 2 == 1) {
+						setGun(new SprayGun(this));
+					} else {
+						setGun(new ShootGun(this));
+					}
+					gun.fire(lookDirection, target, world);
 					break;
 				}
 			}
-			if(!foundTarget) {
+			if (!foundTarget && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
 				Point point = closestFreePoint();
 				pathToFreePoint(point);
-				doAction('p');
-			}
-		}else {
-			doAction('p');
-		}
-
-		/*if (getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
-			// If the area is mostly covered by the players own paint
-			if (!currentPath.isEmpty()) {
-				Point point = closestFreePoint();
-				pathToFreePoint(point);
-				doAction('p');
+				makeNextMove();
+			} else {
+				setGun(new SplatGun(this));
+				Point target = getQuadrant(gun);
+				setLookDirection(calculateLookDirection(target));
+				gun.fire(lookDirection, target, world);
 			}
 		} else {
-			// boolean foundTarget = false;
-			for (Point player : otherPlayers) {
-				if (level.hasLOS(position, player) && inRange(player, gun)) {
-					// Spray or spit gun
-					Point target = player.getLocation();
-					double angle = calculateLookDirection(target);
-					setLookDirection(angle);
-					// Decide between spray and spit weapon depending on ammunition levels of each??
-					gun.shoot(target);
-					// foundTarget = true;
-					break;
-				}
-			}
-			
-			/*
-			 * if(!foundTarget) { // If no player is in the range of either of the guns,
-			 * uses the splat gun Point direction = getQuadrant(gun); doAction('s',
-			 * gun, direction); }
-			 
-		 */
+			makeNextMove();
+		}
 	}
 
 	public double calculateLookDirection(Point target) {
@@ -101,14 +91,6 @@ public class AIPlayer extends Player {
 		return angle;
 	}
 
-	// Splat - Fires a paint explosive a !! certain range that covers an !! area
-	// with
-	// paint on impact. Medium paint usage
-	// Spray - Fires paint that covers the ground and hits any opponents in a
-	// straight line.
-	// Spit - Fires paint bullets that remove the paint from the ground where
-	// it hits an opponent, and takes away some paint ammunition from that player.
-
 	public int getCurrentPercentage(int[][] reducedMap) {
 		int count = 0;
 		for (int x = 0; x < reducedMap.length; x++) {
@@ -123,7 +105,7 @@ public class AIPlayer extends Player {
 
 	public Point getQuadrant(Gun g) {
 		Point[] options = new Point[4];
-		int range = g.getRange();
+		int range = 300; // g.getRange();
 		options[0] = new Point(position.x, position.y + range);
 		options[1] = new Point(position.x + range, position.y);
 		options[2] = new Point(position.x, position.y - range);
@@ -161,7 +143,8 @@ public class AIPlayer extends Player {
 	}
 
 	public boolean inRange(Point player, Gun gun) {
-		int range = gun.getRange();
+		// int range = gun.getRange();
+		int range = 200;
 		if (Math.sqrt((Math.pow(player.getX() - position.getX(), 2))
 				+ Math.pow(player.getY() - position.getY(), 2)) <= range) {
 			// If the point lies inside the circle created by the range
@@ -170,16 +153,7 @@ public class AIPlayer extends Player {
 		return false;
 	}
 
-	public void doAction(char c, Gun gun, Point direction) {
-		assert (c == 's');
-
-		// Only should be called with 's'
-		// Shoot gun
-	}
-
-	public void doAction(char c) {
-		assert (c == 'p');
-		// Only should be called with 'p'
+	public void makeNextMove() {
 		Point next = currentPath.poll();
 		move(next.x - position.x, next.y - position.y);
 	}
