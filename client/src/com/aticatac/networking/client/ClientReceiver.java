@@ -80,7 +80,7 @@ public class ClientReceiver extends Thread {
 					}
 				} catch (Exception e) {
 					numFail++;
-					if (numFail>20) { 
+					if (numFail>200000000) { 
 						master.setStatus(Globals.IN_GAME);
 					}
 					System.out.println("cannot deserialise lobby (is it a model?)");
@@ -91,7 +91,7 @@ public class ClientReceiver extends Thread {
 				try {
 					this.model = SerializationUtils.deserialize(packet.getData());
 				} catch (Exception e) {
-					System.out.println("uh - oh");
+					//System.out.println("uh - oh");
 				}
 				//System.out.println("in game");
 				if (model == null) {

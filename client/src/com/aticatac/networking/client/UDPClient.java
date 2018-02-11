@@ -163,8 +163,11 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public Lobby updateLobby(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		/*System.out.println("updating");
+		System.out.println("status: " + this.status);
+		System.out.println(this.lobby == null);
+		System.out.println("========");*/
+        return this.lobby;
 	}
 
 	@Override

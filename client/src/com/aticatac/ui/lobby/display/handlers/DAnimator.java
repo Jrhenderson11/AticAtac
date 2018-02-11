@@ -36,10 +36,15 @@ public class DAnimator extends AnimationTimer {
         drawables = new HashSet<>();
 
         Lobby lobby = server.updateLobby(selected);
+        //don't be greedy: let the server take some time to get it's lobby object
+        while (lobby==null) {
+        	lobby = server.updateLobby(selected);
+        }
+        System.out.println(lobby == null);
         ClientInfo leader = lobby.getLobbyLeader();
+        
         ArrayList<ClientInfo> peasants  = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
-
         drawables.add(new ClientInfoBrick(leader));
 
         for (ClientInfo c : peasants) {
