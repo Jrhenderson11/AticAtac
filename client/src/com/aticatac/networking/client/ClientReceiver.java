@@ -83,7 +83,7 @@ public class ClientReceiver extends Thread {
 					if (numFail>200000000) { 
 						master.setStatus(Globals.IN_GAME);
 					}
-					System.out.println("cannot deserialise lobby (is it a model?)");
+					System.out.println("cannot deserialise lobby (is it a model?)" + numFail);
 				}
 				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
