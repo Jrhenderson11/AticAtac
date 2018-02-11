@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class MainMenu extends Scene{
 

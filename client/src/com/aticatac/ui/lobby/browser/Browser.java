@@ -66,6 +66,8 @@ public class Browser extends Scene {
 
     public static void join() {
 
+        if (selected == -1) return;
+
         if (server.joinLobby(selected, "")) {
             stage.setScene(new Displayer(new Group(), server.updateLobby(selected)));
         } else {
