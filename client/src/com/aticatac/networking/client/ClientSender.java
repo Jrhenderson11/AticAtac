@@ -9,7 +9,9 @@ import java.util.concurrent.BlockingQueue;
 
 import com.aticatac.networking.globals.Globals;
 
-public class ClientSender extends Thread {
+import javafx.concurrent.Task;
+
+public class ClientSender extends Task {
 
 	private String name;
 	private byte[] buffer = new byte[256];
@@ -29,8 +31,10 @@ public class ClientSender extends Thread {
 		}
 		this.messageQueue = newQueue;
 	}
-
-	public void run() {
+	
+	@Override
+	public Object call() {
+		System.out.println("sender started");
 		this.running = true;
 		String message = "";
 		while (running) {
@@ -42,8 +46,7 @@ public class ClientSender extends Thread {
 			// send message once got
 			buffer = message.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.SERVER_PORT);
-			// System.out.println("sending " + message);
-
+			
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
@@ -51,13 +54,10 @@ public class ClientSender extends Thread {
 				System.exit(-1);
 				e.printStackTrace();
 			}
-			try {
-				Thread.sleep(5);
-			} catch (InterruptedException e1) {
-			}
 		}
+		System.out.println("stopping sender");
 		socket.close();
-		
+		return new Object();
 	}
 
 	public void halt() {

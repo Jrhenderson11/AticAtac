@@ -1,5 +1,7 @@
 package com.aticatac.networking.main;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import com.aticatac.networking.client.UDPClient;
@@ -8,10 +10,17 @@ import com.aticatac.networking.server.UDPServer;
 public class NetworkingTest {
 
 	public static void main(String[] args) {
-
+/*
 		UDPServer server = new UDPServer();
-		UDPClient client = new UDPClient("C1");
-		UDPClient client2 = new UDPClient("C2");
+		InetAddress srvAddress = null;
+		try {
+			srvAddress = InetAddress.getByName("localhost");
+		} catch (UnknownHostException e) {
+			System.out.println("server unreachable on this network");
+			System.exit(-1);
+		}
+		UDPClient client = new UDPClient("C1", srvAddress);
+		UDPClient client2 = new UDPClient("C2", srvAddress);
 
 		Date timer = new Date();
 		long start = timer.getTime();
@@ -56,7 +65,7 @@ public class NetworkingTest {
 		}
 		System.out.println("done");
 		// client.close();
-
+*/
 	}
 
 }

@@ -5,6 +5,7 @@ import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.browser.utils.LBDrawer;
 import com.aticatac.ui.utils.UIDrawer;
+
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

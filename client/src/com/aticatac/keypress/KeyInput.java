@@ -1,3 +1,4 @@
+
 package com.aticatac.keypress;
 
 import java.util.ArrayList;
@@ -151,12 +152,9 @@ public class KeyInput extends Application {
 		r.setFill(Color.AZURE);
 		root.getChildren().add(r);
 		
-		Rectangle bullet = new Rectangle(x,y, 10,5);
-		bullet.setFill(Color.AQUA);
-		Bullet bulletC = new Bullet(x,y, Color.AQUA, root);
-		// bullet = bulletC.getRect();
-		root.getChildren().add(bullet);
-		
+		Bullet bullet = new Bullet(x,y, Color.AQUA, root);
+		Image bulletImg = bullet.getImg();
+			
 		
 		
 		AnimationTimer timer = new AnimationTimer() {
@@ -172,18 +170,20 @@ public class KeyInput extends Application {
 				
 				double[] v = gun.calcDirection(x, y);
 				//System.out.println(x+v[0]);
-				double bulX = bulletC.getX();
-				double bulY = bulletC.getY();
+				double bulX = bullet.getX();
+				double bulY = bullet.getY();
 				if (gun.isAimRunning()){
-					bullet.setTranslateX(bulX += v[0]);
-					bulletC.setX(bulX + v[0]);
+					double currentX = bulX + v[0];
+					bullet.setX(currentX);
+					gc.drawImage(bulletImg, currentX, bulY);
+					
 				}
 				
 				if(gun.isAimRunning()){
-					bullet.setTranslateY(bulY += v[1]);
-					bulletC.setY(bulY + v[1]);
+					double currentY = bulY + v[1];
+					bullet.setY(currentY);
+					gc.drawImage(bulletImg, bulX, currentY);
 				}
-				//bullet.setTranslateY(y += v[1]);
 				
 				if (moveUp /*&& checkPos(1)*/) {
 					y -= speed;

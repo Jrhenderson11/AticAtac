@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 public class AIPlayer extends Player {
 	
-	public AIPlayer(Controller controller, int identifier, Color colour) {
+	public AIPlayer(Controller controller, int identifier, int colour) {
 		super(controller, identifier, colour);
 	}
 	

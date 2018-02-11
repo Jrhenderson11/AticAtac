@@ -1,14 +1,15 @@
 package com.aticatac.lobby;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
-public interface LobbyServer {
+import com.aticatac.lobby.utils.LobbyInfo;
 
+import javafx.scene.paint.Color;
+
+public interface LobbyServer {
+	
     // Only allowed when client is in a lobby
     Lobby updateLobby(int id);
-
     // Only give full testserver info once client actually joins
     boolean joinLobby(int id, String password);
 

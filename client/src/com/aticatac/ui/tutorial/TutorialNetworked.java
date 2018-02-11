@@ -3,6 +3,8 @@ package com.aticatac.ui.tutorial;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.aticatac.networking.client.UDPClient;
+import com.aticatac.networking.globals.Globals;
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
@@ -24,37 +26,43 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class Tutorial extends Scene {
+public class TutorialNetworked extends Scene {
 	
 	private int displayWidth;
 	private int displayHeight;
 	private Level level;
 	private Renderer renderer;
-	private boolean tips;
+	private UDPClient client;
+	private World world;
+	private boolean init;
 	
-	public Tutorial (Group root) {
-        super(root);
-        
+	private void skipLobby() {
+		client.joinLobby(1, "password");
+        client.startGame();
+        System.out.println("waiting for network");
+        while (client.getStatus() != Globals.IN_GAME) {}
+	    this.init = true;      
+	}
+	
+	public TutorialNetworked (Group root, UDPClient newClient) {
+		super(root);
+        this.client = newClient;
+        this.init = false;
         //init display stuff
+        System.out.println("TUTORIAL STARTED");
+
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);
-        this.tips = true;
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        this.level = new Level(50, 50);
-        //level.randomiseMap();
-        level.loadMap("client/assets/maps/map.txt");
-        World world = new World(level);
         
-        renderer.setWorld(world);
+        
         Player player = new Player(Controller.REAL, 2, 2);
         player.setPosition(new Point(50, 50));
-        world.addPlayer(player);
         
-        /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
@@ -75,7 +83,7 @@ public class Tutorial extends Scene {
   	            input.remove(code);
   	        }
   	    });
-  		
+  	
   		//updates player looking direction based on mouse pointer when mouse moves.
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
@@ -106,6 +114,7 @@ public class Tutorial extends Scene {
   	        	}
   	        	
   	        	player.setLookDirection(r);
+  	        	
   	        }
   	    });
   		
@@ -113,97 +122,23 @@ public class Tutorial extends Scene {
   		setOnMouseClicked(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
-  	        	if (player.getGun() != null) {
-  	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
-  	        	}
+  	        	client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
   	        }
   		});
   		
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	//handle movement, reverting moves when detecting collision
-  	        	//left
-  	        	if (input.contains(KeyCode.A)) {
-  	        		player.move(-2, 0);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {   //if the grid coordinate of player is on a wall tile (1) in the level grid.
-  	        			player.move(2, 0);
-  	        		}
-  	        	}
-  	        	//right
-  	        	if (input.contains(KeyCode.D)) {
-  	        		player.move(2, 0);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(-2, 0);
-  	        		}
-  	        	}
-  	        	//up
-  	        	if (input.contains(KeyCode.W)) {
-  	        		player.move(0, -2);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(0, 2);
-  	        		}
-  	        	}
-  	        	//down
-  	        	if (input.contains(KeyCode.S)) {
-  	        		player.move(0, 2);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(0, -2);
-  	        		}
-  	        	}
   	        	
-  	        	//Gun spawn in, using for testing, remove in game
-  	        	//Shoot gun
-  	        	if (input.contains(KeyCode.I)) {
-  	        		player.setGun(new ShootGun(player));
-  	        		input.remove(KeyCode.I);
+  	        	if (!init) {
+  	        		skipLobby();
   	        	}
-  	        	//Splat gun
-  	        	if (input.contains(KeyCode.O)) {
-  	        		player.setGun(new SplatGun(player));
-  	        		input.remove(KeyCode.O);
-  	        		
-  	        	}
-  	        	//Spray gun
-  	        	if (input.contains(KeyCode.P)) {
-  	        		player.setGun(new SprayGun(player));
-  	        		input.remove(KeyCode.P);
-  	        	}
-  	        	if (input.contains(KeyCode.H)) {
-  	        		if (tips)
-  	        			tips = false;
-  	        		else
-  	        			tips = true;
-  	        		input.remove(KeyCode.H);
-  	        	}
-  	        	
-  	        	//claim walking territory
-  	        	Point p = world.displayPositionToCoords(player.getPosition());
-  	        	if (level.getGrid()[p.x][p.y] == 0) {
-  	        		level.updateCoords(p.x, p.y, player.getIdentifier());
-  	        	}
-
-  	        	/* ================ */
-
-  	        	
-  	        	//update world
-  	        	world.update();
-  	        	
-
+  	        	client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
+  	        	World world = client.getModel();
+  	        	renderer.setWorld(world);
+  	        	player.setPosition(((Player) world.getPlayers().toArray()[0]).getPosition());
   	        	//draw scene
   	        	renderer.render(gc);
-  	        	
-  	        	//draw help tips
-  	        	if (tips) {
-  	        		gc.setFill(Color.WHITE);
-  	        		gc.fillText("Use WASD keys to move\nAim with mouse\nClick"
-  							+ " to shoot\nPress H to hide/show this message\n\n Cheats:"
-  							+ "\nI - ShootGun\nO - SplatGun\nP - SprayGun", 100, 150);
-  	        	}
   	        }
   	    }.start();   
 	}
