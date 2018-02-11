@@ -98,8 +98,8 @@ public class UDPClient extends Task implements LobbyServer {
 
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
-		//System.out.println(this.lobbyInfo.MAX_PLAYERS);
-		//System.out.println(newInfo.MAX_PLAYERS);
+		// System.out.println(this.lobbyInfo.MAX_PLAYERS);
+		// System.out.println(newInfo.MAX_PLAYERS);
 	}
 
 	/* =========== */
@@ -117,7 +117,7 @@ public class UDPClient extends Task implements LobbyServer {
 			return true;
 		}
 		return false;
-		
+
 	}
 
 	@Override
@@ -145,13 +145,18 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public boolean leaveLobby() {
+		if (this.status == Globals.IN_LOBBY) {
+			this.sendData("leavelobby");
+			this.status = Globals.IN_LIMBO;
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
 		ArrayList<LobbyInfo> lobbies = new ArrayList<LobbyInfo>();
-		
+
 		lobbies.add(this.lobbyInfo);
 		return lobbies;
 	}

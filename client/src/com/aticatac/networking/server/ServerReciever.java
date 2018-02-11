@@ -112,6 +112,10 @@ public class ServerReciever extends Thread {
 		} else if (parts[0].equals("name")) {
 			this.master.startGame();
 
+		} else if (data.equals("leavelobby")) {
+			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
+			master.leaveLobby(info.getUsername(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
+					originPort);
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {

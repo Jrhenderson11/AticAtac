@@ -67,15 +67,26 @@ public class UDPServer extends Thread{
 	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
 		ClientInfo newClient = new ClientInfo("id", name, false, 2, address, destPort, originPort);
-		System.out.println(status == Globals.IN_LIMBO);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
 			this.startLobby(newClient);
 		} else if (this.status == Globals.IN_LOBBY) {
 			this.lobby.addClient(newClient);
 		}
-		this.lobbyInfo = new LobbyInfo(4, 1 + this.lobby.getPeasants().size(), 1, this.lobbyInfo.NAME);
+		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");
+	}
+	
+	public void leaveLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
+		ClientInfo newClient = new ClientInfo("id", name, false, 2, address, destPort, originPort);
+		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
+			this.lobby.removeClient(newClient);
+		} 
+		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
+		if (this.lobby.getAll().size() == 0) {
+			this.status = Globals.IN_LIMBO;
+		}
+		System.out.println("Client left lobby");
 	}
 	
 	public Lobby getLobby() {

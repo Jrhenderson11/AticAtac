@@ -34,12 +34,20 @@ public class TutorialNetworked extends Scene {
 	private Renderer renderer;
 	private UDPClient client;
 	private World world;
+	private boolean init;
+	
+	private void skipLobby() {
+		client.joinLobby(1, "password");
+        client.startGame();
+        System.out.println("waiting for network");
+        while (client.getStatus() != Globals.IN_GAME) {}
+	    this.init = true;      
+	}
 	
 	public TutorialNetworked (Group root, UDPClient newClient) {
         super(root);
         this.client = newClient;
-        client.joinLobby(1, "password");
-        client.startGame();
+        this.init = false;
         //init display stuff
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
@@ -48,24 +56,11 @@ public class TutorialNetworked extends Scene {
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        /* ================ */
-        System.out.println("waiting for network");
-        while (client.getStatus() != Globals.IN_GAME) {
-        	System.out.println(client.getStatus());
-        	System.out.println(client.getStatus() == Globals.IN_GAME);
-        }
-        // 	MOVE TO SRV
-        World world = client.getModel();
-        /* ================ */
         
-        renderer.setWorld(world);
-        /* ================ */
-        //	MOVE TO SRV
+        
         Player player = new Player(Controller.REAL, 2, 2);
         player.setPosition(new Point(50, 50));
-        //world.addPlayer(player);
-    	Double dir = new Double(0);
-        /* ================ */
+        
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
@@ -132,6 +127,10 @@ public class TutorialNetworked extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	
+  	        	if (!init) {
+  	        		skipLobby();
+  	        	}
   	        	client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
   	        	World world = client.getModel();
   	        	renderer.setWorld(world);
