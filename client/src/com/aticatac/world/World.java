@@ -41,6 +41,10 @@ public class World implements Serializable {
 	public Level getLevel() {
 		return level;
 	}
+	
+	public int getNumPlayers() {
+		return players.size();
+	}
 
 	// calls the update method for all Collideables
 	// this is currently used for moving the bullets.

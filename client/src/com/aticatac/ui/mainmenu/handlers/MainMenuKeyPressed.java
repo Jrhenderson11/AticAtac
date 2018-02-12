@@ -68,6 +68,7 @@ public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
             }
         } else if (pressedKeys.contains(KeyCode.ENTER)) {
 
+            animation.stop(); // TODO: Not sure if this is needed. Remove from mouse clicked if not
             stage.setScene(menuItems.get(whichSelected(menuItems)).choose());
 
         }

@@ -29,6 +29,7 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
 
         if (selectedId == -1) return;
         else {
+            animation.stop();
             stage.setScene(menuItems.get(selectedId).choose());
         }
 
