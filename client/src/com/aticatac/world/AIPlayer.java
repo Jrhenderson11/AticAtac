@@ -58,7 +58,8 @@ public class AIPlayer extends Player {
 
 		if (currentPath.isEmpty()) {
 			for (Player player : otherPlayers) {
-				if (!player.equals(this) && level.hasLOS(position, player.getPosition())
+				// Fix hasLOS to work a bit better
+				if (!player.equals(this) /*&& level.hasLOS(position, player.getPosition())*/
 						&& inRange(player.getPosition())) {
 					// Spray or spit gun
 					System.out.println(world.displayPositionToCoords(player.getPosition()).x + "\t" + world.displayPositionToCoords(player.getPosition()).y);
@@ -66,8 +67,7 @@ public class AIPlayer extends Player {
 					Point target = world.displayPositionToCoords(player.getPosition());
 					double angle = calculateLookDirection(target);
 					setLookDirection(angle);
-					// Decide between spray and spit weapon depending on ammunition levels of each??
-					// gun.shoot(target);
+					// Decide between spray and spit weapon depending on paint levels of each??
 					foundTarget = true;
 					// For now this is random which one it chooses but in the future
 					// we can have a way to decide which one will do more damage
@@ -82,6 +82,7 @@ public class AIPlayer extends Player {
 					break;
 				}
 			}
+			// Need to get the reduced Map method to do what we want it to
 			if (!foundTarget /*&& getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE*/) {
 				System.out.println("calculate path");
 				Point point = closestFreePoint();
@@ -91,6 +92,7 @@ public class AIPlayer extends Player {
 			} /*else if (!foundTarget) {
 				System.out.println("splat");
 				setGun(new SplatGun(this));
+				// Work on getting this to make better choices for the splat gun
 				Point target = getQuadrant();
 				setLookDirection(calculateLookDirection(world.displayPositionToCoords(target)));
 				gun.fire(lookDirection, target, world);
@@ -106,24 +108,28 @@ public class AIPlayer extends Player {
 		double angle;
 		if (target.getX() == p.getX()) {
 			// To avoid division by 0 when finding tan^-1
-			angle = 0;
+			angle = Math.PI/2;
 		} else {
 			// tan^-1(opp/adj)
 			angle = Math.atan(Math.abs(target.getY() - p.getY()) / Math.abs(target.getX() - p.getX()));
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
+			System.out.println("Quad 2");
 			// If in quadrant II
-			return (Math.PI - angle);
+			return 2*Math.PI - angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
+			System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (Math.PI + angle);
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
+			System.out.println("Quad 4");
 			// If in quadrant IV
-			return ((2 * Math.PI) - angle);
+			return (Math.PI - angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		return angle;
+		System.out.println("Quad 1");
+		return Math.PI/2 - angle;
 	}
 
 	public int getCurrentPercentage(int[][] reducedMap) {
