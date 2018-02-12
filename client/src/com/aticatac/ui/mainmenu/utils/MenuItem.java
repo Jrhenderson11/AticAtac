@@ -52,7 +52,9 @@ public class MenuItem {
         return name;
     }
 
-    public Scene choose() { return link.get(); }
+    public Scene choose() {
+        return link.get();
+    }
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);

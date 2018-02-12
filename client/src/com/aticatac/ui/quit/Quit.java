@@ -1,6 +1,6 @@
 package com.aticatac.ui.quit;
 
-import com.aticatac.ui.quit.handlers.QuitAnimation;
+import com.aticatac.ui.quit.handlers.*;
 import com.aticatac.ui.quit.utils.Option;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
@@ -8,9 +8,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Quit extends Scene {
@@ -28,9 +31,8 @@ public class Quit extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-
         ArrayList<Option> options = new ArrayList<>();
-        AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
+        AnimationTimer animation = new QuitAnimation(gc,options,System.nanoTime());
 
         Function<Void, Void> yes = nothing -> {
             System.exit(0);
@@ -38,7 +40,6 @@ public class Quit extends Scene {
         };
 
         Function<Void, Void> no = nothing -> {
-            animation.stop(); // TODO: might have to remove this, also this code is a little dodgey. I don't like pointers
             primaryStage.setScene(mainMenu);
             return null;
         };
@@ -47,6 +48,12 @@ public class Quit extends Scene {
         options.add(new Option(no, "No"));
 
         animation.start();
+
+        Set<KeyCode> pressedKeys = new HashSet<>();
+        this.setOnKeyPressed(new QuitKeyPressed(options, pressedKeys, primaryStage, animation));
+        this.setOnKeyReleased(new QuitKeyReleased(pressedKeys));
+        this.setOnMouseMoved(new QuitMouseMoved(options));
+        this.setOnMouseClicked(new QuitMouseClicked(options, primaryStage, animation));
 
 
     }

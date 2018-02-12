@@ -96,6 +96,8 @@ public abstract class Bullet implements Collidable, Serializable{
 		if (world.getLevel().getCoords(after.x, after.y) == 1) {
 			hit(world, before); //paint splat on floor just before the wall it hits
 		}
+
+
 		
 		//check for collision with collideables. Currently only other Bullets.
 		for (Collidable collidable: world.getBullets()) {

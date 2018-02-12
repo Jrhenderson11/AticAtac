@@ -46,7 +46,7 @@ public class Tutorial extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
         //level.randomiseMap();
-        level.loadMap("client/assets/maps/map.txt");
+        level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
