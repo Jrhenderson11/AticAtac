@@ -43,7 +43,7 @@ public class Tutorial extends Scene {
         
         //init world
         this.level = new Level(50, 50);
-        level.loadMap("client/assets/maps/map.txt");
+        level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);

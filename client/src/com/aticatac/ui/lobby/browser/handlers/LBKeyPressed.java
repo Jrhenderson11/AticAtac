@@ -2,6 +2,7 @@ package com.aticatac.ui.lobby.browser.handlers;
 
 import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.lobby.browser.Browser;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
