@@ -62,7 +62,8 @@ public class UDPServer extends Thread{
 	}
 
 	public void startLobby(ClientInfo newClient) {
-		Player player = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+		//replace 2 with newClient.getColour()
+		Player player = new Player(Controller.REAL, newClient.getID(), 2);
 
 		//Player player = new Player();
 		model.init(player);
@@ -76,7 +77,7 @@ public class UDPServer extends Thread{
 	}
 	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
-		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
+		ClientInfo newClient = new ClientInfo(name, false, 3, address, destPort, originPort);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
 			this.startLobby(newClient);

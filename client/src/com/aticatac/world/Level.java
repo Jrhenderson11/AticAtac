@@ -285,6 +285,7 @@ public class Level implements Serializable{
 
 		}
 
+		this.makeRect(1,1, 30, 30, 0);
 		this.makeWalls();
 	}
 
