@@ -80,9 +80,9 @@ public class ServerReciever extends Thread {
 	}
 
 	/**
-	 * @param data
-	 * @param origin
-	 * @param originPort
+	 * @param data the string contained in the packet recieves
+	 * @param origin address where the data is from
+	 * @param originPort source port where data is from
 	 */
 	private void processData(String data, InetAddress origin, int originPort) {
 		int port = Globals.CLIENT_PORT;
@@ -114,6 +114,10 @@ public class ServerReciever extends Thread {
 			// SET LOBBY TO READY
 			this.master.setClientReady(origin, originPort);
 
+		} else if (data.equals("lobbypls")) {
+			// SENDLOBBY
+			this.master.sendAllLobby();
+
 		} else if (data.equals("unready")) {
 			// SET TO UNREADY
 			this.master.setClientUnReady(origin, originPort);
@@ -143,7 +147,7 @@ public class ServerReciever extends Thread {
 			model.handleInput(input, dir, this.getConnectionInfo(origin, originPort).getID());
 			model.update();
 		} else if(parts[0].equals("click")) {
-			model.shoot(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+			model.shoot(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), this.getConnectionInfo(origin, originPort).getID());
 		}
 	}
 }

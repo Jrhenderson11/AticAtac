@@ -71,6 +71,10 @@ public class UDPServer extends Thread{
 		System.out.println("new lobby created");
 	}
 	
+	public void sendAllLobby() {
+		this.sender.sendAllLobby();
+	}
+	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
 		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
 		if (this.status == Globals.IN_LIMBO) {

@@ -155,6 +155,11 @@ public class UDPClient extends Task implements LobbyServer {
 		return false;
 	}
 
+	public void requestLobby() {
+		//System.out.println("requesting lobby");
+		this.sendData("lobbypls");
+	}
+	
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
 		ArrayList<LobbyInfo> lobbies = new ArrayList<LobbyInfo>();
@@ -178,10 +183,10 @@ public class UDPClient extends Task implements LobbyServer {
 		return false;
 	}
 
+	
 	@Override
 	public ClientInfo myInfo() {
-		System.out.println(this.lobby==null);
-		/*		System.out.println("lobby players:" + this.lobby.getAll().size());
+		/*System.out.println("lobby players:" + this.lobby.getAll().size());
 		
 		for (ClientInfo i : this.lobby.getAll()) {
 			System.out.println(i.getAddress());

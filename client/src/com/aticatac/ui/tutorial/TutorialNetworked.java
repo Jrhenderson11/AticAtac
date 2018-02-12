@@ -34,12 +34,12 @@ public class TutorialNetworked extends Scene {
 
 	private void skipLobby() {
 		client.joinLobby(1, "password");
-		/*try {
+		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		client.startGame();
 //		client.setStatus(Globals.IN_GAME);
 		System.out.println("waiting for network");

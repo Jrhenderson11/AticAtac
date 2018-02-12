@@ -22,7 +22,6 @@ public class LBAnimation extends AnimationTimer {
         //this.me = clientInfo;
         this.gc = gc;
         this.server = server;
-
     }
 
     @Override

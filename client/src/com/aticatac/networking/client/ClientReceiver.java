@@ -96,12 +96,19 @@ public class ClientReceiver extends Thread {
 				try {
 					this.model = SerializationUtils.deserialize(packet.getData());
 				} catch (Exception e) {
-					//System.out.println("uh - oh");
+					try {
+						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+						master.setLobby(newLobby);
+					} catch (Exception e2) {
+						System.out.println("uh - oh");
+						
+					}
+					
 				}
 				//System.out.println("in game");
-				if (model == null) {
-				} else {
-				}
+				if (this.master.getLobby() == null) {
+					this.master.requestLobby();
+				} 
 	}
 
 		}
