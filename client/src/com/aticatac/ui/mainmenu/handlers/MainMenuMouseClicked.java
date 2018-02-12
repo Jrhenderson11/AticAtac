@@ -21,6 +21,7 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
         this.animation = animation;
     }
 
+    
     @Override
     public void handle(MouseEvent event) {
 

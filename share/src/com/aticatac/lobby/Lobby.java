@@ -1,43 +1,71 @@
 package com.aticatac.lobby;
 
+import java.io.Serializable;
+
 //TODO: ClientInfo, Lobby, LobbyInfo all need to be shared by the server project @James
 
 import java.util.ArrayList;
 
-public class Lobby {
+public class Lobby implements Serializable {
 
-    // Min = 1, Max = 4
-    private int max_players;
+	// Min = 1, Max = 4
+	private int max_players;
 
-    private ClientInfo lobbyLeader;
+	private boolean game_started;
 
-    // TODO: need a better name for the people who aren't lobby leader
-    private ArrayList<ClientInfo> peasants;
+	private ClientInfo lobbyLeader;
 
-    public Lobby(ClientInfo lobbyLeader) {
-        this.lobbyLeader = lobbyLeader;
-        peasants = new ArrayList<>();
-    }
+	private ArrayList<ClientInfo> serfs;
 
-    public ClientInfo getLobbyLeader() {
-        return lobbyLeader;
-    }
+	public Lobby(ClientInfo lobbyLeader) {
+		this.lobbyLeader = lobbyLeader;
+		serfs = new ArrayList<>();
+		this.game_started = false;
+	}
 
-    public ArrayList<ClientInfo> getPeasants() {
-        return peasants;
-    }
+	public ClientInfo getLobbyLeader() {
+		return lobbyLeader;
+	}
 
-    // Make sure not full
-    public boolean addClient(ClientInfo client){
-        if (peasants.size() == 3) {
-            return false;
-        } else {
-            peasants.add(client);
-            return true;
-        }
-    }
+	public ArrayList<ClientInfo> getPeasants() {
+		return serfs;
+	}
 
-    public void removeClient(ClientInfo client) {
-        peasants.remove(client);
-    }
+	public ArrayList<ClientInfo> getAll() {
+		ArrayList<ClientInfo> all = new ArrayList<ClientInfo>(serfs);
+		all.add(lobbyLeader);
+		return all;
+	}
+
+	// Make sure not full
+	public boolean addClient(ClientInfo client) {
+		if (serfs.size() == 3) {
+			return false;
+		} else {
+			serfs.add(client);
+			return true;
+		}
+	}
+
+	public void removeClient(ClientInfo client) {
+		serfs.remove(client);
+	}
+
+	public void setStarted() {
+		this.game_started = true;
+		System.out.println("started");
+	}
+
+	public boolean getStarted() {
+		return this.game_started;
+	}
+
+	public ClientInfo getClientByID(String id) {
+		for (ClientInfo i : this.getAll()) {
+			if (i.getID() == id) {
+				return i;
+			}
+		}
+		return null;
+	}
 }

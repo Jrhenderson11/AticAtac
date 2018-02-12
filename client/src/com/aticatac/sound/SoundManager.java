@@ -27,7 +27,6 @@ public class SoundManager{
 		Media sound = new Media(new File(file).toURI().toString());
 		
 		MediaPlayer player = new MediaPlayer(sound);
-		player.play();
 	}
 
 

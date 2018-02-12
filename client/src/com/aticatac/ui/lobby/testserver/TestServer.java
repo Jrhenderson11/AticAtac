@@ -1,12 +1,13 @@
 package com.aticatac.ui.lobby.testserver;
 
+import java.util.ArrayList;
+
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
-import javafx.scene.paint.Color;
+import com.aticatac.lobby.utils.LobbyInfo;
 
-import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class TestServer implements LobbyServer {
 
@@ -16,18 +17,17 @@ public class TestServer implements LobbyServer {
     public TestServer(ClientInfo client) {
 
         this.client = client;
-
-        // Some other clients that have connected
-        ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, Color.YELLOW);
-        ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, Color.RED);
-        ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, Color.BLUE);
+        /*
+        ClientInfo jeff = new ClientInfo("192.168.0.1", "Jeff123", false, 2);
+        ClientInfo bob = new ClientInfo("192.168.0.2", "xX~bob~Xx", false, 3);
+        ClientInfo ian = new ClientInfo("192.168.0.3", "1ang0d", false, 4);
 
         Lobby lobby = new Lobby(jeff);
         lobby.addClient(bob);
         lobby.addClient(ian);
-
+         */
         this.lobbies = new ArrayList<>();
-        lobbies.add(lobby);
+    //    lobbies.add(lobby);
 
     }
 

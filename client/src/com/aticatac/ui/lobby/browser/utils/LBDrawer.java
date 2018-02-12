@@ -1,18 +1,20 @@
 package com.aticatac.ui.lobby.browser.utils;
 
-import com.aticatac.lobby.LobbyInfo;
+
+import static java.lang.StrictMath.abs;
+import static java.lang.StrictMath.sin;
+
+import java.util.ArrayList;
+
+import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-
-import java.util.ArrayList;
-
-import static java.lang.StrictMath.abs;
-import static java.lang.StrictMath.sin;
 
 
 public class LBDrawer {

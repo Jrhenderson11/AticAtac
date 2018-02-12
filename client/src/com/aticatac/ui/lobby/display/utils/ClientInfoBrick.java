@@ -1,6 +1,6 @@
 package com.aticatac.ui.lobby.display.utils;
 
-import com.aticatac.networking.server.ClientInfo;
+import com.aticatac.lobby.ClientInfo;
 
 public class ClientInfoBrick {
 

@@ -23,7 +23,6 @@ public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
         this.pressedKeys = pressedKeys;
         this.stage = primaryStage;
         this.animation = animation;
-
     }
 
     @Override

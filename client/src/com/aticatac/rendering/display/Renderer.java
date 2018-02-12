@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
+import com.aticatac.world.items.Bullet;
+import com.aticatac.world.items.Collidable;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -95,6 +97,7 @@ public class Renderer {
 		//renderMapBW(g);
 		renderTerritory(g);
 		renderMapNeon(g, Color.RED);
+		renderBullets(g);
 		
 		//render any other components in the layers
 		for (RenderLayer layer: layers) {
@@ -105,6 +108,8 @@ public class Renderer {
 		renderPlayers(g);
 	}
 	
+	
+
 	public void renderMapBW(GraphicsContext g) {
 		//render the level
 		g.setFill(Color.BLACK);
@@ -201,7 +206,7 @@ public class Renderer {
 		int l = 10; //length of direction pointer
 				
 		for (Player player: world.getPlayers()) {
-			Color color = player.getColour();
+			Color color = Color.BLUE;//player.getColour();
 			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 			int px = player.getPosition().x; //player position
 			int py = player.getPosition().y;
@@ -226,14 +231,22 @@ public class Renderer {
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
-					if (grid[x][y] == player.getIdentifier()) {
-						Color color = player.getColour();
+					if (grid[x][y] == player.getColour()) {
+						Color color = Color.BLUE;//player.getColour();
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
 						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 					}
 				}
 			}
+		}
+	}
+	
+	private void renderBullets(GraphicsContext g) {
+		for (Bullet bullet: world.getBullets()) {
+			//g.setFill(world.getPlayerColour(bullet.getShooter()));
+			g.setFill(Color.BLUE);
+			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
 		}
 	}
 	

@@ -15,7 +15,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-
 public class MainMenuDrawer {
 
     public static void title(GraphicsContext gc, long time) {

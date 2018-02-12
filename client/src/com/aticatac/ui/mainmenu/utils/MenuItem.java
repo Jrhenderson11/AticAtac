@@ -4,16 +4,17 @@ import javafx.scene.Scene;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import com.aticatac.sound.SoundManager;
 
 public class MenuItem {
     private String name;
     private boolean selected;
-    private Scene link;
+    private Supplier<Scene> link;
     private Rectangle hitbox;
 
-    public MenuItem(String name, Scene link) {
+    public MenuItem(String name, Supplier<Scene> link) {
        this.name = name;
        this.link = link;
        this.selected = false;
@@ -53,10 +54,16 @@ public class MenuItem {
         return name;
     }
 
+<<<<<<< HEAD
     public Scene choose() { 
     	SoundManager m = new SoundManager();
     	m.playClick();
     	return link; }
+=======
+    public Scene choose() {
+        return link.get();
+    }
+>>>>>>> 1883dcdc91d47d29da8b7fc4a63bdcdab409dca0
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);
