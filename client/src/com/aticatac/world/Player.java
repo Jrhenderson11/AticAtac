@@ -9,19 +9,21 @@ import com.aticatac.world.items.Gun;
 import javafx.scene.paint.Color;
 
 public class Player implements Serializable{
-	private final static int MINIMUM_PAINT_FOR_SHOOT = 5;
-	private final static int PAINT_DECREASE = 5;
-	private final static int BASE_PAINT_INCREASE = 5;
 	
-    private Controller controller;
-    private int identifier;
-    private int colour;
-    private int paintLevel;
-    private Point position;
-    private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
-    private Gun gun;
+	protected Controller controller;
+    protected String identifier;
+    protected int colour;
+    protected int paintLevel;
+    protected Point position;
+    protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
+    protected Gun gun;
     
-    public Player(Controller controller, int identifier, int colour) {
+    /**
+     * @param controller
+     * @param identifier
+     * @param colour
+     */
+    public Player(Controller controller, String identifier, int colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
@@ -29,37 +31,15 @@ public class Player implements Serializable{
     	this.lookDirection = 0.0;
     }
     
+    public Controller getController() {
+    	return controller;
+    }
+    
     public void update() {
     	//regenerate paint and other things
     	if (gun != null) {
     		gun.update(); //updates gun, used for gun cooldowns
     	}
-    }
-        
-    public void makeMovement(char control) {
-    	// Send a request to renderer to move
-    }
-    
-    public void shoot() {
-    	if(this.paintLevel >= MINIMUM_PAINT_FOR_SHOOT) {
-    		// Send a request to renderer to shoot
-        	this.decreasePaintLevel();
-    	}
-    }
-    
-    public char getAction() {
-    	// need to get the event and then do the necessary action
-    	return 0;
-    }
-    
-    public void increasePaintLevel(int multiplier) {
-    	this.paintLevel = multiplier * BASE_PAINT_INCREASE;
-    	// increase paint depending on multiplier from possession in world
-    }
-    
-    public void decreasePaintLevel() {
-    	this.paintLevel = this.paintLevel - PAINT_DECREASE;
-    	// make a sensible decrease to paint level
     }
 
 	public int getColour() {
@@ -83,11 +63,11 @@ public class Player implements Serializable{
 		this.position.y += dY;
 	}
 
-	public int getIdentifier() {
+	public String getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(int identifier) {
+	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
