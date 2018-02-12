@@ -25,6 +25,11 @@ public class ClientReceiver extends Thread {
 
 	private UDPClient master;
 	
+	/** makes a new receiver
+	 * 
+	 * @param newName 	name of this client (useful for debugging stuff)
+	 * @param newMaster UDPClient that controls this thread
+	 */
 	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
 		this.running = false;
@@ -42,6 +47,7 @@ public class ClientReceiver extends Thread {
 		this.master = newMaster;
 	}
 
+	
 	@Override
 	public void run() {
 		int count = 0;
@@ -105,7 +111,7 @@ public class ClientReceiver extends Thread {
 						master.setLobby(newLobby);
 					} catch (Exception e2) {
 						System.out.println("uh - oh");
-						
+						e2.printStackTrace();
 					}
 					
 				}
@@ -121,11 +127,18 @@ public class ClientReceiver extends Thread {
 		// return new Object();
 	}
 
+	/**
+	 * starts this thread
+	 */
 	public void halt() {
 		this.running = false;
 		socket.close();
 	}
 
+	/**
+	 * returns most up to date model of the world
+	 * @return
+	 */
 	public World getModel() {
 		return this.model;
 	}

@@ -27,7 +27,7 @@ public class Lobby implements Serializable {
 		this.ID = info.ID;
 		this.NAME = info.NAME;
 	}
-
+	
 	public ClientInfo getLobbyLeader() {
 		return lobbyLeader;
 	}

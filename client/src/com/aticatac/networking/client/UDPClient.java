@@ -29,6 +29,11 @@ public class UDPClient extends Task implements LobbyServer {
 	private ClientInfo myInfo;
 	private boolean ready;
 
+	/**
+	 *  makes a new UDPClient object
+	 * @param newName this client's name
+	 * @param newAddress server address to send messages to
+	 */
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
@@ -38,6 +43,9 @@ public class UDPClient extends Task implements LobbyServer {
 		this.ready = false;
 	}
 
+	/**
+	 * javafx version of Thread.run()
+	 */
 	@Override
 	public Object call() {
 
@@ -58,6 +66,10 @@ public class UDPClient extends Task implements LobbyServer {
 		return new Object();
 	}
 
+	/** sends message to server
+	 * 
+	 * @param data to send
+	 */
 	public void sendData(String data) {
 		try {
 			this.messageQueue.put(data);
@@ -66,6 +78,9 @@ public class UDPClient extends Task implements LobbyServer {
 		}
 	}
 
+	/**
+	 * attempts to stop threads
+	 */
 	public void halt() {
 		sender.halt();
 		sender.cancel();
@@ -73,31 +88,55 @@ public class UDPClient extends Task implements LobbyServer {
 		// receiver.cancel();
 	}
 
+	/**
+	 * @return most up to date model
+	 */
 	public World getModel() {
 		return this.receiver.getModel();
 	}
 
+	/**returns this client status (see Globals for various statuses)
+	 * 
+	 * @return
+	 */
 	public int getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * guess what this does
+	 * @param newStatus
+	 */
 	public void setStatus(int newStatus) {
 		this.status = newStatus;
 	}
 
+	/**
+	 * 
+	 * @return this clients lobby 
+	 */
 	public Lobby getLobby() {
 		return this.lobby;
 	}
 
+	/**
+	 * sets the lobby
+	 * @param newLobby
+	 */
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;
 		this.myInfo = lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
 
+	/**
+	 * 
+	 * @return this lobbyInfo
+	 */
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
 	}
 
+	
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
 		// System.out.println(this.lobbyInfo.MAX_PLAYERS);
