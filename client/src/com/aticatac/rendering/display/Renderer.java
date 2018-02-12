@@ -8,7 +8,6 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 import com.aticatac.world.items.Bullet;
-import com.aticatac.world.items.Collidable;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -109,7 +108,10 @@ public class Renderer {
 	}
 	
 	
-
+	/**
+	 * Draws the map in black and white
+	 * @param g The GraphicsContext to draw to.
+	 */
 	public void renderMapBW(GraphicsContext g) {
 		//render the level
 		g.setFill(Color.BLACK);
@@ -125,6 +127,11 @@ public class Renderer {
 		}
 	}
 
+	/**
+	 * Renders the map with a neon style wire frame for the walls
+	 * @param g The GraphicsContext to draw to.
+	 * @param color The color of the neon frame
+	 */
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
@@ -200,6 +207,10 @@ public class Renderer {
 		}
 	}
 	
+	/**
+	 * Renders the players as a small circle with a line pointing in the lookDirection
+	 * @param gc The GraphicsContext to draw to.
+	 */
 	public void renderPlayers(GraphicsContext gc) {
 		int playerSize = 8;
 		double opacity = 0.5;
@@ -219,8 +230,12 @@ public class Renderer {
 			gc.setLineWidth(3);
 			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
 		}
-	};
+	}
 	
+	/**
+	 * Draws the territories players have claimed to the map.
+	 * @param gc The GraphicsContext to draw to.
+	 */
 	public void renderTerritory(GraphicsContext gc) {
 		int[][] grid = world.getLevel().getGrid();
 		int tileWidth = displayRect.width / world.getLevel().getWidth();
@@ -242,6 +257,10 @@ public class Renderer {
 		}
 	}
 	
+	/**
+	 * Render the bullets in the world.
+	 * @param g The GraphicsContext to draw to.
+	 */
 	private void renderBullets(GraphicsContext g) {
 		for (Bullet bullet: world.getBullets()) {
 			//g.setFill(world.getPlayerColour(bullet.getShooter()));
@@ -312,10 +331,18 @@ public class Renderer {
 		} else return false;
 	}
 
+	/**
+	 * Returns the World instance this renderer draws
+	 * @return The World instance
+	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * Sets the World instance this renderer draws
+	 * @param world The World instance to set the renderer to draw.s
+	 */
 	public void setWorld(World world) {
 		this.world = world;
 	}
