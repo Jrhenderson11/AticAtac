@@ -56,6 +56,9 @@ public class World implements Serializable {
 		}
 		// update players
 		for (Player player : players) {
+			if(player.controller == Controller.AI) {
+				((AIPlayer) player).update();
+			}
 			player.update();
 		}
 	}

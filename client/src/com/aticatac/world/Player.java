@@ -8,43 +8,39 @@ import com.aticatac.world.items.Gun;
 
 import javafx.scene.paint.Color;
 
-
 public class Player {
-    
-    protected Controller controller;
-    protected String identifier;
-    protected int colour;
-    protected int paintLevel;
-    protected Point position;
-    protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
-    protected Gun gun;
 
-    
-   
-    public Player(Controller controller, String identifier, int colour) {
-    	this.controller = controller;
-    	this.setIdentifier(identifier);
-    	this.colour = colour;
-    	this.position = new Point(10, 10);
-    	this.lookDirection = 0.0;
-    }
-    
-    public void update() {
-    	//regenerate paint and other things
-    	if (gun != null) {
-    		gun.update(); //updates gun, used for gun cooldowns
-    	}
-    }
-        
-    public void makeMovement(char control) {
-    	// Send a request to renderer to move
-    }
-    
-    
-    public char getAction() {
-    	// need to get the event and then do the necessary action
-    	return 0;
-    }
+	protected Controller controller;
+	protected String identifier;
+	protected int colour;
+	protected int paintLevel;
+	protected Point position;
+	protected Double lookDirection; // stored as radians, 0 is looking to the right. increases clockwise.
+	protected Gun gun;
+
+	public Player(Controller controller, String identifier, int colour) {
+		this.controller = controller;
+		this.setIdentifier(identifier);
+		this.colour = colour;
+		this.position = new Point(10, 10);
+		this.lookDirection = 0.0;
+	}
+
+	public void update() {
+		// regenerate paint and other things
+		if (gun != null) {
+			gun.update(); // updates gun, used for gun cooldowns
+		}
+	}
+
+	public void makeMovement(char control) {
+		// Send a request to renderer to move
+	}
+
+	public char getAction() {
+		// need to get the event and then do the necessary action
+		return 0;
+	}
 
 	public int getColour() {
 		return colour;
@@ -61,7 +57,7 @@ public class Player {
 	public void setPosition(Point position) {
 		this.position = position;
 	}
-	
+
 	public void move(int dX, int dY) {
 		this.position.x += dX;
 		this.position.y += dY;

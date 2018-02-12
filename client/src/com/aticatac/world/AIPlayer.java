@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import com.aticatac.utils.Controller;
 import com.aticatac.world.items.Gun;
 import com.aticatac.world.ai.AStar;
@@ -20,20 +22,33 @@ public class AIPlayer extends Player {
 
 	private final int PERCENTAGE_TO_MOVE = 85;
 	private final int RANGE_TO_SHOOT = 100;
+	private int i;
 
 	private Level level;
 	private World world;
+	private Point gridPosition;
 
 	private LinkedList<Point> currentPath;
 	private Random r;
 	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS;
-
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
 		this.world = world;
 		this.level = world.getLevel();
 		this.r = new Random();
+		this.currentPath = new LinkedList<>();
+		this.i = 0;
+		this.gridPosition = new Point(3,11);
+	}
+
+	@Override
+	public void update() {
+		if (i++ == 200) {
+			// Updates too fast
+			makeDecision();
+			i = 0;
+		}
 	}
 
 	public void makeDecision() {
@@ -41,61 +56,69 @@ public class AIPlayer extends Player {
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
-		if (!currentPath.isEmpty()) {
+		if (currentPath.isEmpty()) {
 			for (Player player : otherPlayers) {
 				if (!player.equals(this) && level.hasLOS(position, player.getPosition())
 						&& inRange(player.getPosition())) {
 					// Spray or spit gun
+					System.out.println(world.displayPositionToCoords(player.getPosition()).x + "\t" + world.displayPositionToCoords(player.getPosition()).y);
 					foundTarget = true;
-					Point target = player.getPosition();
+					Point target = world.displayPositionToCoords(player.getPosition());
 					double angle = calculateLookDirection(target);
 					setLookDirection(angle);
 					// Decide between spray and spit weapon depending on ammunition levels of each??
-					//gun.shoot(target);
+					// gun.shoot(target);
 					foundTarget = true;
 					// For now this is random which one it chooses but in the future
 					// we can have a way to decide which one will do more damage
 					if (r.nextInt() % 2 == 1) {
+						System.out.println("spray");
 						setGun(new SprayGun(this));
 					} else {
+						System.out.println("shoot");
 						setGun(new ShootGun(this));
 					}
 					gun.fire(lookDirection, target, world);
 					break;
 				}
 			}
-			if (!foundTarget && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE) {
+			if (!foundTarget /*&& getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE*/) {
+				System.out.println("calculate path");
 				Point point = closestFreePoint();
+				System.out.println(point.x + "\t" + point.y);
 				pathToFreePoint(point);
 				makeNextMove();
-			} else {
+			} /*else if (!foundTarget) {
+				System.out.println("splat");
 				setGun(new SplatGun(this));
-				Point target = getQuadrant(gun);
-				setLookDirection(calculateLookDirection(target));
+				Point target = getQuadrant();
+				setLookDirection(calculateLookDirection(world.displayPositionToCoords(target)));
 				gun.fire(lookDirection, target, world);
-			}
+			}*/
 		} else {
+			System.out.println("move");
 			makeNextMove();
 		}
 	}
 
 	public double calculateLookDirection(Point target) {
+		Point p = world.displayPositionToCoords(position);
 		double angle;
-		if (target.getX() == position.getX()) {
+		if (target.getX() == p.getX()) {
 			// To avoid division by 0 when finding tan^-1
-			angle = Math.PI / 2;
+			angle = 0;
 		} else {
 			// tan^-1(opp/adj)
-			angle = Math.atan(Math.abs(target.getY() - position.getY()) / Math.abs(target.getX() - position.getX()));
+			angle = Math.atan(Math.abs(target.getY() - p.getY()) / Math.abs(target.getX() - p.getX()));
 		}
 
-		if (target.getY() <= position.getY() && target.getX() < position.getX()) {
+		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
 			// If in quadrant II
 			return (Math.PI - angle);
-		} else if (target.getY() > position.getY() && target.getX() <= position.getX()) {
+		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
 			// If in quadrant III or if pi/2 in pos y direction
 			return (Math.PI + angle);
-		} else if (target.getY() > position.getY() && target.getX() > position.getX()) {
+		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
 			// If in quadrant IV
 			return ((2 * Math.PI) - angle);
 		}
@@ -115,30 +138,42 @@ public class AIPlayer extends Player {
 		return count;
 	}
 
-	public Point getQuadrant(Gun g) {
-		Point[] options = new Point[4];
+	public Point getQuadrant() {
+		ArrayList<Point> options = new ArrayList<>();
 		// Hard coded for now, need to get from the gun
-		int range = 200; // g.getRange();
-		options[0] = new Point(position.x, position.y + range);
-		options[1] = new Point(position.x + range, position.y);
-		options[2] = new Point(position.x, position.y - range);
-		options[3] = new Point(position.x - range, position.y);
+		int range = 20; // gun.getRange();
+		if (gridPosition.y + range < level.getHeight()) {
+			options.add(new Point(gridPosition.x, gridPosition.y + range));
+		}
+		if (gridPosition.x + range < level.getWidth()) {
+			options.add(new Point(gridPosition.x + range, gridPosition.y));
+		}
+		if (gridPosition.y - range > 0) {
+			options.add(new Point(gridPosition.x, gridPosition.y - range));
+		}
+		if (gridPosition.x - range > 0) {
+			options.add(new Point(gridPosition.x - range, gridPosition.y));
+		}
 
-		int bestCover = 0;
+		int bestCover = -1;
 		Point bestPoint = null;
 		int currentCover;
+		int t = 0;
 		for (Point p : options) {
-			currentCover = getCoverage(g, p);
-			if (currentCover > bestCover) {
+			currentCover = getCoverage(p);
+			System.out.println(currentCover);
+			// ok this is nonsense for the moment, need to change for the future
+			if (currentCover >= bestCover /*&& (t==0 || r.nextInt()%2 == 1)*/) {
 				bestCover = currentCover;
 				bestPoint = p;
 			}
+			t++;
 		}
 		return bestPoint;
 	}
 
-	public int getCoverage(Gun g, Point p) {
-		int splatCoverage = 5; /* g.getSplatCoverage(); */
+	public int getCoverage(Point p) {
+		int splatCoverage = 8; /* gun.getSplatCoverage(); */
 		// Hard coded in, need to get from gun
 		// Radius = 5
 		int x = 0;
@@ -147,12 +182,16 @@ public class AIPlayer extends Player {
 		// if this is odd then it is easy, even not so much
 		for (int i = -splatCoverage; i < splatCoverage + 1; i++) {
 			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
+				/*System.out.println((p.x + i) + "\t" + (p.y + j));
+				Point t = world.displayPositionToCoords(new Point(p.x + i, p.y + j));
+				System.out.println(t.x + "\t" + t.y);*/
 				coord = level.getCoords(p.x + i, p.y + j);
 				if (coord != colour && coord != 1 && coord != -1) {
 					x++;
 				}
 			}
 		}
+		//System.out.println(x);
 		return x;
 	}
 
@@ -167,7 +206,7 @@ public class AIPlayer extends Player {
 
 	public void makeNextMove() {
 		Point next = currentPath.poll();
-		move(next.x - position.x, next.y - position.y);
+		move(world.coordsToDisplayPosition(next).x - position.x, world.coordsToDisplayPosition(next).y - position.y);
 	}
 
 	public Point closestFreePoint() {
@@ -176,7 +215,7 @@ public class AIPlayer extends Player {
 
 		boolean foundClosest = false;
 
-		Point current = position;
+		Point current = gridPosition;
 		Point translated;
 		Pair<Integer, Integer> translation;
 
@@ -185,7 +224,7 @@ public class AIPlayer extends Player {
 			for (int i = 0; i < 8; i++) {
 				translation = translations.get(i);
 				// Key is x translation, Value is y translation
-				translated = new Point(current.x + translation.getKey(), current.y + translation.getValue());
+				translated = new Point(current.x + translation.getKey(), current.y + (int) translation.getValue());
 				if (level.getCoords(translated.x, translated.y) == 0) {
 					foundClosest = true;
 					return translated;
@@ -201,6 +240,6 @@ public class AIPlayer extends Player {
 
 	// get the path that the ai player will take to reach the free Point
 	public void pathToFreePoint(Point endPoint) {
-		currentPath = (new AStar(getPosition(), endPoint, level, colour)).getPath();
+		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
 	}
 }

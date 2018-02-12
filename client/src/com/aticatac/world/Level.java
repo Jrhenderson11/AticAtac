@@ -102,33 +102,8 @@ public class Level implements Serializable {
 		}
 		return count;
 	}
-<<<<<<< HEAD
 
 	// updates coords with input restrictions and no overwriting walls
-=======
-	
-	// returns whether 1 x,y pos can see another (direct line with no walls in
-	// between)
-	public boolean hasLOS(Point player, Point target) {
-		int dx = target.x - player.x;
-		int dy = target.y - player.y;
-		float m = dy / dx;
-		int step = 1;
-		if (dx < 0) {
-			step = -1;
-		}
-
-		for (int x = 0; x != dx; x += step) {
-			int y = (int) m * x;
-			if (grid[x][y] == 1) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	//updates coords with input restrictions and no overwriting walls
->>>>>>> 044a9f719b3b304fc88b142d5ad8db5f3d7f07ec
 	public boolean updateCoords(int x, int y, int val) {
 		if (x < width && y < height && x >= 0 && y >= 0) {
 			if (grid[x][y] != 1) {
@@ -144,11 +119,17 @@ public class Level implements Serializable {
 	public boolean hasLOS(Point player, Point target) {
 		int dx = target.x - player.x;
 		int dy = target.y - player.y;
-		float m = dy / dx;
+		float m;
+		if (dx != 0) {
+			m = dy / dx;
+		} else {
+			m = 0;
+		}
 		int step = 1;
 		if (dx < 0) {
 			step = -1;
 		}
+		
 
 		for (int x = 0; x != dx; x += step) {
 			int y = (int) m * x;

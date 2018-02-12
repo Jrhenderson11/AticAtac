@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javafx.util.Pair;
 
 public class Translations {
-	public static final int STEP = 2;
+	public static final int STEP = 1;
 	public static final ArrayList<Pair<Integer, Integer>> TRANSLATIONS = getTranslations();
 
 	private static ArrayList<Pair<Integer, Integer>> getTranslations() {
