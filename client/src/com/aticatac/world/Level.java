@@ -1,6 +1,5 @@
 package com.aticatac.world;
 
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -47,101 +46,66 @@ public class Level implements Serializable{
 	}
 
 	public int[][] getReducedMap(int playercolour) {
-		// returns a map: 1 indicates this square is playercolour, 0 means it is not
+		//returns a map: 1 indicates this square is playercolour, 0 means it is not
 		int[][] redMap = new int[10][10];
 
-		int chunkwidth = width / 10;
-		int chunkheight = height / 10;
-
-		for (int y = 0; y < 10; y++) {
-			for (int x = 0; x < 10; x++) {
-				// get max for 10th sq
-
+		int chunkwidth = width/10;
+		int chunkheight = height/10;
+		
+		for (int y=0; y< 10; y++) {
+			for (int x=0; x< 10; x++) {
+				//get max for 10th sq 
+				
 				int[] colours = new int[10];
-				for (int colour : colours) {
+				for (int colour: colours) {
 					colour = 0;
 				}
-
-				for (int y2 = 0; y2 < chunkheight; y2++) {
-					for (int x2 = 0; x2 < chunkwidth; x2++) {
-						// colours[grid[x*chunkwidth + x2][y*chunkwidth + y2]] +=1;
-						if (grid[x * chunkwidth + x2][y * chunkwidth + y2] == playercolour) {
+				
+				for (int y2=0; y2< chunkheight; y2++) {
+					for (int x2=0; x2< chunkwidth; x2++) {
+				//		 colours[grid[x*chunkwidth + x2][y*chunkwidth + y2]] +=1; 
+						if (grid[x*chunkwidth + x2][y*chunkwidth + y2] == playercolour) {
 							colours[1]++;
 						} else {
 							colours[0]++;
 						}
 					}
 				}
-				if (colours[1] > colours[0]) {
+				if (colours[1]>colours[0]) {
 					redMap[x][y] = 1;
 				} else {
 					redMap[x][y] = 0;
 				}
 				/*
-				 * //calc max and set in red int max = 0; for (int colour:colours) { if (colour
-				 * > max) {
-				 * 
-				 * } }
-				 */
-
+				//calc max and set in red
+				int max = 0;
+				for (int colour:colours) {
+					if (colour > max) {
+						
+					}
+				}
+				*/
+				
 			}
 		}
-
+		
+		
 		return redMap;
 	}
-
+	
 	// used to determine who has control of map by counting tiles of one colour
 	public int getNumTiles(int val) {
-		int count = 0;
+		int count=0;
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (grid[x][y] == val) {
+				if (grid[x][y]==val) {
 					count++;
 				}
 			}
 		}
 		return count;
 	}
-
-	//returns whether 1 x,y pos can see another (direct line with no walls in between)
-	public boolean hasLOS(int x1, int y1, int x2, int y2) {
-		int dx = x2 - x1;
-		int dy = y2 - y1;
-		float m = dy / dx;
-		int step = 1;
-		if (dx<0) {
-			step = -1;
-		}
-
-		for (int x=0; x!= dx; x+=step) {
-			int y = (int) m*x;
-			if (grid[x][y]==1) {
-				return false;
-			}
-		}
-		return true;
-	}
 	
-	// returns whether 1 x,y pos can see another (direct line with no walls in
-	// between)
-	public boolean hasLOS(Point player, Point target) {
-		int dx = target.x - player.x;
-		int dy = target.y - player.y;
-		float m = dy / dx;
-		int step = 1;
-		if (dx < 0) {
-			step = -1;
-		}
-
-		for (int x = 0; x != dx; x += step) {
-			int y = (int) m * x;
-			if (grid[x][y] == 1) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	//updates coords with input restrictions and no overwriting walls
 	public boolean updateCoords(int x, int y, int val) {
 		if (x < width && y < height && x >= 0 && y >= 0) {
@@ -174,7 +138,7 @@ public class Level implements Serializable{
 	}
 
 	public void makeSplat(int posX, int posY, int colour) {
-		// placeholder: make circle radius 5
+		//placeholder: make circle radius 5
 		this.makeCircle(posX, posY, 5, colour, 1);
 	}
 	
@@ -322,18 +286,9 @@ public class Level implements Serializable{
 		}
 
 		this.makeWalls();
-		//ensure upper left corner is free
-		makeRect(1, 1, 30, 30, 0);
 	}
 
 	// random methods
-	/** Make a rectangle
-	 * @param posX top left x coord
-	 * @param posY top left y coord
-	 * @param xLen width to make rect
-	 * @param yLen height to make rect
-	 * @param tile int value to fill rect with
-	 */
 	private void makeRect(int posX, int posY, int xLen, int yLen, int tile) {
 
 		for (int y = posY; (y - posY < yLen) && (y < height) && (y > 0); y++) {

@@ -123,7 +123,7 @@ public class KeyInput extends Application {
 				} else if (input == KeyCode.SHIFT) {
 					run = false;
 					speed = 1;
-				} else if (input == KeyCode.Q){
+				}else if (input == KeyCode.Q){
 					direction *= -1;
 				}
 			}
@@ -135,7 +135,7 @@ public class KeyInput extends Application {
 
 		x = 5;
 		y = 5;
-
+		
 		
 		
 		gc.drawImage(space, 0, 0);
@@ -156,7 +156,7 @@ public class KeyInput extends Application {
 		Image bulletImg = bullet.getImg();
 			
 		
-
+		
 		AnimationTimer timer = new AnimationTimer() {
 
 			@Override
@@ -239,10 +239,9 @@ public class KeyInput extends Application {
 		};
 		timer.start();
 
-
+		
 		stage.show();
 	}
-
 
 	public boolean checkPos(double coord) {
 		int offsetY = stageY - 10;
@@ -267,9 +266,5 @@ public class KeyInput extends Application {
 			return false;
 	}
 
-<<<<<<< HEAD
-}
-=======
 
 }
->>>>>>> fb7325a2b0d7bc97b08a5a411b9aa9053612140c
