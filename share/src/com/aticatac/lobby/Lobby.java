@@ -17,11 +17,15 @@ public class Lobby implements Serializable {
 	private ClientInfo lobbyLeader;
 
 	private ArrayList<ClientInfo> serfs;
+	public final int ID;
+	public final String NAME;
 
-	public Lobby(ClientInfo lobbyLeader) {
+	public Lobby(ClientInfo lobbyLeader, LobbyInfo info) {
 		this.lobbyLeader = lobbyLeader;
 		serfs = new ArrayList<>();
 		this.game_started = false;
+		this.ID = info.ID;
+		this.NAME = info.NAME;
 	}
 
 	public ClientInfo getLobbyLeader() {

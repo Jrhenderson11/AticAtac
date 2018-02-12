@@ -8,6 +8,12 @@ public class LobbyInfo implements Serializable{
     public final int CURRENT_PLAYERS;
     public final int ID;
     
+    /**
+     * @param max_players
+     * @param current_players
+     * @param id
+     * @param name
+     */
     public LobbyInfo(int max_players, int current_players, int id, String name) {
         this.MAX_PLAYERS = max_players;
         this.CURRENT_PLAYERS = current_players;

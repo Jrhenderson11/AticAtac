@@ -65,7 +65,11 @@ public class ClientReceiver extends Thread {
 					master.setLobbyInfo(newInfo);
 				} catch (Exception e) {
 					
-					System.out.println("cannot deserialise lobbyinfo (is it a model?)");
+					//System.out.println("cannot deserialise lobbyinfo (is it a model?)");
+					try {
+						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, name));
+					} catch (Exception e2) {}
 				}
 				//System.out.println("getting info");
 				
