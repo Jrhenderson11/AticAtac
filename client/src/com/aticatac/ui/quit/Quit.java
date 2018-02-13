@@ -1,7 +1,6 @@
 package com.aticatac.ui.quit;
 
-import com.aticatac.ui.quit.handlers.QuitAnimation;
-import com.aticatac.ui.quit.handlers.QuitKeyPressed;
+import com.aticatac.ui.quit.handlers.*;
 import com.aticatac.ui.quit.utils.Option;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
@@ -19,15 +18,11 @@ import java.util.function.Function;
 
 public class Quit extends Scene {
 
-    private final Scene mainMenu;
-
     public Quit(Group root, Scene mainMenu, Stage primaryStage) {
         super(root);
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
-
-        this.mainMenu = mainMenu;
 
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -47,14 +42,14 @@ public class Quit extends Scene {
         options.add(new Option(yes, "Yes"));
         options.add(new Option(no, "No"));
 
-        this.setOnKeyPressed(new QuitKeyPressed());
+        this.setOnKeyPressed(new QuitKeyPressed(options));
 
         AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
 
         animation.start();
 
         Set<KeyCode> pressedKeys = new HashSet<>();
-        this.setOnKeyPressed(new QuitKeyPressed(options, pressedKeys, primaryStage, animation));
+        this.setOnKeyPressed(new QuitKeyPressed(options));
         this.setOnKeyReleased(new QuitKeyReleased(pressedKeys));
         this.setOnMouseMoved(new QuitMouseMoved(options));
         this.setOnMouseClicked(new QuitMouseClicked(options, primaryStage, animation));
