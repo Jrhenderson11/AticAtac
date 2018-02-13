@@ -32,7 +32,7 @@ public class Displayer extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         DAnimator animator = new DAnimator(gc, selected, server);
-
+        //animator.start();
     }
 
     public static HashSet<Drawable> getDrawables() {

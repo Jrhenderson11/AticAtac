@@ -36,7 +36,18 @@ public class DAnimator extends AnimationTimer {
         Displayer.setDrawables(new HashSet<>());
 
         Lobby lobby = server.updateLobby(selected);
+        //don't be greedy: let the server take some time to get it's lobby object
+        while (lobby==null) {
+        	System.out.println("waiting for lobby obj");
+        	try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {}
+        	lobby = server.updateLobby(selected);
+
+        }
+        System.out.println("finished waiting");
         ClientInfo leader = lobby.getLobbyLeader();
+        
         ArrayList<ClientInfo> peasants  = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
 

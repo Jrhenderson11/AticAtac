@@ -13,15 +13,15 @@ import javafx.scene.paint.Color;
 public class LBAnimation extends AnimationTimer {
 
     private final GraphicsContext gc;
-    private final ClientInfo me;
+    //private final ClientInfo me;
     private final LobbyServer server;
 
-    public LBAnimation(GraphicsContext gc, LobbyServer server, ClientInfo clientInfo) {
-
-        this.me = clientInfo;
+    public LBAnimation(GraphicsContext gc, LobbyServer server) {
+    	//if u want to get client info, call from server once it exists:
+    	//calling before the network has joined a lobby is a bad idea (Nullpointer exceptions everywhere)
+        //this.me = clientInfo;
         this.gc = gc;
         this.server = server;
-
     }
 
     @Override

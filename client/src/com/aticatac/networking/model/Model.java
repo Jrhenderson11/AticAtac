@@ -5,7 +5,6 @@ import java.io.Serializable;
 import com.aticatac.world.Level;
 
 public class Model implements Serializable{
-
 	
 	private int x;
 	private int y;

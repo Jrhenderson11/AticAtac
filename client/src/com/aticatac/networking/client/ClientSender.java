@@ -19,19 +19,31 @@ public class ClientSender extends Task {
 	private DatagramSocket socket;
 	private boolean running;
 	private BlockingQueue<String> messageQueue;
+	private int port;
 
+	/** makes a new sender obj
+	 * 
+	 * @param newName the name: used for debug messages
+	 * @param newServer: UDPClient that controls this thread
+	 * @param newQueue: MessageQueue to send from
+	 */
 	public ClientSender(String newName, InetAddress newServer, BlockingQueue newQueue) {
 		this.name = newName;
 		this.server = newServer;
 		try {
 			this.socket = new DatagramSocket();
+			this.port = socket.getLocalPort();
 		} catch (SocketException e) {
 			System.out.println("client sender cannot acquire socket");
 			e.printStackTrace();
 		}
+
 		this.messageQueue = newQueue;
 	}
-	
+
+	/**
+	 * JavaFX version of run(), starts a thread
+	 */
 	@Override
 	public Object call() {
 		System.out.println("sender started");
@@ -46,7 +58,7 @@ public class ClientSender extends Task {
 			// send message once got
 			buffer = message.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, Globals.SERVER_PORT);
-			
+
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
@@ -60,7 +72,18 @@ public class ClientSender extends Task {
 		return new Object();
 	}
 
+	/**
+	 * stops this thread
+	 */
 	public void halt() {
 		this.running = false;
+	}
+
+	/**
+	 * returns port this is sending from (because this is dynamic)
+	 * @return
+	 */
+	public int getPort() {
+		return this.port;
 	}
 }

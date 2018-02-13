@@ -2,8 +2,8 @@ package com.aticatac.ui.lobby.browser.handlers;
 
 import java.util.ArrayList;
 
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
-import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.ui.lobby.browser.Browser;
 
 import javafx.event.EventHandler;

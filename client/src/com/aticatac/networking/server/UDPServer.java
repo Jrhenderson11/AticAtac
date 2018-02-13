@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.utils.Controller;
 import com.aticatac.world.Level;
@@ -61,25 +61,33 @@ public class UDPServer extends Thread{
 		return this.status;
 	}
 
-	public void startLobby(ClientInfo newClient) {
-		Player player = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+	public void startLobby(ClientInfo newClient, LobbyInfo info) {
+		//replace 2 with newClient.getColour()
+		Player player = new Player(Controller.REAL, newClient.getID(), 2);
 
 		//Player player = new Player();
 		model.init(player);
-		this.lobby = new Lobby(newClient);
+		this.lobby = new Lobby(newClient, info);
 		this.status = Globals.IN_LOBBY;
 		System.out.println("new lobby created");
 	}
 	
+	public void sendAllLobby() {
+		this.sender.sendAllLobby();
+	}
+	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
-		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
+		ClientInfo newClient = new ClientInfo(name, false, 3, address, destPort, originPort);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
-			this.startLobby(newClient);
-		} else if (this.status == Globals.IN_LOBBY) {
+			this.startLobby(newClient, this.lobbyInfo);
+		} else {
+			System.out.println("adding " + newClient.getID() + " to lobby");
 			this.lobby.addClient(newClient);
+			Player newPlayer = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+			this.model.addPlayer(newPlayer);
 		}
-		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
+		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), this.lobbyInfo.ID, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");
 	}
 	

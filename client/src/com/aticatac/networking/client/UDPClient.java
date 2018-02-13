@@ -7,8 +7,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.lobby.LobbyServer;
-import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.world.World;
 
@@ -26,8 +26,14 @@ public class UDPClient extends Task implements LobbyServer {
 	private int status;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
+	private ClientInfo myInfo;
 	private boolean ready;
 
+	/**
+	 *  makes a new UDPClient object
+	 * @param newName this client's name
+	 * @param newAddress server address to send messages to
+	 */
 	public UDPClient(String newName, InetAddress newAddress) {
 		this.name = newName;
 		this.address = newAddress;
@@ -37,6 +43,9 @@ public class UDPClient extends Task implements LobbyServer {
 		this.ready = false;
 	}
 
+	/**
+	 * javafx version of Thread.run()
+	 */
 	@Override
 	public Object call() {
 
@@ -57,6 +66,10 @@ public class UDPClient extends Task implements LobbyServer {
 		return new Object();
 	}
 
+	/** sends message to server
+	 * 
+	 * @param data to send
+	 */
 	public void sendData(String data) {
 		try {
 			this.messageQueue.put(data);
@@ -65,6 +78,9 @@ public class UDPClient extends Task implements LobbyServer {
 		}
 	}
 
+	/**
+	 * attempts to stop threads
+	 */
 	public void halt() {
 		sender.halt();
 		sender.cancel();
@@ -72,30 +88,55 @@ public class UDPClient extends Task implements LobbyServer {
 		// receiver.cancel();
 	}
 
+	/**
+	 * @return most up to date model
+	 */
 	public World getModel() {
 		return this.receiver.getModel();
 	}
 
+	/**returns this client status (see Globals for various statuses)
+	 * 
+	 * @return
+	 */
 	public int getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * guess what this does
+	 * @param newStatus
+	 */
 	public void setStatus(int newStatus) {
 		this.status = newStatus;
 	}
 
+	/**
+	 * 
+	 * @return this clients lobby 
+	 */
 	public Lobby getLobby() {
 		return this.lobby;
 	}
 
+	/**
+	 * sets the lobby
+	 * @param newLobby
+	 */
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;
+		this.myInfo = lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
 
+	/**
+	 * 
+	 * @return this lobbyInfo
+	 */
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
 	}
 
+	
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
 		// System.out.println(this.lobbyInfo.MAX_PLAYERS);
@@ -153,6 +194,11 @@ public class UDPClient extends Task implements LobbyServer {
 		return false;
 	}
 
+	public void requestLobby() {
+		//System.out.println("requesting lobby");
+		this.sendData("lobbypls");
+	}
+	
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
 		ArrayList<LobbyInfo> lobbies = new ArrayList<LobbyInfo>();
@@ -163,8 +209,11 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public Lobby updateLobby(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		/*System.out.println("updating");
+		System.out.println("status: " + this.status);
+		System.out.println(this.lobby == null);
+		System.out.println("========");*/
+        return this.lobby;
 	}
 
 	@Override
@@ -173,9 +222,19 @@ public class UDPClient extends Task implements LobbyServer {
 		return false;
 	}
 
+	
 	@Override
 	public ClientInfo myInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		/*System.out.println("lobby players:" + this.lobby.getAll().size());
+		
+		for (ClientInfo i : this.lobby.getAll()) {
+			System.out.println(i.getAddress());
+			System.out.println(i.getOriginPort());
+			System.out.println("---------------");
+			System.out.println(this.address.toString().replaceAll("localhost", ""));
+			System.out.println(this.sender.getPort());
+			System.out.println("===================");
+		}*/
+		return this.lobby.getClientBySocket(this.address, this.sender.getPort());//lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
 }

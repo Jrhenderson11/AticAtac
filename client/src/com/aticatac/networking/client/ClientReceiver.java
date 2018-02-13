@@ -8,7 +8,7 @@ import java.net.SocketException;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.lobby.Lobby;
-import com.aticatac.lobby.utils.LobbyInfo;
+import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.model.Model;
 import com.aticatac.world.World;
@@ -25,6 +25,11 @@ public class ClientReceiver extends Thread {
 
 	private UDPClient master;
 	
+	/** makes a new receiver
+	 * 
+	 * @param newName 	name of this client (useful for debugging stuff)
+	 * @param newMaster UDPClient that controls this thread
+	 */
 	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
 		this.running = false;
@@ -42,6 +47,7 @@ public class ClientReceiver extends Thread {
 		this.master = newMaster;
 	}
 
+	
 	@Override
 	public void run() {
 		int count = 0;
@@ -65,7 +71,11 @@ public class ClientReceiver extends Thread {
 					master.setLobbyInfo(newInfo);
 				} catch (Exception e) {
 					
-					System.out.println("cannot deserialise lobbyinfo (is it a model?)");
+					//System.out.println("cannot deserialise lobbyinfo (is it a model?)");
+					try {
+						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, name));
+					} catch (Exception e2) {}
 				}
 				//System.out.println("getting info");
 				
@@ -80,10 +90,15 @@ public class ClientReceiver extends Thread {
 					}
 				} catch (Exception e) {
 					numFail++;
-					if (numFail>20) { 
+					if (numFail>20000) { 
 						master.setStatus(Globals.IN_GAME);
 					}
-					System.out.println("cannot deserialise lobby (is it a model?)");
+					System.out.println("cannot deserialise lobby (is it a model?)" + numFail);
+					try {
+						this.model = SerializationUtils.deserialize(packet.getData());
+						this.master.setStatus(Globals.IN_GAME);
+					} catch (Exception e2) {
+					}
 				}
 				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
@@ -91,12 +106,19 @@ public class ClientReceiver extends Thread {
 				try {
 					this.model = SerializationUtils.deserialize(packet.getData());
 				} catch (Exception e) {
-					System.out.println("uh - oh");
+					try {
+						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
+						master.setLobby(newLobby);
+					} catch (Exception e2) {
+						System.out.println("uh - oh");
+						e2.printStackTrace();
+					}
+					
 				}
 				//System.out.println("in game");
-				if (model == null) {
-				} else {
-				}
+				if (this.master.getLobby() == null) {
+					this.master.requestLobby();
+				} 
 	}
 
 		}
@@ -105,11 +127,18 @@ public class ClientReceiver extends Thread {
 		// return new Object();
 	}
 
+	/**
+	 * starts this thread
+	 */
 	public void halt() {
 		this.running = false;
 		socket.close();
 	}
 
+	/**
+	 * returns most up to date model of the world
+	 * @return
+	 */
 	public World getModel() {
 		return this.model;
 	}
