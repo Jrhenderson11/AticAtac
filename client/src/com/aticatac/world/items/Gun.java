@@ -6,6 +6,7 @@ import java.io.Serializable;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
+@SuppressWarnings("serial")
 public abstract class Gun implements Serializable{
 
 	
@@ -43,6 +44,7 @@ public abstract class Gun implements Serializable{
 	// -------
 	// Methods
 	// -------
+	
 	
 	/**
 	 * Fires a bullet.
@@ -86,11 +88,18 @@ public abstract class Gun implements Serializable{
 	// -------------------
 	
 	
+	/**
+	 * Get the user that is using the weapon
+	 * @return The Player instance that is using the weapon
+	 */
 	public Player getUser() {
 		return user;
 	}
 
-
+	/**
+	 * Set the user of this weapon
+	 * @param user The Player to set this weapon to be used by.
+	 */
 	public void setUser(Player user) {
 		this.user = user;
 	}

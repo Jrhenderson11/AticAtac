@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 import com.aticatac.world.World;
 
+@SuppressWarnings("serial")
 public class SprayBullet extends Bullet {
 	
 	/**

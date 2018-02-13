@@ -9,9 +9,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Quit extends Scene {
@@ -28,7 +31,6 @@ public class Quit extends Scene {
 
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
 
         ArrayList<Option> options = new ArrayList<>();
 
@@ -50,6 +52,12 @@ public class Quit extends Scene {
         AnimationTimer animation = new QuitAnimation(gc,options, System.nanoTime());
 
         animation.start();
+
+        Set<KeyCode> pressedKeys = new HashSet<>();
+        this.setOnKeyPressed(new QuitKeyPressed(options, pressedKeys, primaryStage, animation));
+        this.setOnKeyReleased(new QuitKeyReleased(pressedKeys));
+        this.setOnMouseMoved(new QuitMouseMoved(options));
+        this.setOnMouseClicked(new QuitMouseClicked(options, primaryStage, animation));
 
 
     }

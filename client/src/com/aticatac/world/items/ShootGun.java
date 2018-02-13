@@ -9,6 +9,10 @@ import com.aticatac.world.World;
 public class ShootGun extends Gun {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 5;
@@ -43,7 +47,7 @@ public class ShootGun extends Gun {
 	public boolean fire(double direction, Point target, World world) {
 		if (ready()) {
 			resetCooldown();
-			ShootBullet bullet = new ShootBullet(direction, getUser().getPosition(), getUser().getIdentifier());
+			ShootBullet bullet = new ShootBullet(direction, getUser().getPosition(), getUser().getColour());
 			bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
 			return world.addBullet(bullet);
 		} else return false;

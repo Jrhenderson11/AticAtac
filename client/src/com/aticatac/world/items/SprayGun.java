@@ -5,6 +5,7 @@ import java.awt.Point;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
+@SuppressWarnings("serial")
 public class SprayGun extends Gun {
 	
 	/**
@@ -42,7 +43,7 @@ public class SprayGun extends Gun {
 	public boolean fire(double direction, Point target, World world) {
 		if (ready()) {
 			resetCooldown();
-			SprayBullet bullet = new SprayBullet(direction, getUser().getPosition(), getUser().getIdentifier());
+			SprayBullet bullet = new SprayBullet(direction, getUser().getPosition(), getUser().getColour());
 			bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
 			return world.addBullet(bullet);
 		} else return false;

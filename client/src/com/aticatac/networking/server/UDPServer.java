@@ -1,5 +1,6 @@
 package com.aticatac.networking.server;
 
+import java.awt.Point;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -7,7 +8,9 @@ import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.utils.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
+import com.aticatac.utils.Controller;
 import com.aticatac.world.Level;
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 public class UDPServer extends Thread{
@@ -59,14 +62,17 @@ public class UDPServer extends Thread{
 	}
 
 	public void startLobby(ClientInfo newClient) {
-		model.init();
+		Player player = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+
+		//Player player = new Player();
+		model.init(player);
 		this.lobby = new Lobby(newClient);
 		this.status = Globals.IN_LOBBY;
 		System.out.println("new lobby created");
 	}
 	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
-		ClientInfo newClient = new ClientInfo("id", name, false, 2, address, destPort, originPort);
+		ClientInfo newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
 		if (this.status == Globals.IN_LIMBO) {
 			//no lobby started so start one
 			this.startLobby(newClient);
@@ -78,7 +84,8 @@ public class UDPServer extends Thread{
 	}
 	
 	public void leaveLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
-		ClientInfo newClient = new ClientInfo("id", name, false, 2, address, destPort, originPort);
+		ClientInfo newClient = this.getClientInfo(address, originPort);
+				//new ClientInfo("id", name, false, 2, address, destPort, originPort);
 		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
 			this.lobby.removeClient(newClient);
 		} 

@@ -3,7 +3,6 @@ package com.aticatac.ui.mainmenu;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.aticatac.networking.client.UDPClient;
 import com.aticatac.ui.lobby.browser.Browser;
