@@ -6,12 +6,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class ClientInfoBrick implements Drawable{
 
+    private final int offset;
     private ClientInfo mine;
 
-    public ClientInfoBrick(ClientInfo info) {
-
+    public ClientInfoBrick(ClientInfo info, int i) {
         this.mine = info;
-
+        this.offset = i;
     }
 
     @Override

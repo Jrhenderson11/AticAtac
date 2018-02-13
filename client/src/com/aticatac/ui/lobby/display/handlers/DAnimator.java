@@ -10,8 +10,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -33,6 +31,8 @@ public class DAnimator extends AnimationTimer {
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
 
+        // TODO: might have to move this to handle V if its not updating
+
         drawables = new HashSet<>();
 
         Lobby lobby = server.updateLobby(selected);
@@ -40,19 +40,19 @@ public class DAnimator extends AnimationTimer {
         ArrayList<ClientInfo> peasants  = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
 
-        drawables.add(new ClientInfoBrick(leader));
+        drawables.add(new ClientInfoBrick(leader, 0));
 
-        for (ClientInfo c : peasants) {
-            drawables.add(new ClientInfoBrick(c));
-            // TODO
-            drawables.add(new KickButton(new Rectangle()));
+        for (int i = 0; i < peasants.size(); i++) {
+            ClientInfo c = peasants.get(i);
+            drawables.add(new ClientInfoBrick(c, i + 1));
+            drawables.add(new KickButton(i));
         }
 
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
         drawables.add(new BackButton(hitbox));
         drawables.add(new LobbyHeader(lobby));
-
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+
         if (isLead) {
             drawables.add(new ReadyStartButton(hitbox, "Start"));
         } else {
@@ -63,11 +63,8 @@ public class DAnimator extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-
         for (Drawable d : drawables) {
             d.draw(gc, now);
         }
-
-
     }
 }
