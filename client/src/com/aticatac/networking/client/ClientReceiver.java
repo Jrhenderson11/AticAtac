@@ -25,7 +25,8 @@ public class ClientReceiver extends Thread {
 
 	private UDPClient master;
 	
-	/** makes a new receiver
+	/**
+	 * makes a new receiver
 	 * 
 	 * @param newName 	name of this client (useful for debugging stuff)
 	 * @param newMaster UDPClient that controls this thread
@@ -111,7 +112,7 @@ public class ClientReceiver extends Thread {
 						master.setLobby(newLobby);
 					} catch (Exception e2) {
 						System.out.println("uh - oh");
-						e2.printStackTrace();
+						//e2.printStackTrace();
 					}
 					
 				}
@@ -124,7 +125,6 @@ public class ClientReceiver extends Thread {
 		}
 		socket.close();
 		System.out.println(name + " r done");
-		// return new Object();
 	}
 
 	/**
@@ -142,5 +142,4 @@ public class ClientReceiver extends Thread {
 	public World getModel() {
 		return this.model;
 	}
-
 }

@@ -10,7 +10,8 @@ public class UIDrawer {
     public static final Font TITLE_FONT = Font.font("Nimbus Mono L", FontWeight.BOLD, 48);
     public static final Font OPTION_TEXT = Font.font("Courier 10 Pitch", FontWeight.BOLD, 25);
     public static final Font LOBBYBROWSTEXT = Font.font("Gentium", FontWeight.BOLD, 18);
-
+    public static final Font TUTORIAL_FONT = Font.font("Nimbus Mono L", FontWeight.BOLD, 13);
+		
     public static void background(GraphicsContext gc, Color color) {
         gc.save();
         int width = SystemSettings.getNativeWidth();

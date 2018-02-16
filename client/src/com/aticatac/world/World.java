@@ -155,9 +155,25 @@ public class World implements Serializable {
 		return players;
 	}
 
+	/**
+	 * Adds a player to the world
+	 * @param player to add
+	 * @returns whether it was succesful
+	 */
 	public boolean addPlayer(Player player) {
 		System.out.println("adding player " + player.getIdentifier());
 		player.setPosition(this.startLocs[players.size()]);
+		this.players.add(player);
+		return true;
+	}
+	
+	/**
+	 * Adds a player to the world without assigning it a position
+	 * @param player to add
+	 * @returns whether it was succesful
+	 */
+	public boolean addPlayerWithoutPosition(Player player) {
+		System.out.println("adding player " + player.getIdentifier());
 		this.players.add(player);
 		return true;
 	}

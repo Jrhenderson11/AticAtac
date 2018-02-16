@@ -29,15 +29,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class Tutorial extends Scene {
+public class Tutorial2 extends Scene {
 	
 	private int displayWidth;
 	private int displayHeight;
 	private Level level;
 	private Renderer renderer;
 	private boolean tips;
+	private	ArrayList<Point> visited = new ArrayList<Point>();
 	
-	public Tutorial (Group root) {
+	public Tutorial2 (Group root) {
         super(root);
         
         //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
@@ -55,15 +56,15 @@ public class Tutorial extends Scene {
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        this.level = new Level(50, 50);
+        this.level = new Level(200, 200);
         //level.randomiseMap();
-        level.loadMap("assets/maps/map.txt");
+        level.loadMap("assets/maps/tutorial.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
         Player player = new Player(Controller.REAL, "player", 2);
-        player.setPosition(new Point(50, 50));
-        world.addPlayer(player);
+        player.setPosition(new Point(25, 25));
+        world.addPlayerWithoutPosition(player);
         
         /* ================ */
         //add key event listeners
@@ -208,15 +209,57 @@ public class Tutorial extends Scene {
   	        	//draw scene
   	        	renderer.render(gc);
   	        	
+  	        	int bigX = (p.x/(world.getLevel().getWidth()/10));
+  	        	int bigY = (p.y/(world.getLevel().getHeight()/10));
+  	        	String[][] texts = new String[10][10];
+  	        	Point[][] pos = new Point[10][10];
+  	        	
+  	        	for (int i=0;i<10;i++) {
+  	        		for (int j=0;j<10;j++) {
+  	  	        		pos[i][j] = new Point(400, 400);
+  	  	        	}	
+  	        	}
+  	        	texts[0][0]  ="Use WASD to move";
+  	        	pos[0][0] = new Point(10, 75);
+  	        	texts[2][0]  ="Use mouse to aim";
+  	        	pos[2][0] = new Point(170, 20);
+  	        	texts[2][1]  ="Use mouse to aim";
+  	        	pos[2][1] = new Point(170, 20);
+  	        	
+  	        	
+  	        	texts[4][2]  ="press O to select splat cannon";
+	        	pos[4][2] = new Point(190, 105);
+	        	
+  	        	
+  	        	texts[6][0]  ="and left click to shoot";
+	        	pos[6][0] = new Point(330, 20);
+	        	texts[6][1]  ="and left click to shoot";
+	        	pos[6][1] = new Point(330, 20);
+  	        	gc.setFill(Color.WHITE);
+  	        	gc.setFont(UIDrawer.TUTORIAL_FONT);
+  	        	
   	        	//draw help tips
   	        	if (tips) {
-  	        		gc.setFill(Color.WHITE);
-  	        	    gc.setFont(UIDrawer.TUTORIAL_FONT);
-  	        		gc.fillText("Use WASD keys to move\nAim with mouse\nClick"
-  							+ " to shoot\nPress H to hide/show this message\n\n Cheats:"
-  							+ "\nI - ShootGun\nO - SplatGun\nP - SprayGun", 100, 150);
+  	        		if (!pointCheck(new Point(bigX, bigY), visited)) {
+  	        			visited.add(new Point(bigX, bigY));
+  	        		}
+  	        		for (Point newP: visited) {
+  	  	        		gc.fillText(texts[newP.x][newP.y], pos[newP.x][newP.y].x, pos[newP.x][newP.y].y);  	        			
+  	        		}
+  	        		
+
   	        	}
   	        }
   	    }.start();   
 	}
+	private boolean pointCheck(Point p, ArrayList<Point> list) {
+		for (Point point: list) {
+			if (p.x==point.x && p.y==point.y) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
+
+

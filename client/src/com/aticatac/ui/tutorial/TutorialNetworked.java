@@ -143,9 +143,13 @@ public class TutorialNetworked extends Scene {
 				
 				//System.out.println(myInfo == null);
 				//System.out.println(world.getPlayers().size());
-				Player p = (world.getPlayerById(myInfo.getID()));
-				
-				player.setPosition(p.getPosition());
+				try {
+					Player p = (world.getPlayerById(myInfo.getID()));
+					player.setPosition(p.getPosition());
+
+				} catch (Exception e){
+					
+				}
 				//player.setPosition(((Player) world.getPlayers().toArray()[0]).getPosition());
 					// draw scene
 					
