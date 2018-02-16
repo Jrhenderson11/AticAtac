@@ -62,6 +62,11 @@ public class Tutorial extends Scene {
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
         
+        //testing with gun boxes
+        world.spawnShootGunBox(new Point(40, 40));
+        world.spawnSplatGunBox(new Point(340, 430));
+        world.spawnSprayGunBox(new Point(140, 240));
+        
         /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
