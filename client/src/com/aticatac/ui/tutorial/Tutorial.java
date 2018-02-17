@@ -63,9 +63,9 @@ public class Tutorial extends Scene {
         world.addPlayer(player);
         
         //testing with gun boxes
-        world.spawnShootGunBox(new Point(40, 40));
-        world.spawnSplatGunBox(new Point(340, 430));
-        world.spawnSprayGunBox(new Point(140, 240));
+        world.spawnShootGunBox(new Point(100, 40));
+        world.spawnSplatGunBox(new Point(320, 400));
+        world.spawnSprayGunBox(new Point(440, 240));
         
         /* ================ */
         //add key event listeners

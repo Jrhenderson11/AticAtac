@@ -57,12 +57,16 @@ public class World implements Serializable {
 	// this is currently used for moving the bullets.
 	public void update() {
 		// update bullets
-		for (int i=0; i<bullets.size(); i++) {
+		for (int i=0; i<bullets.size(); i++) { //iterating this way prevents ConcurrentModificationExceptions
 			((Bullet) bullets.toArray()[i]).update(this);
 		}
 		// update players
 		for (Player player : players) {
 			player.update();
+		}
+		// update gunboxes
+		for (int i=0; i<gunboxes.size(); i++) {
+			((GunBox) gunboxes.toArray()[i]).update(this);
 		}
 	}
 
