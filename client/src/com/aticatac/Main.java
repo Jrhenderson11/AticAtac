@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.aticatac.networking.client.UDPClient;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.utils.SystemSettings;
 import javafx.application.Application;
@@ -46,6 +47,8 @@ public class Main extends Application{
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
         primaryStage.show();
+        SoundManager m = new SoundManager();
+       m.playBgMenu2();
 
     }
 }

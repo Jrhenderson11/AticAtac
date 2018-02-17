@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Level;
@@ -53,10 +54,8 @@ public class Tutorial extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
-<<<<<<< HEAD
-=======
+
         //level.randomiseMap();
->>>>>>> 1883dcdc91d47d29da8b7fc4a63bdcdab409dca0
         level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
@@ -64,6 +63,9 @@ public class Tutorial extends Scene {
         Player player = new Player(Controller.REAL, "player", 2);
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
+        
+        SoundManager m = new SoundManager();
+        m.playBgGame();
         
         /* ================ */
         //add key event listeners
@@ -125,6 +127,7 @@ public class Tutorial extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
+  	        		m.playShoot();
   	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
   	        	}
   	        }

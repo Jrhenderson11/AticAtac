@@ -54,16 +54,12 @@ public class MenuItem {
         return name;
     }
 
-<<<<<<< HEAD
     public Scene choose() { 
     	SoundManager m = new SoundManager();
-    	m.playClick();
-    	return link; }
-=======
-    public Scene choose() {
-        return link.get();
-    }
->>>>>>> 1883dcdc91d47d29da8b7fc4a63bdcdab409dca0
+    	m.stopMenuBg();
+    	//m.playClick();
+    	return link.get(); }
+ 
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);
