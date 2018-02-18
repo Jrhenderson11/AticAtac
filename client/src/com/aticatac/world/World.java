@@ -1,5 +1,6 @@
 package com.aticatac.world;
 
+
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.Serializable;
@@ -10,13 +11,11 @@ import java.util.LinkedList;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.items.Bullet;
-import com.aticatac.world.items.Collidable;
 import com.aticatac.world.items.ShootGun;
 import com.aticatac.world.items.SplatGun;
 import com.aticatac.world.items.SprayGun;
 
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 public class World implements Serializable {
 	private Collection<Player> players;
@@ -32,15 +31,22 @@ public class World implements Serializable {
 		this.players = new LinkedList<Player>();
 		this.bullets = new LinkedList<Bullet>();
 	}
-
 	// sets up world
 	public void init(Player player) {
-		player.setPosition(new Point(50, 50));
 		this.addPlayer(player);
 	}
 	
 	public Level getLevel() {
 		return level;
+	}
+
+	public void shoot(int targetX, int targetY, String id) {
+		
+		Player player = this.getPlayerById(id);
+
+		if (player.getGun() != null) {
+      		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
+      	}
 	}
 	
 	public int getNumPlayers() {
@@ -159,10 +165,18 @@ public class World implements Serializable {
 		return players;
 	}
 
+	/**
+	 * Adds a player to the world
+	 * @param player to add
+	 * @returns whether it was succesful
+	 */
 	public boolean addPlayer(Player player) {
-		return players.add(player);
+		System.out.println("adding player " + player.getIdentifier());
+		player.setPosition(this.startLocs[players.size()]);
+		this.players.add(player);
+		return true;
 	}
-
+	
 	public int getPlayerColour(String playerIdentifier) {
 		for (Player player : players) {
 			if (player.getIdentifier() == playerIdentifier) {
@@ -215,4 +229,16 @@ public class World implements Serializable {
 		return coordsToDisplayPosition(coords,
 				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
 	}
+
+	/**
+	 * Adds a player to the world without assigning it a position
+	 * @param player to add
+	 * @returns whether it was succesful
+	 */
+	public boolean addPlayerWithoutPosition(Player player) {
+		System.out.println("adding player " + player.getIdentifier());
+		this.players.add(player);
+		return true;
+	}
+
 }

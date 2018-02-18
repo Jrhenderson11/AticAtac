@@ -26,6 +26,7 @@ public class Player implements Serializable{
      * @param identifier
      * @param colour
      */
+
     public Player(Controller controller, String identifier, int colour) {
     	this.controller = controller;
     	this.setIdentifier(identifier);

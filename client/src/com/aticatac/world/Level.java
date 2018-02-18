@@ -187,6 +187,7 @@ public class Level implements Serializable {
 	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
+
 		if (posX > width - 1 || posX < 0 || posY > height - 1 || posY < 0) {
 			return;
 		}
@@ -207,25 +208,13 @@ public class Level implements Serializable {
 					}
 					if ((posX - x > 0) && grid[posX - x][posY - y] != blockVal) {
 						grid[posX - x][posY - y] = fillVal;
-						if (posX + x < (width - 1) && grid[posY + y][posX + x] != blockVal) {
-							grid[posY + y][posX + x] = fillVal;
-						}
-						if ((posX - x > 0) && grid[posY + y][posX - x] != blockVal) {
-							grid[posY + y][posX - x] = fillVal;
-						}
-					}
-					if ((posY - y > 0) && grid[posY - y][posX + x] != blockVal) {
-						if (posX + x < (width - 1)) {
-							grid[posY - y][posX + x] = fillVal;
-						}
-						if ((posX - x > 0) && grid[posY - y][posX - x] != blockVal) {
-							grid[posY - y][posX - x] = fillVal;
-						}
 					}
 				}
 			}
 		}
+
 	}
+
 
 	// filehandling
 	public boolean saveMap(String fileName) {
@@ -378,49 +367,35 @@ public class Level implements Serializable {
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-//		System.out.println("SERIALISING");
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		int lastval = -1;
 		int num = 0;
 		int sum=0;
 		int sum2=0;
 		for (int y = 0; y < height; y++) {
-	//		System.out.println("y:" + y);
 			for (int x = 0; x < width; x++) {
-				//System.out.println(x + ":" + y + "=" + grid[x][y]);
 				if (this.grid[x][y] != lastval) {
 					if (num != 0) {
 						intList.add(num);
 						intList.add(lastval);
-	//					System.out.println("adding " + num + " of " + lastval);
 						sum2+=num;
 						num=0;
-						
 					}
 					
 					lastval = this.grid[x][y];
-					//num++;
 				}
 				if ((x==width-1 && y==height-1)) {
 					intList.add(num+1);
 					sum2+=num+1;
 					intList.add(lastval);
-//					System.out.println("END");
-//					System.out.println("adding " + num+1 + " of " + lastval);
-					
 				}
 				num++;
 				sum++;
 			}
 		}
 		
-		/*System.out.println("SUM: " + sum);
-		System.out.println("SUM2: " + sum2);
-		System.out.println("making byte array[" + (intList.size()+1)*4 + "]");*/
 		byte[] arr = new byte[(intList.size()+1)*4];
 		int x=4;
-		//int x=0;
-		
 		byte[] num2 = ByteBuffer.allocate(4).putInt((intList.size()*4)).array();
 		for (int j=0;j<4; j++) {
 			arr[j] = num2[j];
@@ -431,61 +406,29 @@ public class Level implements Serializable {
 				arr[x++] = num2[j];
 			}
 		}
-		//System.out.println("intList len: " + intList.size());
-	//	System.out.println("byte len: " + arr.length);
 		out.write(arr);
-		//System.out.println("=================");
 	}
-	
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		//System.out.println("DESERIALISING");
 		
 		byte[] byteArray = new byte[in.readInt()];
 		
-		//in.read(byteArray);
-		//System.out.println("byte len:" + byteArray.length);
 		for (int i =0; i< byteArray.length; i++) {
 			byteArray[i] = in.readByte();
-			//System.out.println(byteArray[i]);
 		}
-		/*try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 		IntBuffer intBuf = ByteBuffer.wrap(byteArray).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
 		
 		int[] intArray = new int[intBuf.remaining()];
-		
-			//but now intbuf is too big
-		//intBuf.get(intArray);
 		
 		for (int j=0; j< intArray.length; j++) {
 			intArray[j] = intBuf.get(j);
 		}
 		
-		//System.out.println("INT ARR LEN: " + intArray.length);
-		// calculate total number of cells
 		int sum = 0;
 		for (int x2 = 0; x2 < intArray.length; x2+=2) {
-			/*if (intArray[x2]==0) {
-				System.out.println("look");
-				System.out.println("-" + intArray[x2-2]);
-				System.out.println("-" + intArray[x2-1]);
-				System.out.println(">" + intArray[x2]);
-				System.out.println("-" + intArray[x2+1]);
-				System.out.println("-" + intArray[x2+2]);
-			}*/
-			
-			//System.out.println("calc sum: " + intArray[x2]);
 			sum += intArray[x2];
 		}
-		//System.out.println("sum: " + sum);
 		int width = (int) Math.sqrt(sum);
-		//System.out.println("width: " + width);
 
 		int x = 0;
 		int y = 0;
@@ -493,25 +436,17 @@ public class Level implements Serializable {
 		for (int i = 0; i < intArray.length; i += 2) {
 			int val = intArray[i + 1];
 			int num = intArray[i];
-			//System.out.println("writing " + num + " of " + val);
 			for (int count = 0; count < num; count++) {
 				grid[x][y] = val;
 
-				// newline
 				if (++x == width) {
 					x = 0;
 					y++;
 				}
-
 			}
-
 		}
 		this.grid = grid;
 		this.width = width;
 		this.height = width;
-		//new Level(grid);
-	//	System.out.println("=================");
 	}
-	
-
 }

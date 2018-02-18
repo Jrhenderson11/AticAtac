@@ -31,7 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class Tutorial extends Scene {
+public class AiDemo extends Scene {
 	
 	private int displayWidth;
 	private int displayHeight;
@@ -39,7 +39,7 @@ public class Tutorial extends Scene {
 	private Renderer renderer;
 	private boolean tips;
 	
-	public Tutorial (Group root) {
+	public AiDemo (Group root) {
         super(root);
         
         //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
@@ -59,7 +59,7 @@ public class Tutorial extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
         //level.randomiseMap();
-        level.loadMap("client/assets/maps/map.txt");
+        level.loadMap("assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
@@ -217,13 +217,6 @@ public class Tutorial extends Scene {
   	        	renderer.render(gc);
   	        	
   	        	//draw help tips
-  	        	if (tips) {
-  	        		gc.setFill(Color.WHITE);
-  	        	    gc.setFont(UIDrawer.TUTORIAL_FONT);
-  	        		gc.fillText("Use WASD keys to move\nAim with mouse\nClick"
-  							+ " to shoot\nPress H to hide/show this message\n\n Cheats:"
-  							+ "\nI - ShootGun\nO - SplatGun\nP - SprayGun", 100, 150);
-  	        	}
   	        }
   	    }.start();   
 	}
