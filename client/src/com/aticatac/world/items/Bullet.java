@@ -18,6 +18,10 @@ public abstract class Bullet implements Collidable, Serializable{
 	 */
 	protected double direction;
 	/**
+	 * The grid position of the world the bullet is shot at.
+	 */
+	protected Point target;
+	/**
 	 * Distance the bullet travels evey update.
 	 */
 	protected int moveSpeed;
@@ -40,9 +44,19 @@ public abstract class Bullet implements Collidable, Serializable{
 	// -----------
 	
 	
-	public Bullet(int range, double direction, int moveSpeed, Rectangle rect, int shooter) {
+	/**
+	 * Generic constructor for Bullets
+	 * @param range The maximum range the bullet can travel
+	 * @param direction The direction in rads, with 'north' being 0 increasing clockwise to 2 pi
+	 * @param target The target map grid the bullet is shot at
+	 * @param moveSpeed The distance the bullet travels each tick
+	 * @param rect The collision rectangle for this bullet
+	 * @param shooter The unique int id of the Player who fired the gun, used for coloring
+	 */
+	public Bullet(int range, double direction, Point target, int moveSpeed, Rectangle rect, int shooter) {
 		this.range = range;
 		this.direction = direction;
+		this.target = target;
 		this.moveSpeed = moveSpeed;
 		this.shooter = shooter;
 		this.rect = rect;
@@ -97,8 +111,11 @@ public abstract class Bullet implements Collidable, Serializable{
 		if (world.getLevel().getCoords(after.x, after.y) == 1) {
 			hit(world, before); //paint splat on floor just before the wall it hits
 		}
-
-
+		
+		//check if target tile reached
+		if (atTarget(after)) {
+			hit(world, target);
+		}
 		
 		//check for collision with collideables. Currently only other Bullets.
 		for (Collidable collidable: world.getBullets()) {
@@ -108,6 +125,23 @@ public abstract class Bullet implements Collidable, Serializable{
 		}
 	}
 	
+	/**
+	 * Checks whether the the given point is near enough to the target to consider a hit.
+	 * Checks with tiles above, below, left, and right of the target with the given point.
+	 * This is used because bullets can skip over tiles due to the high movement speed.
+	 * @param point The point to check against the target
+	 * @return True if the given point is considered to be 'at the target' or close enough.
+	 */
+	private boolean atTarget(Point point) {
+		int targetX = target.x;
+		int targetY = target.y;
+		return (point.equals(new Point(targetX + 1, targetY)) ||
+				point.equals(new Point(targetX - 1, targetY)) ||
+				point.equals(new Point(targetX, targetY + 1)) ||
+				point.equals(new Point(targetX, targetY - 1)) ||
+				point.equals(target)); 
+	}
+
 	/**
 	 * Called when a bullet hits a wall or another Collideable.
 	 * Removes this object from the world and destroys the object.
@@ -151,6 +185,16 @@ public abstract class Bullet implements Collidable, Serializable{
 		return direction;
 	}
 	
+	public Point getTarget() {
+		return target;
+	}
+
+
+	public void setTarget(Point target) {
+		this.target = target;
+	}
+
+
 	/**
 	 * Get the number of pixels the bullet moves every tick 
 	 * @return The move speed

@@ -43,7 +43,7 @@ public class SprayGun extends Gun {
 	public boolean fire(double direction, Point target, World world) {
 		if (ready()) {
 			resetCooldown();
-			SprayBullet bullet = new SprayBullet(direction, getUser().getPosition(), getUser().getColour());
+			SprayBullet bullet = new SprayBullet(direction, target, getUser().getPosition(), getUser().getColour());
 			//bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
 			return world.addBullet(bullet);
 		} else return false;

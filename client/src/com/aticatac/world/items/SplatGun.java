@@ -43,7 +43,7 @@ public class SplatGun extends Gun {
 	public boolean fire(double direction, Point target, World world) {
 		if (ready()) {
 			resetCooldown();
-			SplatBullet bullet = new SplatBullet(direction, getUser().getPosition(), getUser().getColour());
+			SplatBullet bullet = new SplatBullet(direction, target, getUser().getPosition(), getUser().getColour());
 			//bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
 			return world.addBullet(bullet);
 		} else return false;
