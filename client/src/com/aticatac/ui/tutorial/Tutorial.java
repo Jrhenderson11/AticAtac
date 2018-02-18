@@ -2,11 +2,13 @@ package com.aticatac.ui.tutorial;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
+import com.aticatac.world.AIPlayer;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
@@ -57,13 +59,16 @@ public class Tutorial extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(50, 50);
         //level.randomiseMap();
-        level.loadMap("assets/maps/map.txt");
+        level.loadMap("client/assets/maps/map.txt");
         World world = new World(level);
         
         renderer.setWorld(world);
         Player player = new Player(Controller.REAL, "player", 2);
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
+        AIPlayer aiPlayer = new AIPlayer(Controller.AI, world, "aiPlayer", 3);
+        aiPlayer.setPosition(new Point(50,100));
+        world.addPlayer(aiPlayer);
         
         /* ================ */
         //add key event listeners
@@ -197,10 +202,13 @@ public class Tutorial extends Scene {
   	        	if (level.getGrid()[p.x][p.y] == 0) {
   	        		level.updateCoords(p.x, p.y, player.getColour());
   	        	}
+  	        	p = world.displayPositionToCoords(aiPlayer.getPosition());
+  	        	if(level.getGrid()[p.x][p.y] == 0) {
+  	        		level.updateCoords(p.x, p.y, aiPlayer.getColour());
+  	        	}
 
   	        	/* ================ */
-
-  	        	
+  	        
   	        	//update world
   	        	world.update();
   	        	

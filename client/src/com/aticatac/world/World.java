@@ -35,11 +35,16 @@ public class World implements Serializable {
 
 	// sets up world
 	public void init(Player player) {
+		player.setPosition(new Point(50, 50));
 		this.addPlayer(player);
 	}
 	
 	public Level getLevel() {
 		return level;
+	}
+	
+	public int getNumPlayers() {
+		return players.size();
 	}
 
 	// calls the update method for all Collideables
@@ -51,17 +56,15 @@ public class World implements Serializable {
 		}
 		// update players
 		for (Player player : players) {
+			if(player.controller == Controller.AI) {
+				((AIPlayer) player).update();
+			}
 			player.update();
 		}
 	}
 
 	public void handleInput(ArrayList<KeyCode> input, double dir, String id) {
 		Player player = this.getPlayerById(id);
-		//System.out.println(this.players.size());
-		//System.out.println("got player " + player + " by id " + id);
-		if (player==null) {
-			return;
-		}
 		// left
 		if (input.contains(KeyCode.A)) {
 	
@@ -130,9 +133,10 @@ public class World implements Serializable {
 
 	}
 
-	public void shoot(int targetX, int targetY, String id) {
-		
-		Player player = this.getPlayerById(id);
+	public void shoot(int targetX, int targetY) {
+		// TODO: replace with specific player
+
+		Player player = (Player) players.toArray()[0];
 
 		if (player.getGun() != null) {
       		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
@@ -155,27 +159,8 @@ public class World implements Serializable {
 		return players;
 	}
 
-	/**
-	 * Adds a player to the world
-	 * @param player to add
-	 * @returns whether it was succesful
-	 */
 	public boolean addPlayer(Player player) {
-		System.out.println("adding player " + player.getIdentifier());
-		player.setPosition(this.startLocs[players.size()]);
-		this.players.add(player);
-		return true;
-	}
-	
-	/**
-	 * Adds a player to the world without assigning it a position
-	 * @param player to add
-	 * @returns whether it was succesful
-	 */
-	public boolean addPlayerWithoutPosition(Player player) {
-		System.out.println("adding player " + player.getIdentifier());
-		this.players.add(player);
-		return true;
+		return players.add(player);
 	}
 
 	public int getPlayerColour(String playerIdentifier) {
@@ -189,7 +174,7 @@ public class World implements Serializable {
 
 	public Player getPlayerById(String id) {
 		for (Player p: this.getPlayers()) {
-			if (p.getIdentifier().equals(id)) {
+			if (p.getIdentifier()==id) {
 				return p;
 			} 
 		}

@@ -13,15 +13,13 @@ public class Player implements Serializable{
 	private final static int PAINT_DECREASE = 5;
 	private final static int BASE_PAINT_INCREASE = 5;
 	
-    private Controller controller;
-    private String identifier;
-    private int colour;
-    private int paintLevel;
-    private Point position;
-    private Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
-    private Gun gun;
-    
-    
+    public Controller controller;
+    protected String identifier;
+    protected int colour;
+    protected int paintLevel;
+    protected Point position;
+    protected Double lookDirection; //stored as radians, 0 is looking to the right. increases clockwise.
+    protected Gun gun;
     
     /**
      * @param controller
@@ -69,6 +67,7 @@ public class Player implements Serializable{
     	// make a sensible decrease to paint level
     }
 
+
 	public int getColour() {
 		return colour;
 	}
@@ -84,7 +83,7 @@ public class Player implements Serializable{
 	public void setPosition(Point position) {
 		this.position = position;
 	}
-	
+
 	public void move(int dX, int dY) {
 		this.position.x += dX;
 		this.position.y += dY;

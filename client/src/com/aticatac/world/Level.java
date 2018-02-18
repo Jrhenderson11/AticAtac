@@ -1,5 +1,6 @@
 package com.aticatac.world;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -116,6 +117,32 @@ public class Level implements Serializable {
 		return false;
 	}
 
+	// returns whether 1 x,y pos can see another (direct line with no walls in
+	// between)
+	public boolean hasLOS(Point player, Point target) {
+		int dx = target.x - player.x;
+		int dy = target.y - player.y;
+		float m;
+		if (dx != 0) {
+			m = dy / dx;
+		} else {
+			m = 0;
+		}
+		int step = 1;
+		if (dx < 0) {
+			step = -1;
+		}
+		
+
+		for (int x = 0; x != dx; x += step) {
+			int y = (int) m * x;
+			if (grid[x][y] == 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private void fillmap(int fillval) {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -180,11 +207,24 @@ public class Level implements Serializable {
 					}
 					if ((posX - x > 0) && grid[posX - x][posY - y] != blockVal) {
 						grid[posX - x][posY - y] = fillVal;
+						if (posX + x < (width - 1) && grid[posY + y][posX + x] != blockVal) {
+							grid[posY + y][posX + x] = fillVal;
+						}
+						if ((posX - x > 0) && grid[posY + y][posX - x] != blockVal) {
+							grid[posY + y][posX - x] = fillVal;
+						}
+					}
+					if ((posY - y > 0) && grid[posY - y][posX + x] != blockVal) {
+						if (posX + x < (width - 1)) {
+							grid[posY - y][posX + x] = fillVal;
+						}
+						if ((posX - x > 0) && grid[posY - y][posX - x] != blockVal) {
+							grid[posY - y][posX - x] = fillVal;
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	// filehandling
