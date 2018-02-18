@@ -39,7 +39,7 @@ public class AIPlayer extends Player {
 		this.r = new Random();
 		this.currentPath = new LinkedList<>();
 		this.i = 0;
-		this.gridPosition = new Point(3, 11);
+		this.gridPosition = new Point(7, 11);
 	}
 
 	@Override
@@ -67,8 +67,6 @@ public class AIPlayer extends Player {
 				if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
 						&& inRange(player.getPosition())) {
 					// Spray or spit gun
-					System.out.println(world.displayPositionToCoords(player.getPosition()).x + "\t"
-							+ world.displayPositionToCoords(player.getPosition()).y);
 					foundTarget = true;
 					Point target = world.displayPositionToCoords(player.getPosition());
 					double angle = calculateLookDirection(target);
@@ -92,7 +90,6 @@ public class AIPlayer extends Player {
 			if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
 				System.out.println("calculate path");
 				Point point = closestFreePoint();
-				System.out.println(point.x + "\t" + point.y);
 				pathToFreePoint(point);
 				makeNextMove();
 			} /*
@@ -260,9 +257,22 @@ public class AIPlayer extends Player {
 	 * Method to get the next movement from a path that has been generated
 	 */
 	public void makeNextMove() {
+		// Need to make this go more smoothly
 		Point next = currentPath.poll();
+		System.out.println(world.coordsToDisplayPosition(next) + "\t" + position);
 		move(world.coordsToDisplayPosition(next).x - position.x, world.coordsToDisplayPosition(next).y - position.y);
 		gridPosition.setLocation(next);
+	}
+	
+	public ArrayList<Point> gridToDisplay(Point currentGrid, Point nextGrid){
+		ArrayList<Point> newPath = new ArrayList<>();
+		Point current = currentGrid;
+		Point next;
+		while(current!=nextGrid) {
+			
+		}
+		
+		return null;
 	}
 
 	/**

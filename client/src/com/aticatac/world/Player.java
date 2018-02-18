@@ -33,15 +33,6 @@ public class Player {
 		}
 	}
 
-	public void makeMovement(char control) {
-		// Send a request to renderer to move
-	}
-
-	public char getAction() {
-		// need to get the event and then do the necessary action
-		return 0;
-	}
-
 	public int getColour() {
 		return colour;
 	}
