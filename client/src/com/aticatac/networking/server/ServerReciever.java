@@ -137,7 +137,7 @@ public class ServerReciever extends Thread {
 
 			// GAME
 		} else if (parts[0].equals("input")) {
-			System.out.println(data);
+			//System.out.println(data);
 			ArrayList<KeyCode> input = new ArrayList<KeyCode>();
 			for (String letter : parts[1].replaceAll("\\[", "").replaceAll(" ", "").replaceAll("\\]", "").split(",")) {
 				input.add(KeyCode.getKeyCode(letter));

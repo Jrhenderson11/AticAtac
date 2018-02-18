@@ -31,7 +31,7 @@ public class TutorialNetworked extends Scene {
 	private Renderer renderer;
 	private UDPClient client;
 	private World world;
-
+	
 	private void skipLobby() {
 		client.joinLobby(1, "password");
 		try {
@@ -129,7 +129,8 @@ public class TutorialNetworked extends Scene {
 				client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
 			}
 		});
-
+	
+		
 		// sets up an AnimationTimer to update the display
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -137,25 +138,15 @@ public class TutorialNetworked extends Scene {
 				World world = client.getModel();
 				renderer.setWorld(world);
 				
-//				try {
-				// NULL PTR EXCEPTION HERE
 				ClientInfo myInfo = client.myInfo();
 				
-				//System.out.println(myInfo == null);
-				//System.out.println(world.getPlayers().size());
 				try {
 					Player p = (world.getPlayerById(myInfo.getID()));
 					player.setPosition(p.getPosition());
 
 				} catch (Exception e){
-					
+					//shhhh, let's just pretend this never happened
 				}
-				//player.setPosition(((Player) world.getPlayers().toArray()[0]).getPosition());
-					// draw scene
-					
-//				} catch (NullPointerException e) {
-
-//			} 
 				renderer.render(gc);
 
 			}
