@@ -16,7 +16,7 @@ public class SprayBullet extends Bullet {
 	/**
 	 * Default movement speed
 	 */
-	public static final int MOVESPEED = 10;
+	public static final int MOVESPEED = 6;
 	/**
 	 * Default collision rect dimensions
 	 */
