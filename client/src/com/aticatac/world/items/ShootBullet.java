@@ -34,8 +34,8 @@ public class ShootBullet extends Bullet {
 	 * @param startPosition The position from which it was fired
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
-	public ShootBullet(double direction, Point startPosition, int shooter) {
-		super(RANGE, direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+	public ShootBullet(double direction, Point target, Point startPosition, int shooter) {
+		super(RANGE, direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 	
 	

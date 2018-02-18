@@ -8,6 +8,10 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 import com.aticatac.world.items.Bullet;
+import com.aticatac.world.items.GunBox;
+import com.aticatac.world.items.ShootGunBox;
+import com.aticatac.world.items.SplatGunBox;
+import com.aticatac.world.items.SprayGunBox;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -96,6 +100,7 @@ public class Renderer {
 		//renderMapBW(g);
 		renderTerritory(g);
 		renderMapNeon(g, Color.RED);
+		renderGunBoxes(g);
 		renderBullets(g);
 		
 		//render any other components in the layers
@@ -279,6 +284,55 @@ public class Renderer {
 			//g.setFill(world.getPlayerColour(bullet.getShooter()));
 			g.setFill(Color.BLUE);
 			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
+		}
+	}
+	
+	/**
+	 * Renders the GunBoxes in the World
+	 * @param g The GraphicsContext to draw to.
+	 */
+	private void renderGunBoxes(GraphicsContext g) {
+		//settings
+		Color boxOutline = Color.RED;
+		Color boxDetail = Color.BLACK;
+		Color boxType = Color.WHITE;
+		int detailWidth = 2;
+		int detailMargin = 2;
+		int shootSize = 3;
+		int sprayLength = 14;
+		int splatSize = 10;
+		//Render each gunbox
+		for (GunBox gunbox: world.getGunBoxes()) {
+			double xpos = gunbox.getRect().getX();
+			double ypos = gunbox.getRect().getY();
+			double width = gunbox.getRect().getWidth();
+			double height = gunbox.getRect().getHeight();
+			double tmpx;
+			double tmpy;
+			//draw generic box
+			g.setFill(boxOutline);
+			g.fillRect(xpos, ypos, width, height); //rectangle box
+			//draw detail
+			g.setFill(boxDetail);
+			tmpx = xpos + detailMargin; //get xpos for left side bar
+			g.fillRect(tmpx, ypos, detailWidth, height);
+			tmpx = xpos + width - detailMargin - detailWidth; //get ypos for right side bar
+			g.fillRect(tmpx, ypos, detailWidth, height);
+			//draw details specific to item
+			g.setFill(boxType);
+			if (gunbox.getClass().equals(ShootGunBox.class)) {
+				tmpx = xpos + ((width - shootSize) / 2);
+				tmpy = ypos + ((height - shootSize) / 2); 
+				g.fillRect(tmpx, tmpy, shootSize, shootSize);
+			} else if (gunbox.getClass().equals(SplatGunBox.class)) {
+				tmpx = xpos + ((width - splatSize) / 2);
+				tmpy = ypos + ((height - splatSize) / 2);
+				g.fillOval(tmpx, tmpy, splatSize, splatSize);
+			} else if (gunbox.getClass().equals(SprayGunBox.class)) {
+				tmpx = xpos + ((width - sprayLength) / 2);
+				tmpy = ypos + ((height - shootSize) / 2);
+				g.fillRect(tmpx, tmpy, sprayLength, shootSize);
+			}
 		}
 	}
 	

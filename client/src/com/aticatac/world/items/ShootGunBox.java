@@ -3,6 +3,7 @@ package com.aticatac.world.items;
 import java.awt.Point;
 
 import com.aticatac.world.Player;
+import com.aticatac.world.World;
 
 public class ShootGunBox extends GunBox {
 

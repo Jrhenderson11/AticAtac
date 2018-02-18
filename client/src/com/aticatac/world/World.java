@@ -11,15 +11,20 @@ import java.util.LinkedList;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.items.Bullet;
+import com.aticatac.world.items.GunBox;
 import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.ShootGunBox;
 import com.aticatac.world.items.SplatGun;
+import com.aticatac.world.items.SplatGunBox;
 import com.aticatac.world.items.SprayGun;
+import com.aticatac.world.items.SprayGunBox;
 
 import javafx.scene.input.KeyCode;
 
 public class World implements Serializable {
 	private Collection<Player> players;
 	private Collection<Bullet> bullets;
+	private Collection<GunBox> gunboxes;
 	private Level level;
 	private final Point[] startLocs = {new Point(50, 50), new Point(100, 100)};
 
@@ -30,6 +35,7 @@ public class World implements Serializable {
 		map = getLevel().getGrid();
 		this.players = new LinkedList<Player>();
 		this.bullets = new LinkedList<Bullet>();
+		this.gunboxes = new LinkedList<GunBox>();
 	}
 	// sets up world
 	public void init(Player player) {
@@ -57,7 +63,7 @@ public class World implements Serializable {
 	// this is currently used for moving the bullets.
 	public void update() {
 		// update bullets
-		for (int i=0; i<bullets.size(); i++) {
+		for (int i=0; i<bullets.size(); i++) { //iterating this way prevents ConcurrentModificationExceptions
 			((Bullet) bullets.toArray()[i]).update(this);
 		}
 		// update players
@@ -71,6 +77,10 @@ public class World implements Serializable {
 			}
 			player.update();
 			
+		}
+		// update gunboxes
+		for (int i=0; i<gunboxes.size(); i++) {
+			((GunBox) gunboxes.toArray()[i]).update(this);
 		}
 	}
 
@@ -166,7 +176,31 @@ public class World implements Serializable {
 	public boolean removeBullet(Bullet bullet) {
 		return bullets.remove(bullet);
 	}
+	
+	public Collection<GunBox> getGunBoxes() {
+		return gunboxes;
+	}
 
+	public boolean addGunBox(GunBox gunbox) {
+		return gunboxes.add(gunbox);
+	}
+	
+	public boolean removeGunBox(GunBox gunbox) {
+		return gunboxes.remove(gunbox);
+	}
+
+	public void spawnShootGunBox(Point position) {
+		addGunBox(new ShootGunBox(position));
+	}
+	
+	public void spawnSplatGunBox(Point position) {
+		addGunBox(new SplatGunBox(position));
+	}
+	
+	public void spawnSprayGunBox(Point position) {
+		addGunBox(new SprayGunBox(position));
+	}
+	
 	public Collection<Player> getPlayers() {
 		return players;
 	}

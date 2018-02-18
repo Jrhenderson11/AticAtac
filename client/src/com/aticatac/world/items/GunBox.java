@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import com.aticatac.world.Player;
+import com.aticatac.world.World;
 
 public abstract class GunBox {
 	
@@ -55,6 +56,28 @@ public abstract class GunBox {
 	 * @param player The Player that opens the box.
 	 */
 	public abstract void openBox(Player player);
+	
+	/**
+	 * Updates this box within the world
+	 * If a player intersects with the box's rect, open the box for that player and remove box from world.
+	 * @param world The World to update the box within.
+	 */
+	public void update(World world) {
+		for (Player player: world.getPlayers()) {
+			if (getRect().contains(player.getPosition())) {
+				openBox(player);
+				kill(world);
+			}
+		}
+	}
+	
+	/**
+	 * Removes this box from the given world
+	 * @param world The World to remove this box from.
+	 */
+	private void kill(World world) {
+		world.removeGunBox(this);
+	}
 	
 	
 	// -------------------

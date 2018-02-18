@@ -171,7 +171,9 @@ public class Level implements Serializable {
 	public void makeSpray(int posX, int posY, double direction, int colour) {
 		// placeholder: make spray of length 6, with the center at the given position
 		int length = 8;
-
+		boolean posSpray = true; //when a wall is hit, these will go false to stop the spray going through walls
+		boolean negSpray = true; 
+		
 		// paint center point
 		updateCoords(posX, posY, colour);
 
@@ -181,8 +183,12 @@ public class Level implements Serializable {
 			int y1 = (int) (posY - (i * Math.cos(direction)));
 			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); // the opposite direction
 			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI)));
-			updateCoords(x1, y1, colour);
-			updateCoords(x2, y2, colour);
+			if (posSpray && !updateCoords(x1, y1, colour)) {
+				posSpray = false; //spray in positive direction has hit a wall
+			}
+			if (negSpray && !updateCoords(x2, y2, colour)) {
+				negSpray = false; //spray in negative direction has hit wall
+			}
 		}
 	}
 

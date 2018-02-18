@@ -16,7 +16,7 @@ public class SprayBullet extends Bullet {
 	/**
 	 * Default movement speed
 	 */
-	public static final int MOVESPEED = 10;
+	public static final int MOVESPEED = 6;
 	/**
 	 * Default collision rect dimensions
 	 */
@@ -34,8 +34,8 @@ public class SprayBullet extends Bullet {
 	 * @param startPosition The position from which it was fired
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
-	public SprayBullet(double direction, Point startPosition, int shooter) {
-		super(RANGE, direction, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+	public SprayBullet(double direction, Point target, Point startPosition, int shooter) {
+		super(RANGE, direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 
 	
