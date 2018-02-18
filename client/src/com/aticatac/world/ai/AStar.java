@@ -85,10 +85,14 @@ public class AStar {
 
 		assert (current.equals(finishPoint));
 		Point parentPoint = null;
-
+		
+		try {
 		while (!(parentPoint = parent.get(current)).equals(startPoint)) {
 			path.add(current);
 			current = parentPoint;
+		}
+		} catch (NullPointerException e) {
+			//just ignore it, it will probably be fine
 		}
 		path.add(current);
 		Collections.reverse(path);

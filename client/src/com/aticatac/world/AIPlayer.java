@@ -39,7 +39,7 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update() {
-		if (i++ == 60) {
+		if (i++ == 200) {
 			// Updates too fast
 			makeDecision();
 			i = 0;
@@ -85,9 +85,9 @@ public class AIPlayer extends Player {
 			}
 			// Need to get the reduced Map method to do what we want it to
 			if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
-				//System.out.println("calculate path");
+				System.out.println("calculate path");
 				Point point = closestFreePoint();
-				//System.out.println(point.x + "\t" + point.y);
+				System.out.println(point.x + "\t" + point.y);
 				pathToFreePoint(point);
 				makeNextMove();
 			} /*
@@ -98,7 +98,7 @@ public class AIPlayer extends Player {
 				 * )); gun.fire(lookDirection, target, world); }
 				 */
 		} else {
-			//System.out.println("move");
+			System.out.println("move");
 			makeNextMove();
 		}
 	}
@@ -122,15 +122,15 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			//System.out.println("Quad 2");
+			System.out.println("Quad 2");
 			// If in quadrant IV
 			return  (3 * Math.PI)/2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			//System.out.println("Quad 3");
+			System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI)/2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			//System.out.println("Quad 4");
+			System.out.println("Quad 4");
 			// If in quadrant II
 			return (Math.PI - angle);
 		}
@@ -305,6 +305,4 @@ public class AIPlayer extends Player {
 	public void pathToFreePoint(Point endPoint) {
 		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
 	}
-	
-	
 }

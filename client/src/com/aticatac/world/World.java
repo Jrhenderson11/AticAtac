@@ -64,8 +64,13 @@ public class World implements Serializable {
 		for (Player player : players) {
 			if(player.controller == Controller.AI) {
 				((AIPlayer) player).update();
+				Point p = displayPositionToCoords(player.getPosition());
+  	        	if(level.getGrid()[p.x][p.y] != 1) {
+  	        		level.updateCoords(p.x, p.y, player.getColour());
+  	        	}
 			}
 			player.update();
+			
 		}
 	}
 
@@ -131,7 +136,8 @@ public class World implements Serializable {
 		}
 
 		Point p = this.displayPositionToCoords(player.getPosition());
-		if (level.getGrid()[p.x][p.y] == 0) {
+		
+		if (level.getGrid()[p.x][p.y] != 1) {
 			level.updateCoords(p.x, p.y, player.getColour());
 		}
 

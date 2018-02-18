@@ -39,11 +39,10 @@ public class AiDemo extends Scene {
 	private Renderer renderer;
 	private boolean tips;
 	
+	private double dir;
+	
 	public AiDemo (Group root) {
         super(root);
-        
-        //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
-        //Image image = new Image("assets/sprites/crosshair.png");
         
         Image image = new Image("file:assets/sprites/crosshair.png");
         this.setCursor(new ImageCursor(image));
@@ -121,7 +120,7 @@ public class AiDemo extends Scene {
   	        		r = (1.5 * Math.PI) + Math.abs(Math.atan(dy / dx));
   	        	}
   	        	
-  	        	player.setLookDirection(r);
+  	        	dir = r;
   	        }
   	    });
   		
@@ -138,57 +137,7 @@ public class AiDemo extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
-  	        	//handle movement, reverting moves when detecting collision
-  	        	//left
-  	        	if (input.contains(KeyCode.A)) {
-  	        		player.move(-2, 0);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {   //if the grid coordinate of player is on a wall tile (1) in the level grid.
-  	        			player.move(2, 0);
-  	        		}
-  	        	}
-  	        	//right
-  	        	if (input.contains(KeyCode.D)) {
-  	        		player.move(2, 0);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(-2, 0);
-  	        		}
-  	        	}
-  	        	//up
-  	        	if (input.contains(KeyCode.W)) {
-  	        		player.move(0, -2);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(0, 2);
-  	        		}
-  	        	}
-  	        	//down
-  	        	if (input.contains(KeyCode.S)) {
-  	        		player.move(0, 2);
-  	        		Point p = world.displayPositionToCoords(player.getPosition());
-  	        		if (level.getGrid()[p.x][p.y] == 1) {
-  	        			player.move(0, -2);
-  	        		}
-  	        	}
   	        	
-  	        	//Gun spawn in, using for testing, remove in game
-  	        	//Shoot gun
-  	        	if (input.contains(KeyCode.I)) {
-  	        		player.setGun(new ShootGun(player));
-  	        		input.remove(KeyCode.I);
-  	        	}
-  	        	//Splat gun
-  	        	if (input.contains(KeyCode.O)) {
-  	        		player.setGun(new SplatGun(player));
-  	        		input.remove(KeyCode.O);
-  	        		
-  	        	}
-  	        	//Spray gun
-  	        	if (input.contains(KeyCode.P)) {
-  	        		player.setGun(new SprayGun(player));
-  	        		input.remove(KeyCode.P);
-  	        	}
   	        	if (input.contains(KeyCode.H)) {
   	        		if (tips)
   	        			tips = false;
@@ -198,17 +147,11 @@ public class AiDemo extends Scene {
   	        	}
   	        	
   	        	//claim walking territory
-  	        	Point p = world.displayPositionToCoords(player.getPosition());
-  	        	if (level.getGrid()[p.x][p.y] == 0) {
-  	        		level.updateCoords(p.x, p.y, player.getColour());
-  	        	}
-  	        	p = world.displayPositionToCoords(aiPlayer.getPosition());
-  	        	if(level.getGrid()[p.x][p.y] == 0) {
-  	        		level.updateCoords(p.x, p.y, aiPlayer.getColour());
-  	        	}
-
-  	        	/* ================ */
+  	        	
+  	        	
   	        
+  	        	
+  	        	world.handleInput(input, dir, player.getIdentifier());
   	        	//update world
   	        	world.update();
   	        	
