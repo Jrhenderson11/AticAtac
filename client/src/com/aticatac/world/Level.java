@@ -187,26 +187,25 @@ public class Level implements Serializable {
 	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
-
-		if (posX > width - 1 || posX < 0 || posY > height - 1 || posY < 0) {
+		if (posX > width-1 || posX <0 || posY > height-1 || posY < 0) {
 			return;
 		}
 		for (int x = 0; x <= radius; x++) {
 			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
 				if (posY + y < (height - 1)) {
-					if (posX + x < (width - 1) && grid[posX + x][posY + y] != blockVal) {
+					if (posX + x < (width - 1) && grid[posX + x][posY + y]!=blockVal) {
 						grid[posX + x][posY + y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posX - x][posY + y] != blockVal) {
+					if ((posX - x > 0) && grid[posX - x][posY + y]!=blockVal) {
 						grid[posX - x][posY + y] = fillVal;
 					}
 				}
 
 				if ((posY - y > 0)) {
-					if ((posX + x < (width - 1)) && grid[posX + x][posY - y] != blockVal) {
+					if ((posX + x < (width-1)) && grid[posX + x][posY - y]!=blockVal) {
 						grid[posX + x][posY - y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posX - x][posY - y] != blockVal) {
+					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {
 						grid[posX - x][posY - y] = fillVal;
 					}
 				}

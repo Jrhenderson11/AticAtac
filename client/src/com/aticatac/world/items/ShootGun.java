@@ -9,6 +9,10 @@ import com.aticatac.world.World;
 public class ShootGun extends Gun {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 5;

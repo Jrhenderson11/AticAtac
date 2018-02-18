@@ -4,6 +4,7 @@ import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
@@ -28,13 +29,14 @@ public class QuitDrawer {
 
             if (options.get(i).selected()) {
                 gc.translate(2 * sin(animation),sin(animation));
-                gc.setFill(Color.color(sin(2 * animation), sin(3 * animation), sin(5 * animation)));
+                gc.setFill(Color.color(abs(sin(2 * animation)), abs(sin(3 * animation)), abs(sin(5 * animation))));
             } else {
                 gc.setFill(Color.WHITE);
             }
 
             int x = 2 *( i + 1) * width / 6;
             int y = 2 * height / 3;
+            options.get(i).setHitbox(new Rectangle(x - width / 6, y - height / 6, width / 7, height / 6));
             gc.fillText(options.get(i).getText(), x, y);
             gc.strokeText(options.get(i).getText(), x, y);
             gc.restore();

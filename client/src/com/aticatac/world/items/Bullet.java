@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import com.aticatac.world.World;
 
+@SuppressWarnings("serial")
 public abstract class Bullet implements Collidable, Serializable{
 	
 	/**
@@ -96,6 +97,8 @@ public abstract class Bullet implements Collidable, Serializable{
 		if (world.getLevel().getCoords(after.x, after.y) == 1) {
 			hit(world, before); //paint splat on floor just before the wall it hits
 		}
+
+
 		
 		//check for collision with collideables. Currently only other Bullets.
 		for (Collidable collidable: world.getBullets()) {
@@ -130,23 +133,44 @@ public abstract class Bullet implements Collidable, Serializable{
 	// -------------------
 	
 	
+	/**
+	 * Returns the Rectangle defining the collision boundaries of this object
+	 * @return The Rectangle defining collision boundaries
+	 */ 
 	@Override
 	public Rectangle getRect() {
 		return rect;
 	}
 
+	/**
+	 * Get the direction the bullet is travelling in.
+	 * Stored in radians, with 0 being north or up, increasing to 2PI clockwise
+	 * @return The direction in radians as a double
+	 */
 	public double getDirection() {
 		return direction;
 	}
-
+	
+	/**
+	 * Get the number of pixels the bullet moves every tick 
+	 * @return The move speed
+	 */
 	public int getMoveSpeed() {
 		return moveSpeed;
 	}
 
+	/**
+	 * Set the number of pixels the bullet moves every tick
+	 * @param moveSpeed The value to set the move speed to
+	 */
 	public void setMoveSpeed(int moveSpeed) {
 		this.moveSpeed = moveSpeed;
 	}
 
+	/**
+	 * Get the unique player identifier of the Player that fired this bullet
+	 * @return
+	 */
 	public int getShooter() {
 		return shooter;
 	}
