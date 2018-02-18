@@ -6,8 +6,9 @@ import javafx.scene.shape.Rectangle;
 
 public class KickButton extends Button {
 
-    public KickButton(Rectangle hitbox) {
-        super(hitbox, "Kick");
+    public KickButton(int offset) {
+        // TODO get hitbox from offset
+        super(new Rectangle(), "Kick");
     }
 
     @Override

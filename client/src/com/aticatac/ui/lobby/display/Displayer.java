@@ -15,8 +15,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Displayer extends Scene {
+
+    private static HashSet<Drawable> drawables;
 
     public Displayer(Group root, int selected, LobbyServer server) {
         super(root);
@@ -30,5 +33,13 @@ public class Displayer extends Scene {
 
         DAnimator animator = new DAnimator(gc, selected, server);
         //animator.start();
+    }
+
+    public static HashSet<Drawable> getDrawables() {
+        return drawables;
+    }
+
+    public static void setDrawables(HashSet<Drawable> drawables) {
+        Displayer.drawables = drawables;
     }
 }

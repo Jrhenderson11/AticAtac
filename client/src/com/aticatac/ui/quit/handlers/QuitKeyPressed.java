@@ -16,16 +16,10 @@ import static com.aticatac.ui.quit.utils.Option.whichSelected;
 
 public class QuitKeyPressed implements EventHandler<KeyEvent> {
 
-    private final Stage stage;
     private final ArrayList<Option> options;
-    private final AnimationTimer animation;
-    private Set<KeyCode> pressedKeys;
 
-    public QuitKeyPressed(ArrayList<Option> options, Set<KeyCode> pressedKeys, Stage primaryStage, AnimationTimer animation) {
+    public QuitKeyPressed(ArrayList<Option> options) {
         this.options = options;
-        this.pressedKeys = pressedKeys;
-        this.stage = primaryStage;
-        this.animation = animation;
     }
 
     @Override

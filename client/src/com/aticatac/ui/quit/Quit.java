@@ -23,15 +23,11 @@ import javafx.stage.Stage;
 
 public class Quit extends Scene {
 
-    private final Scene mainMenu;
-
     public Quit(Group root, Scene mainMenu, Stage primaryStage) {
         super(root);
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
-
-        this.mainMenu = mainMenu;
 
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -51,11 +47,11 @@ public class Quit extends Scene {
 
         options.add(new Option(yes, "Yes"));
         options.add(new Option(no, "No"));
-        
+
         animation.start();
 
         Set<KeyCode> pressedKeys = new HashSet<>();
-        this.setOnKeyPressed(new QuitKeyPressed(options, pressedKeys, primaryStage, animation));
+        this.setOnKeyPressed(new QuitKeyPressed(options));
         this.setOnKeyReleased(new QuitKeyReleased(pressedKeys));
         this.setOnMouseMoved(new QuitMouseMoved(options));
         this.setOnMouseClicked(new QuitMouseClicked(options, primaryStage, animation));
