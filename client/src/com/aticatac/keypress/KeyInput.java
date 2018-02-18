@@ -3,6 +3,7 @@ package com.aticatac.keypress;
 
 import java.util.ArrayList;
 
+import com.aticatac.sound.SoundManager;
 import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
@@ -77,6 +78,7 @@ public class KeyInput extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+				
 				KeyCode input = event.getCode();
 
 				if (input == KeyCode.W) {

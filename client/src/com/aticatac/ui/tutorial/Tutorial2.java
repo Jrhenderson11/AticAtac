@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.utils.UIDrawer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Level;
@@ -71,6 +72,9 @@ public class Tutorial2 extends Scene {
         world.spawnSplatGunBox(new Point(320, 400));
         world.spawnSprayGunBox(new Point(440, 240));
         
+        SoundManager m = new SoundManager();
+        m.playBgGame();
+        
         /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
@@ -131,6 +135,7 @@ public class Tutorial2 extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
+  	        		m.playShoot();
   	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
   	        	}
   	        }

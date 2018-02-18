@@ -6,6 +6,8 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import com.aticatac.sound.SoundManager;
+
 public class MenuItem {
     private String name;
     private boolean selected;
@@ -52,9 +54,12 @@ public class MenuItem {
         return name;
     }
 
-    public Scene choose() {
-        return link.get();
-    }
+    public Scene choose() { 
+    	SoundManager m = new SoundManager();
+    	m.stopMenuBg();
+    	//m.playClick();
+    	return link.get(); }
+ 
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);
