@@ -10,7 +10,7 @@ import com.aticatac.world.World;
 public abstract class Bullet implements Collidable, Serializable{
 	
 	/**
-	 * The maximum range of the gun
+	 * The distance the bullet will travel
 	 */
 	protected final int range;
 	/**
@@ -46,7 +46,7 @@ public abstract class Bullet implements Collidable, Serializable{
 	
 	/**
 	 * Generic constructor for Bullets
-	 * @param range The maximum range the bullet can travel
+	 * @param range The distance the bullet will travel
 	 * @param direction The direction in rads, with 'north' being 0 increasing clockwise to 2 pi
 	 * @param target The target map grid the bullet is shot at
 	 * @param moveSpeed The distance the bullet travels each tick
@@ -112,34 +112,12 @@ public abstract class Bullet implements Collidable, Serializable{
 			hit(world, before); //paint splat on floor just before the wall it hits
 		}
 		
-		//check if target tile reached
-		if (atTarget(after)) {
-			hit(world, target);
-		}
-		
 		//check for collision with collideables. Currently only other Bullets.
 		for (Collidable collidable: world.getBullets()) {
 			if (collidable != this && collidable.getRect().intersects(this.getRect())) {
 				hit(world, after); //splat where the bullet hits
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the the given point is near enough to the target to consider a hit.
-	 * Checks with tiles above, below, left, and right of the target with the given point.
-	 * This is used because bullets can skip over tiles due to the high movement speed.
-	 * @param point The point to check against the target
-	 * @return True if the given point is considered to be 'at the target' or close enough.
-	 */
-	private boolean atTarget(Point point) {
-		int targetX = target.x;
-		int targetY = target.y;
-		return (point.equals(new Point(targetX + 1, targetY)) ||
-				point.equals(new Point(targetX - 1, targetY)) ||
-				point.equals(new Point(targetX, targetY + 1)) ||
-				point.equals(new Point(targetX, targetY - 1)) ||
-				point.equals(target)); 
 	}
 
 	/**

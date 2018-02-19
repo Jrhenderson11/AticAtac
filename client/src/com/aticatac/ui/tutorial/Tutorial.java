@@ -137,7 +137,7 @@ public class Tutorial extends Scene {
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
   	        		m.playShoot();
-  	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
+  	        		player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
   	        	}
   	        }
   		});

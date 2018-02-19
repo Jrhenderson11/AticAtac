@@ -12,7 +12,7 @@ public class SplatBullet extends Bullet {
 	/**
 	 * The range of the bullets
 	 */
-	public static final int RANGE = 200;
+	public static final double RANGE = 200.0d;
 	/**
 	 * Default movement speed
 	 */
@@ -35,7 +35,7 @@ public class SplatBullet extends Bullet {
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
 	public SplatBullet(double direction, Point target, Point startPosition, int shooter) {
-		super(RANGE, direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+		super((int) Math.min(target.distance(startPosition), RANGE), direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 
 	
