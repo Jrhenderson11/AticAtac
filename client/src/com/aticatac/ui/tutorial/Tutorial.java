@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.sound.SoundManager;
+import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
@@ -27,7 +28,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import ui.overlay.Overlay;
 
 public class Tutorial extends Scene {
 	

@@ -1,4 +1,4 @@
-package ui.overlay;
+package com.aticatac.ui.overlay;
 
 import java.util.LinkedList;
 

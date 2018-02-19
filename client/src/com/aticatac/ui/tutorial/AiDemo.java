@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.AIPlayer;
@@ -22,7 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import ui.overlay.Overlay;
 
 public class AiDemo extends Scene {
 	
