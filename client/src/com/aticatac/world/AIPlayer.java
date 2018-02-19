@@ -29,8 +29,9 @@ public class AIPlayer extends Player {
 	private Point gridPosition;
 
 	private LinkedList<Point> currentPath;
+	private LinkedList<Point> intermediatePath;
 	private Random r;
-	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS;
+	private ArrayList<Pair<Integer, Integer>> gridTranslations = Translations.TRANSLATIONS_GRID;
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
@@ -38,13 +39,14 @@ public class AIPlayer extends Player {
 		this.level = world.getLevel();
 		this.r = new Random();
 		this.currentPath = new LinkedList<>();
+		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
-		this.gridPosition = new Point(7, 11);
+		this.gridPosition = new Point(3, 11);
 	}
 
 	@Override
 	public void update() {
-		if (i++ == 200) {
+		if (i++ == 10) {
 			// Updates too fast
 			makeDecision();
 			i = 0;
@@ -61,7 +63,7 @@ public class AIPlayer extends Player {
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
-		if (currentPath.isEmpty()) {
+		if (currentPath.isEmpty() && intermediatePath.isEmpty()) {
 			for (Player player : otherPlayers) {
 				// Fix hasLOS to work a bit better
 				if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
@@ -126,11 +128,11 @@ public class AIPlayer extends Player {
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
 			System.out.println("Quad 2");
 			// If in quadrant IV
-			return  (3 * Math.PI)/2 + angle;
+			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
 			System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
-			return (3 * Math.PI)/2 - angle;
+			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
 			System.out.println("Quad 4");
 			// If in quadrant II
@@ -258,21 +260,47 @@ public class AIPlayer extends Player {
 	 */
 	public void makeNextMove() {
 		// Need to make this go more smoothly
-		Point next = currentPath.poll();
-		System.out.println(world.coordsToDisplayPosition(next) + "\t" + position);
-		move(world.coordsToDisplayPosition(next).x - position.x, world.coordsToDisplayPosition(next).y - position.y);
-		gridPosition.setLocation(next);
-	}
-	
-	public ArrayList<Point> gridToDisplay(Point currentGrid, Point nextGrid){
-		ArrayList<Point> newPath = new ArrayList<>();
-		Point current = currentGrid;
-		Point next;
-		while(current!=nextGrid) {
-			
+		if (intermediatePath.isEmpty()) {
+			gridPosition.setLocation(world.displayPositionToCoords(position));
+			Point next = currentPath.poll();
+			intermediatePath = gridToDisplay(position, next);
+			Point intermediate = intermediatePath.poll();
+			move(intermediate.x - position.x, intermediate.y - position.y);
 		}
+		Point intermediate = intermediatePath.poll();
+		move(intermediate.x - position.x, intermediate.y - position.y);
 		
-		return null;
+		// move(world.coordsToDisplayPosition(next).x - position.x,
+		// world.coordsToDisplayPosition(next).y - position.y);
+		// gridPosition.setLocation(next);
+	}
+
+	public LinkedList<Point> gridToDisplay(Point currentGrid, Point nextGrid) {
+		LinkedList<Point> newPath = new LinkedList<>();
+		Point current = currentGrid;
+		Point next = world.coordsToDisplayPosition(nextGrid);
+		while (!current.equals(next)) {
+			if (current.x < next.x && current.y < next.y) {
+				current = new Point(current.x + 1, current.y + 1);
+			} else if (current.x < next.x && current.y > next.y) {
+				current = new Point(current.x + 1, current.y - 1);
+			} else if (current.x < next.x && current.y == next.y) {
+				current = new Point(current.x + 1, current.y);
+			} else if (current.x > next.x && current.y < next.y) {
+				current = new Point(current.x - 1, current.y + 1);
+			} else if (current.x > next.x && current.y > next.y) {
+				current = new Point(current.x - 1, current.y - 1);
+			} else if (current.x > next.x && current.y == next.y) {
+				current = new Point(current.x - 1, current.y);
+			} else if (current.x == next.x && current.y < next.y) {
+				current = new Point(current.x, current.y + 1);
+			} else if (current.x == next.x && current.y > next.y) {
+				current = new Point(current.x, current.y - 1);
+			}
+			newPath.add(current);
+		}
+		return newPath;
+
 	}
 
 	/**
@@ -294,7 +322,7 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			visited.add(current);
 			for (int i = 0; i < 8; i++) {
-				translation = translations.get(i);
+				translation = gridTranslations.get(i);
 				// Key is x translation, Value is y translation
 				translated = new Point(current.x + translation.getKey(), current.y + (int) translation.getValue());
 				if (level.getCoords(translated.x, translated.y) == 0) {

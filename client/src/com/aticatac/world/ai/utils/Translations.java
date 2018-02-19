@@ -5,19 +5,28 @@ import java.util.ArrayList;
 import javafx.util.Pair;
 
 public class Translations {
-	public static final int STEP = 1;
-	public static final ArrayList<Pair<Integer, Integer>> TRANSLATIONS = getTranslations();
+	private enum Step {
+		GRID(1), DISPLAY(2);
+		private final int STEP;
 
-	private static ArrayList<Pair<Integer, Integer>> getTranslations() {
+		Step(int step) {
+			this.STEP = step;
+		}
+	}
+
+	public static final ArrayList<Pair<Integer, Integer>> TRANSLATIONS_GRID = getTranslations(Step.GRID);
+	public static final ArrayList<Pair<Integer, Integer>> TRANSLATIONS_DISPLAY = getTranslations(Step.DISPLAY);
+
+	private static ArrayList<Pair<Integer, Integer>> getTranslations(Step type) {
 		ArrayList<Pair<Integer, Integer>> translations = new ArrayList<>();
-		translations.add(new Pair<>(-STEP, -STEP));
-		translations.add(new Pair<>(0, -STEP));
-		translations.add(new Pair<>(STEP, -STEP));
-		translations.add(new Pair<>(-STEP, 0));
-		translations.add(new Pair<>(STEP, 0));
-		translations.add(new Pair<>(-STEP, STEP));
-		translations.add(new Pair<>(0, STEP));
-		translations.add(new Pair<>(STEP, STEP));
+		translations.add(new Pair<>(-type.STEP, -type.STEP));
+		translations.add(new Pair<>(0, -type.STEP));
+		translations.add(new Pair<>(type.STEP, -type.STEP));
+		translations.add(new Pair<>(-type.STEP, 0));
+		translations.add(new Pair<>(type.STEP, 0));
+		translations.add(new Pair<>(-type.STEP, type.STEP));
+		translations.add(new Pair<>(0, type.STEP));
+		translations.add(new Pair<>(type.STEP, type.STEP));
 		return translations;
 	}
 }
