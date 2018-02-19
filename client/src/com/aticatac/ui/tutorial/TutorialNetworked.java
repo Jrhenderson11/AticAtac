@@ -22,6 +22,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import ui.overlay.Overlay;
 
 public class TutorialNetworked extends Scene {
 
@@ -43,6 +44,7 @@ public class TutorialNetworked extends Scene {
 		client.startGame();
 //		client.setStatus(Globals.IN_GAME);
 		System.out.println("waiting for network");
+		
 		while (client.getStatus() != Globals.IN_GAME) {
 			System.out.println("waiting");
 		}
@@ -59,6 +61,7 @@ public class TutorialNetworked extends Scene {
 		this.displayWidth = SystemSettings.getNativeWidth();
 		this.displayHeight = SystemSettings.getNativeHeight();
 		this.renderer = new Renderer(displayWidth, displayHeight);
+		Overlay overlay = new Overlay();
 		System.out.println("added renderer");
 		Canvas canvas = new Canvas(displayWidth, displayHeight);
 		root.getChildren().add(canvas);
@@ -147,8 +150,10 @@ public class TutorialNetworked extends Scene {
 				} catch (Exception e){
 					//shhhh, let's just pretend this never happened
 				}
+				
 				renderer.render(gc);
-
+				
+				overlay.drawOverlay(gc, world, myInfo.getID());
 			}
 		}.start();
 	}

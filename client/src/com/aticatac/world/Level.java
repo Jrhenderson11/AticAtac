@@ -106,6 +106,10 @@ public class Level implements Serializable {
 		return count;
 	}
 
+	public int getPercentTiles(int val) {
+		return (int) ((long) (this.getNumTiles(val)*100) /(long) ((this.width * this.height) - this.getNumTiles(1)));
+	}
+	
 	// updates coords with input restrictions and no overwriting walls
 	public boolean updateCoords(int x, int y, int val) {
 		if (x < width && y < height && x >= 0 && y >= 0) {

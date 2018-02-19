@@ -2,19 +2,14 @@ package com.aticatac.ui.tutorial;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import com.aticatac.rendering.display.Renderer;
-import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.AIPlayer;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
-import com.aticatac.world.items.ShootGun;
-import com.aticatac.world.items.SplatGun;
-import com.aticatac.world.items.SprayGun;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -27,9 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import ui.overlay.Overlay;
 
 public class AiDemo extends Scene {
 	
@@ -158,7 +151,8 @@ public class AiDemo extends Scene {
 
   	        	//draw scene
   	        	renderer.render(gc);
-  	        	
+  	        	Overlay overlay = new Overlay();
+  	        	overlay.drawOverlay(gc, world, player.getIdentifier());
   	        	//draw help tips
   	        }
   	    }.start();   

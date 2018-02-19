@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
-import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.sound.SoundManager;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Level;
@@ -27,10 +27,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import ui.overlay.Overlay;
 
-public class Tutorial2 extends Scene {
+public class Tutorial extends Scene {
 	
 	private int displayWidth;
 	private int displayHeight;
@@ -38,8 +37,9 @@ public class Tutorial2 extends Scene {
 	private Renderer renderer;
 	private boolean tips;
 	private	ArrayList<Point> visited = new ArrayList<Point>();
+	private Overlay overlay;
 	
-	public Tutorial2 (Group root) {
+	public Tutorial (Group root) {
         super(root);
         
         //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
@@ -52,6 +52,7 @@ public class Tutorial2 extends Scene {
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
         this.renderer = new Renderer(displayWidth, displayHeight);
+        this.overlay = new Overlay();
         this.tips = true;
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
@@ -218,6 +219,10 @@ public class Tutorial2 extends Scene {
 
   	        	//draw scene
   	        	renderer.render(gc);
+  	        	
+  	        	
+  	        	//draw overlay
+  	        	overlay.drawOverlay(gc, world, player.getIdentifier());
   	        	
   	        	int bigX = (p.x/(world.getLevel().getWidth()/10));
   	        	int bigY = (p.y/(world.getLevel().getHeight()/10));

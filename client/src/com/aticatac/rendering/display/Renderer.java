@@ -24,6 +24,8 @@ public class Renderer {
 	// ------
 	
 	
+	
+	
 	/**
 	 * A rectangle encapsulating the area of the coordinate space where renderable components in this space will be displayed.
 	 */
@@ -223,15 +225,7 @@ public class Renderer {
 				
 		for (Player player: world.getPlayers()) {
 			
-			Color color;
-			
-			if (player.getColour()==2) {
-				color = Color.BLUE;
-			} else {
-				color =Color.YELLOW;
-			}
-
-			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+			Color color = this.getColourByVal(player.getColour());			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 			int px = player.getPosition().x; //player position
 			int py = player.getPosition().y;
 			
@@ -260,12 +254,7 @@ public class Renderer {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
 					if (grid[x][y] == player.getColour()) {
-						Color color;
-						if (player.getColour()==2) {
-							color = Color.BLUE;
-						} else {
-							color =Color.YELLOW;
-						}
+						Color color = this.getColourByVal(player.getColour());
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
 						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
@@ -412,6 +401,30 @@ public class Renderer {
 	 */
 	public void setWorld(World world) {
 		this.world = world;
+	}
+	
+	/**
+	 * Translates between integers and colours
+	 * @param val the val to translate
+	 * @return
+	 */
+	
+	public static Color getColourByVal(int val) {
+		switch (val) {
+		case 2:
+			return Color.BLUE;
+		case 3:
+			return Color.YELLOW;
+		case 4:
+			return Color.GREEN;
+		case 5:
+			return Color.RED;
+		case 6:
+			return Color.PURPLE;
+		case 7:
+			return Color.MAGENTA;
+		}
+		return Color.PINK;
 	}
 	
 }
