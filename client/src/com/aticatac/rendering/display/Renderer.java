@@ -271,7 +271,7 @@ public class Renderer {
 	private void renderBullets(GraphicsContext g) {
 		for (Bullet bullet: world.getBullets()) {
 			//g.setFill(world.getPlayerColour(bullet.getShooter()));
-			g.setFill(Color.BLUE);
+			g.setFill(getColourByVal(bullet.getShooter()));
 			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
 		}
 	}
