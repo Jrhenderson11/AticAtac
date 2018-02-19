@@ -5,13 +5,13 @@ import java.awt.Point;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-//name is dumb but it follows the trend
+@SuppressWarnings("serial")
 public class ShootGun extends Gun {
 	
 	/**
-	 * 
+	 * Cost to the users paint level when fired.
 	 */
-	private static final long serialVersionUID = 1L;
+	public static final int PAINTCOST = 4;
 	/**
 	 * The delay between shots
 	 */
@@ -28,7 +28,7 @@ public class ShootGun extends Gun {
 	 * @param user The user of the gun
 	 */
 	public ShootGun(Player user) {
-		super(user, COOLDOWNTIME);
+		super(user, COOLDOWNTIME, PAINTCOST);
 	}
 	
 	
@@ -45,10 +45,10 @@ public class ShootGun extends Gun {
 	 */
 	@Override
 	public boolean fire(double direction, Point target, World world) {
-		if (ready()) {
+		if (ready() && enoughPaint(getUser().getPaintLevel())) {
 			resetCooldown();
 			ShootBullet bullet = new ShootBullet(direction, target, getUser().getPosition(), getUser().getColour());
-			//bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
+			getUser().changePaintLevel(-PAINTCOST);
 			return world.addBullet(bullet);
 		} else return false;
 	}

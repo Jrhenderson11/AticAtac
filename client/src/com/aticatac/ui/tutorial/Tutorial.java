@@ -264,6 +264,8 @@ public class Tutorial extends Scene {
   	        		
 
   	        	}
+  	        	
+  	        	System.out.println("paintlevel: " + player.getPaintLevel());
   	        }
   	    }.start();   
 	}

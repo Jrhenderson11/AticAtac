@@ -9,6 +9,10 @@ import com.aticatac.world.World;
 public class SprayGun extends Gun {
 	
 	/**
+	 * Cost to the users paint level when fired.
+	 */
+	public static final int PAINTCOST = 18;
+	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 5;
@@ -24,7 +28,7 @@ public class SprayGun extends Gun {
 	 * @param user The user of the gun
 	 */
 	public SprayGun(Player user) {
-		super(user, COOLDOWNTIME);
+		super(user, COOLDOWNTIME, PAINTCOST);
 	}
 	
 	
@@ -41,10 +45,10 @@ public class SprayGun extends Gun {
 	 */
 	@Override
 	public boolean fire(double direction, Point target, World world) {
-		if (ready()) {
+		if (ready() && enoughPaint(getUser().getPaintLevel())) {
 			resetCooldown();
 			SprayBullet bullet = new SprayBullet(direction, target, getUser().getPosition(), getUser().getColour());
-			//bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
+			getUser().changePaintLevel(-PAINTCOST);
 			return world.addBullet(bullet);
 		} else return false;
 	}
