@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 
 public class Player implements Serializable{
 	
+	public static final int MAX_PAINT = 100;
     public Controller controller;
     protected String identifier;
     protected int colour;
@@ -30,6 +31,7 @@ public class Player implements Serializable{
     	this.colour = colour;
     	this.position = new Point(10, 10);
     	this.lookDirection = 0.0;
+    	this.paintLevel = Player.MAX_PAINT;
     }
     
     public Controller getController() {
@@ -42,7 +44,6 @@ public class Player implements Serializable{
     		gun.update(); //updates gun, used for gun cooldowns
     	}
     }
-
 
 	public int getColour() {
 		return colour;
@@ -87,5 +88,9 @@ public class Player implements Serializable{
 
 	public void setGun(Gun gun) {
 		this.gun = gun;
+	}
+
+	public int getPaintLevel() {
+		return this.paintLevel;
 	}
 }

@@ -17,11 +17,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 public class Overlay {
-
 	
 	public void drawOverlay(GraphicsContext gc, World world, String id) {
 		drawPercents(gc, world);
 		drawWeapon(gc, world, id);
+		drawPaintLevel(gc, world, id);
 	}
 
 	private void drawPercents(GraphicsContext gc, World world) {
@@ -52,7 +52,37 @@ public class Overlay {
 		        x+=100;
 		}
 	}
-	
+
+	private void drawPaintLevel(GraphicsContext gc, World world, String id) {
+		String text = "paint";
+		
+		int width = SystemSettings.getNativeWidth();
+	    int height = SystemSettings.getNativeHeight();
+		
+		//draw bar on right side
+		
+		int paintPercent = (world.getPlayerById(id).getPaintLevel()*100) / Player.MAX_PAINT;
+		
+		int rwidth = 50;
+		int rheight = 300;
+		
+		int acHeight = (paintPercent * rheight) / 100;
+		
+		int x = width - 100;
+		int y = height - 150;
+		
+		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
+		gc.fillRect(x, y-acHeight-25, rwidth, acHeight);
+		gc.setTextAlign(TextAlignment.CENTER);
+        gc.setFill(Color.WHITE);
+
+		gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+        
+        //draw word paint as well
+        gc.fillText(text, x, y);
+	}
 	
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
 		String weapName = "No current weapon";
