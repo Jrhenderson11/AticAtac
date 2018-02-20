@@ -62,7 +62,7 @@ public class Overlay {
 		
 		//draw bar on right side
 		
-		int paintPercent = (world.getPlayerById(id).getPaintLevel()*100) / Player.MAX_PAINT;
+		int paintPercent = (int) ((world.getPlayerById(id).getPaintLevel()*100) / Player.MAX_PAINTLEVEL);
 		
 		int rwidth = 50;
 		int rheight = 300;

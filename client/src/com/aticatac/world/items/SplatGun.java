@@ -9,6 +9,10 @@ import com.aticatac.world.World;
 public class SplatGun extends Gun {
 
 	/**
+	 * Cost to the users paint level when fired.
+	 */
+	public static final int PAINTCOST = 30;
+	/**
 	 * The delay between shots
 	 */
 	public static final int COOLDOWNTIME = 30;
@@ -24,7 +28,7 @@ public class SplatGun extends Gun {
 	 * @param user The user of the gun
 	 */
 	public SplatGun(Player user) {
-		super(user, COOLDOWNTIME);
+		super(user, COOLDOWNTIME, PAINTCOST);
 	}
 
 	
@@ -41,10 +45,10 @@ public class SplatGun extends Gun {
 	 */
 	@Override
 	public boolean fire(double direction, Point target, World world) {
-		if (ready()) {
+		if (ready() && enoughPaint(getUser().getPaintLevel())) {
 			resetCooldown();
 			SplatBullet bullet = new SplatBullet(direction, target, getUser().getPosition(), getUser().getColour());
-			//bullet.move(); //move the bullet once so the bullet doesn't hit the player firing
+			getUser().changePaintLevel(-PAINTCOST);
 			return world.addBullet(bullet);
 		} else return false;
 	}

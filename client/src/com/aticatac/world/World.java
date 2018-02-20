@@ -22,11 +22,13 @@ import com.aticatac.world.items.SprayGunBox;
 import javafx.scene.input.KeyCode;
 
 public class World implements Serializable {
+	private static final int REGEN_DELAY = 60;
 	private Collection<Player> players;
 	private Collection<Bullet> bullets;
 	private Collection<GunBox> gunboxes;
 	private Level level;
 	private final Point[] startLocs = {new Point(50, 50), new Point(100, 100)};
+	private int regenTimer;
 
 	int[][] map;
 
@@ -36,6 +38,7 @@ public class World implements Serializable {
 		this.players = new LinkedList<Player>();
 		this.bullets = new LinkedList<Bullet>();
 		this.gunboxes = new LinkedList<GunBox>();
+		this.regenTimer = 0;
 	}
 	// sets up world
 	public void init(Player player) {
@@ -76,7 +79,11 @@ public class World implements Serializable {
   	        	}
 			}
 			player.update();
-			
+			if (regenTimer == REGEN_DELAY) { //used for a delay between each regeneraction call
+				player.regenPaint(level.getPercentTiles(player.getColour()));
+				regenTimer = 0;
+			}
+			regenTimer++;
 		}
 		// update gunboxes
 		for (int i=0; i<gunboxes.size(); i++) {

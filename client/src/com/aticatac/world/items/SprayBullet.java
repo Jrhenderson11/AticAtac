@@ -35,7 +35,7 @@ public class SprayBullet extends Bullet {
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
 	public SprayBullet(double direction, Point target, Point startPosition, int shooter) {
-		super(RANGE, direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+		super((int) Math.min(target.distance(startPosition), RANGE), direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 
 	

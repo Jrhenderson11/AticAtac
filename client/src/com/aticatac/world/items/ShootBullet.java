@@ -10,7 +10,7 @@ import com.aticatac.world.World;
 public class ShootBullet extends Bullet {
 	
 	/**
-	 * The range of the bullets
+	 * The maximumrange of the bullets
 	 */
 	public static final int RANGE = 500;
 	/**
@@ -35,7 +35,7 @@ public class ShootBullet extends Bullet {
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */
 	public ShootBullet(double direction, Point target, Point startPosition, int shooter) {
-		super(RANGE, direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
+		super((int) Math.min(target.distance(startPosition), RANGE), direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
 	
 	

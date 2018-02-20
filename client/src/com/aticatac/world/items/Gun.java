@@ -9,7 +9,6 @@ import com.aticatac.world.World;
 @SuppressWarnings("serial")
 public abstract class Gun implements Serializable{
 
-	
 	/**
 	 * The duration of the 'cooldown' between shots
 	 */
@@ -22,6 +21,10 @@ public abstract class Gun implements Serializable{
 	 * The Player using the gun
 	 */
 	private Player user;
+	/**
+	 * The amount of paint
+	 */
+	private int paintCost;
 	
 	
 	// -----------
@@ -34,10 +37,11 @@ public abstract class Gun implements Serializable{
 	 * @param range The maximum range of the gun
 	 * @param cooldownTime The cooldown between shots
 	 */
-	public Gun(Player user, int cooldownTime) {
+	public Gun(Player user, int cooldownTime, int paintCost) {
 		this.cooldownTime = cooldownTime;
 		this.currentCooldown = 0;
 		this.user = user;
+		this.paintCost = paintCost;
 	}
 	
 	
@@ -66,6 +70,10 @@ public abstract class Gun implements Serializable{
 	 */
 	public boolean ready() {
 		return currentCooldown <= 0;
+	}
+	
+	public boolean enoughPaint(double usersPaintLevel) {
+		return paintCost < usersPaintLevel;
 	}
 	
 	/**
