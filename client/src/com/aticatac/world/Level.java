@@ -107,9 +107,9 @@ public class Level implements Serializable {
 	}
 
 	public int getPercentTiles(int val) {
-		return (int) ((long) (this.getNumTiles(val)*100) /(long) ((this.width * this.height) - this.getNumTiles(1)));
+		return (int) ((long) (this.getNumTiles(val) * 100) / (long) ((this.width * this.height) - this.getNumTiles(1)));
 	}
-	
+
 	// updates coords with input restrictions and no overwriting walls
 	public boolean updateCoords(int x, int y, int val) {
 		if (x < width && y < height && x >= 0 && y >= 0) {
@@ -126,22 +126,40 @@ public class Level implements Serializable {
 	public boolean hasLOS(Point player, Point target) {
 		int dx = target.x - player.x;
 		int dy = target.y - player.y;
-		float m;
-		if (dx != 0) {
-			m = dy / dx;
-		} else {
-			m = 0;
-		}
-		int step = 1;
+		
+		int stepx = 1;
+		int stepy = 1;
+
 		if (dx < 0) {
-			step = -1;
+			stepx = -1;
+		}
+		if (dy < 0) {
+			stepy = -1;
 		}
 		
+		if (dx==0) {
+			for (int y = 0; Math.abs(y-dy) > 0; y += stepy) {
+				if (grid[player.x][player.y + y] == 1) {
+					System.out.println("grid " + (player.x) + ", " + (player.y + y));
+					return false;
+				}
+			}
+		} else if (dy==0) {
+			for (int x = 0; Math.abs(x-dx) > 0; x += stepx) {
+				if (grid[player.x + x][player.y] == 1) {
+					System.out.println("grid " + (player.x + x) + ", " + (player.y));
+					return false;
+				}
+			}
+		}
 
-		for (int x = 0; x != dx; x += step) {
-			int y = (int) m * x;
-			if (grid[x][y] == 1) {
-				return false;
+		for (int x = 0; Math.abs(x-dx) > 0; x += stepx) {
+			for (int y = 0; Math.abs(y-dy) > 0; y += stepy) {
+				
+				if (grid[player.x + x][player.y + y] == 1) {
+					System.out.println("grid " + (player.x + x) + ", " + (player.y + y));
+					return false;
+				}
 			}
 		}
 		return true;
@@ -175,9 +193,9 @@ public class Level implements Serializable {
 	public void makeSpray(int posX, int posY, double direction, int colour) {
 		// placeholder: make spray of length 6, with the center at the given position
 		int length = 8;
-		boolean posSpray = true; //when a wall is hit, these will go false to stop the spray going through walls
-		boolean negSpray = true; 
-		
+		boolean posSpray = true; // when a wall is hit, these will go false to stop the spray going through walls
+		boolean negSpray = true;
+
 		// paint center point
 		updateCoords(posX, posY, colour);
 
@@ -188,34 +206,37 @@ public class Level implements Serializable {
 			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); // the opposite direction
 			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI)));
 			if (posSpray && !updateCoords(x1, y1, colour)) {
-				posSpray = false; //spray in positive direction has hit a wall
+				posSpray = false; // spray in positive direction has hit a wall
 			}
 			if (negSpray && !updateCoords(x2, y2, colour)) {
-				negSpray = false; //spray in negative direction has hit wall
+				negSpray = false; // spray in negative direction has hit wall
 			}
 		}
 	}
 
 	public void makeCircle(int posX, int posY, int radius, int fillVal, int blockVal) {
-		if (posX > width-1 || posX <0 || posY > height-1 || posY < 0) {
+		if (posX > width - 1 || posX < 0 || posY > height - 1 || posY < 0) {
 			return;
 		}
 		for (int x = 0; x <= radius; x++) {
 			for (int y = 0; y < Math.sqrt((radius * radius) - (x * x)) + 1; y++) {
 				if (posY + y < (height - 1)) {
-					if (posX + x < (width - 1) && grid[posX + x][posY + y]!=blockVal) {
+					if (posX + x < (width - 1) && grid[posX + x][posY + y] != blockVal
+							&& this.hasLOS(new Point(posX, posY), new Point(posX + x, posY + y))) {
 						grid[posX + x][posY + y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posX - x][posY + y]!=blockVal) {
+					if ((posX - x > 0) && grid[posX - x][posY + y] != blockVal
+							&& this.hasLOS(new Point(posX, posY), new Point(posX - x, posY + y))) {
 						grid[posX - x][posY + y] = fillVal;
 					}
 				}
-
 				if ((posY - y > 0)) {
-					if ((posX + x < (width-1)) && grid[posX + x][posY - y]!=blockVal) {
+					if ((posX + x < (width - 1)) && grid[posX + x][posY - y] != blockVal
+							&& this.hasLOS(new Point(posX, posY), new Point(posX + x, posY - y))) {
 						grid[posX + x][posY - y] = fillVal;
 					}
-					if ((posX - x > 0) && grid[posX - x][posY - y]!=blockVal) {
+					if ((posX - x > 0) && grid[posX - x][posY - y] != blockVal
+							&& this.hasLOS(new Point(posX, posY), new Point(posX - x, posY - y))) {
 						grid[posX - x][posY - y] = fillVal;
 					}
 				}
@@ -223,7 +244,6 @@ public class Level implements Serializable {
 		}
 
 	}
-
 
 	// filehandling
 	public boolean saveMap(String fileName) {
@@ -374,44 +394,44 @@ public class Level implements Serializable {
 	public void setGrid(int[][] map) {
 		this.grid = map;
 	}
-	
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		int lastval = -1;
 		int num = 0;
-		int sum=0;
-		int sum2=0;
+		int sum = 0;
+		int sum2 = 0;
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				if (this.grid[x][y] != lastval) {
 					if (num != 0) {
 						intList.add(num);
 						intList.add(lastval);
-						sum2+=num;
-						num=0;
+						sum2 += num;
+						num = 0;
 					}
-					
+
 					lastval = this.grid[x][y];
 				}
-				if ((x==width-1 && y==height-1)) {
-					intList.add(num+1);
-					sum2+=num+1;
+				if ((x == width - 1 && y == height - 1)) {
+					intList.add(num + 1);
+					sum2 += num + 1;
 					intList.add(lastval);
 				}
 				num++;
 				sum++;
 			}
 		}
-		
-		byte[] arr = new byte[(intList.size()+1)*4];
-		int x=4;
-		byte[] num2 = ByteBuffer.allocate(4).putInt((intList.size()*4)).array();
-		for (int j=0;j<4; j++) {
+
+		byte[] arr = new byte[(intList.size() + 1) * 4];
+		int x = 4;
+		byte[] num2 = ByteBuffer.allocate(4).putInt((intList.size() * 4)).array();
+		for (int j = 0; j < 4; j++) {
 			arr[j] = num2[j];
 		}
-		for (int i=0; i < intList.size();i++) {
+		for (int i = 0; i < intList.size(); i++) {
 			num2 = ByteBuffer.allocate(4).putInt(intList.get(i)).array();
-			for (int j=0;j<4; j++) {
+			for (int j = 0; j < 4; j++) {
 				arr[x++] = num2[j];
 			}
 		}
@@ -419,22 +439,22 @@ public class Level implements Serializable {
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		
+
 		byte[] byteArray = new byte[in.readInt()];
-		
-		for (int i =0; i< byteArray.length; i++) {
+
+		for (int i = 0; i < byteArray.length; i++) {
 			byteArray[i] = in.readByte();
 		}
 		IntBuffer intBuf = ByteBuffer.wrap(byteArray).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
-		
+
 		int[] intArray = new int[intBuf.remaining()];
-		
-		for (int j=0; j< intArray.length; j++) {
+
+		for (int j = 0; j < intArray.length; j++) {
 			intArray[j] = intBuf.get(j);
 		}
-		
+
 		int sum = 0;
-		for (int x2 = 0; x2 < intArray.length; x2+=2) {
+		for (int x2 = 0; x2 < intArray.length; x2 += 2) {
 			sum += intArray[x2];
 		}
 		int width = (int) Math.sqrt(sum);

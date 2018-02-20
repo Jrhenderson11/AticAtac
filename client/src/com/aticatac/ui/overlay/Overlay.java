@@ -19,12 +19,12 @@ import javafx.scene.text.TextAlignment;
 public class Overlay {
 	
 	public void drawOverlay(GraphicsContext gc, World world, String id) {
-		drawPercents(gc, world);
+		drawPercents(gc, world, id);
 		drawWeapon(gc, world, id);
 		drawPaintLevel(gc, world, id);
 	}
 
-	private void drawPercents(GraphicsContext gc, World world) {
+	private void drawPercents(GraphicsContext gc, World world, String id) {
 		
 		int width = SystemSettings.getNativeWidth();
 	    int height = SystemSettings.getNativeHeight();
@@ -38,18 +38,19 @@ public class Overlay {
 		for (int i=0; i< world.getNumPlayers(); i++) {
 			Player player = players.get(i);
 			int percent = world.getLevel().getPercentTiles(player.getColour());
-		
-		        gc.setTextAlign(TextAlignment.CENTER);
-		        gc.setFill(Renderer.getColourByVal(player.getColour()));
-		        gc.setStroke(Color.BLACK);
-		        gc.setLineWidth(2);
-		        gc.setFont(UIDrawer.OVERLAY_FONT);
-		        
-		        String text = Integer.toString(percent) + "%";
-		        gc.fillText(text, x, y);
-		        gc.strokeText(text, x, y);
-		        //gc.restore();
-		        x+=100;
+			
+	        gc.setTextAlign(TextAlignment.CENTER);
+	        gc.setFill(Renderer.getColourByVal(player.getColour()));
+	        gc.setStroke(Color.WHITE);
+	        gc.setLineWidth(1);
+	        gc.setFont(UIDrawer.OVERLAY_FONT);
+	        
+	        String text = Integer.toString(percent) + "%";
+	        gc.fillText(text, x, y);
+	        if (player.getIdentifier().equals(id)) {
+	        	gc.strokeText(text, x, y);
+	        }
+	        x+=100;
 		}
 	}
 
@@ -72,12 +73,15 @@ public class Overlay {
 		int y = height - 150;
 		
 		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
+		gc.setStroke(Color.WHITE);
+        gc.setLineWidth(2);
+
 		gc.fillRect(x, y-acHeight-25, rwidth, acHeight);
+		gc.strokeRect(x, y-acHeight-25, rwidth, acHeight);
+		
 		gc.setTextAlign(TextAlignment.CENTER);
         gc.setFill(Color.WHITE);
 
-		gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
         gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
         
         //draw word paint as well
@@ -85,6 +89,7 @@ public class Overlay {
 	}
 	
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
+
 		String weapName = "No current weapon";
 		Gun w = world.getPlayerById(id).getGun();
 		if (w instanceof ShootGun) {
@@ -110,4 +115,8 @@ public class Overlay {
         //gc.strokeText(weapName, x, y);
        
 	} 
+
+	private void drawTimer(GraphicsContext gc, World world) {
+		
+	}
 }
