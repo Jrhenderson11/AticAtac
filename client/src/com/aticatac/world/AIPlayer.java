@@ -46,7 +46,7 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update() {
-		if (i++ == 10) {
+		if (i++ == 15) {
 			// Updates too fast
 			makeDecision();
 			i = 0;
@@ -136,7 +136,7 @@ public class AIPlayer extends Player {
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
 			System.out.println("Quad 4");
 			// If in quadrant II
-			return (Math.PI - angle);
+			return (Math.PI/2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
 		System.out.println("Quad 1");
@@ -247,14 +247,18 @@ public class AIPlayer extends Player {
 	 *         range
 	 */
 	public boolean inRange(Point target) {
-		if (Math.sqrt((Math.pow(target.getX() - position.getX(), 2))
-				+ Math.pow(target.getY() - position.getY(), 2)) <= RANGE_TO_SHOOT) {
+		if (calculateDistance(target, position) <= RANGE_TO_SHOOT) {
 			// If the point lies inside the circle created by the range
 			return true;
 		}
 		return false;
 	}
 
+	public double calculateDistance(Point p1, Point p2) {
+		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2))
+				+ Math.pow(p1.getY() - p2.getY(), 2));
+	}
+	
 	/**
 	 * Method to get the next movement from a path that has been generated
 	 */
@@ -264,8 +268,11 @@ public class AIPlayer extends Player {
 			gridPosition.setLocation(world.displayPositionToCoords(position));
 			Point next = currentPath.poll();
 			intermediatePath = gridToDisplay(position, next);
-			Point intermediate = intermediatePath.poll();
-			move(intermediate.x - position.x, intermediate.y - position.y);
+			if(!intermediatePath.isEmpty()) {
+				Point intermediate = intermediatePath.poll();
+				move(intermediate.x - position.x, intermediate.y - position.y);
+				gridPosition.setLocation(world.displayPositionToCoords(position));
+			}
 		}
 		Point intermediate = intermediatePath.poll();
 		move(intermediate.x - position.x, intermediate.y - position.y);
@@ -279,7 +286,28 @@ public class AIPlayer extends Player {
 		LinkedList<Point> newPath = new LinkedList<>();
 		Point current = currentGrid;
 		Point next = world.coordsToDisplayPosition(nextGrid);
-		while (!current.equals(next)) {
+		while (!current.equals(next) && calculateDistance(current, next) > 1.5) {
+			// 1.5 used as a cutoff for when distance is at most a 1,1 translation
+			if (current.x < next.x && current.y < next.y) {
+				current = new Point(current.x + 2, current.y + 2);
+			} else if (current.x < next.x && current.y > next.y) {
+				current = new Point(current.x + 2, current.y - 2);
+			} else if (current.x < next.x && current.y == next.y) {
+				current = new Point(current.x + 2, current.y);
+			} else if (current.x > next.x && current.y < next.y) {
+				current = new Point(current.x - 2, current.y + 2);
+			} else if (current.x > next.x && current.y > next.y) {
+				current = new Point(current.x - 2, current.y - 2);
+			} else if (current.x > next.x && current.y == next.y) {
+				current = new Point(current.x - 2, current.y);
+			} else if (current.x == next.x && current.y < next.y) {
+				current = new Point(current.x, current.y + 2);
+			} else if (current.x == next.x && current.y > next.y) {
+				current = new Point(current.x, current.y - 2);
+			}
+			newPath.add(current);
+		}
+		if(calculateDistance(current, next) != 0) {
 			if (current.x < next.x && current.y < next.y) {
 				current = new Point(current.x + 1, current.y + 1);
 			} else if (current.x < next.x && current.y > next.y) {
@@ -297,7 +325,6 @@ public class AIPlayer extends Player {
 			} else if (current.x == next.x && current.y > next.y) {
 				current = new Point(current.x, current.y - 1);
 			}
-			newPath.add(current);
 		}
 		return newPath;
 
