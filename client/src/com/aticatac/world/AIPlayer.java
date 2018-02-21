@@ -24,8 +24,9 @@ public class AIPlayer extends Player {
 	private Point gridPosition;
 
 	private LinkedList<Point> currentPath;
+	private LinkedList<Point> intermediatePath;
 	private Random r;
-	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS;
+	private ArrayList<Pair<Integer, Integer>> gridTranslations = Translations.TRANSLATIONS_GRID;
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
@@ -33,14 +34,16 @@ public class AIPlayer extends Player {
 		this.level = world.getLevel();
 		this.r = new Random();
 		this.currentPath = new LinkedList<>();
+		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
 		this.gridPosition = new Point(3, 11);
 	}
 
 	@Override
 	public void update() {
-		if (i++ == 200) {
+		if (i++ == 10) {
 			// Updates too fast
+			// This speed is good for moving perhaps but not for shooting
 			makeDecision();
 			i = 0;
 		}
@@ -62,8 +65,6 @@ public class AIPlayer extends Player {
 				if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
 						&& inRange(player.getPosition())) {
 					// Spray or spit gun
-					System.out.println(world.displayPositionToCoords(player.getPosition()).x + "\t"
-							+ world.displayPositionToCoords(player.getPosition()).y);
 					foundTarget = true;
 					Point target = world.displayPositionToCoords(player.getPosition());
 					double angle = calculateLookDirection(target);
@@ -73,21 +74,24 @@ public class AIPlayer extends Player {
 					// For now this is random which one it chooses but in the future
 					// we can have a way to decide which one will do more damage
 					if (r.nextInt() % 2 == 1) {
-						System.out.println("spray");
+						//System.out.println("spray");
 						setGun(new SprayGun(this));
 					} else {
-						System.out.println("shoot");
+						//System.out.println("shoot");
 						setGun(new ShootGun(this));
 					}
 					gun.fire(lookDirection, target, world);
 					break;
 				}
 			}
+			if(!foundTarget && !intermediatePath.isEmpty()) {
+				//System.out.println("move");
+				makeNextMove();
+			}
 			// Need to get the reduced Map method to do what we want it to
-			if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
-				System.out.println("calculate path");
+			else if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
+				//System.out.println("calculate path");
 				Point point = closestFreePoint();
-				System.out.println(point.x + "\t" + point.y);
 				pathToFreePoint(point);
 				makeNextMove();
 			} /*
@@ -122,20 +126,20 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			System.out.println("Quad 2");
+			//System.out.println("Quad 2");
 			// If in quadrant IV
-			return  (3 * Math.PI)/2 + angle;
+			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			System.out.println("Quad 3");
+			//System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
-			return (3 * Math.PI)/2 - angle;
+			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			System.out.println("Quad 4");
+			//System.out.println("Quad 4");
 			// If in quadrant II
-			return (Math.PI - angle);
+			return (Math.PI/2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		System.out.println("Quad 1");
+		//System.out.println("Quad 1");
 		return Math.PI / 2 - angle;
 	}
 
@@ -243,21 +247,87 @@ public class AIPlayer extends Player {
 	 *         range
 	 */
 	public boolean inRange(Point target) {
-		if (Math.sqrt((Math.pow(target.getX() - position.getX(), 2))
-				+ Math.pow(target.getY() - position.getY(), 2)) <= RANGE_TO_SHOOT) {
+		if (calculateDistance(target, position) <= RANGE_TO_SHOOT) {
 			// If the point lies inside the circle created by the range
 			return true;
 		}
 		return false;
 	}
 
+	public double calculateDistance(Point p1, Point p2) {
+		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2))
+				+ Math.pow(p1.getY() - p2.getY(), 2));
+	}
+	
 	/**
 	 * Method to get the next movement from a path that has been generated
 	 */
 	public void makeNextMove() {
-		Point next = currentPath.poll();
-		move(world.coordsToDisplayPosition(next).x - position.x, world.coordsToDisplayPosition(next).y - position.y);
-		gridPosition.setLocation(next);
+		// Need to make this go more smoothly
+		if (intermediatePath.isEmpty()) {
+			gridPosition.setLocation(world.displayPositionToCoords(position));
+			Point next = currentPath.poll();
+			intermediatePath = gridToDisplay(position, next);
+			if(!intermediatePath.isEmpty()) {
+				Point intermediate = intermediatePath.poll();
+				move(intermediate.x - position.x, intermediate.y - position.y);
+				gridPosition.setLocation(world.displayPositionToCoords(position));
+			}
+		}
+		Point intermediate = intermediatePath.poll();
+		move(intermediate.x - position.x, intermediate.y - position.y);
+		
+		// move(world.coordsToDisplayPosition(next).x - position.x,
+		// world.coordsToDisplayPosition(next).y - position.y);
+		// gridPosition.setLocation(next);
+	}
+
+	public LinkedList<Point> gridToDisplay(Point currentGrid, Point nextGrid) {
+		LinkedList<Point> newPath = new LinkedList<>();
+		Point current = currentGrid;
+		Point next = world.coordsToDisplayPosition(nextGrid);
+		while (!current.equals(next) && calculateDistance(current, next) > 1.5) {
+			// 1.5 used as a cutoff for when distance is at most a 1,1 translation
+			if (current.x < next.x && current.y < next.y) {
+				current = new Point(current.x + 2, current.y + 2);
+			} else if (current.x < next.x && current.y > next.y) {
+				current = new Point(current.x + 2, current.y - 2);
+			} else if (current.x < next.x && current.y == next.y) {
+				current = new Point(current.x + 2, current.y);
+			} else if (current.x > next.x && current.y < next.y) {
+				current = new Point(current.x - 2, current.y + 2);
+			} else if (current.x > next.x && current.y > next.y) {
+				current = new Point(current.x - 2, current.y - 2);
+			} else if (current.x > next.x && current.y == next.y) {
+				current = new Point(current.x - 2, current.y);
+			} else if (current.x == next.x && current.y < next.y) {
+				current = new Point(current.x, current.y + 2);
+			} else if (current.x == next.x && current.y > next.y) {
+				current = new Point(current.x, current.y - 2);
+			}
+			newPath.add(current);
+		}
+		if(calculateDistance(current, next) != 0) {
+			if (current.x < next.x && current.y < next.y) {
+				current = new Point(current.x + 1, current.y + 1);
+			} else if (current.x < next.x && current.y > next.y) {
+				current = new Point(current.x + 1, current.y - 1);
+			} else if (current.x < next.x && current.y == next.y) {
+				current = new Point(current.x + 1, current.y);
+			} else if (current.x > next.x && current.y < next.y) {
+				current = new Point(current.x - 1, current.y + 1);
+			} else if (current.x > next.x && current.y > next.y) {
+				current = new Point(current.x - 1, current.y - 1);
+			} else if (current.x > next.x && current.y == next.y) {
+				current = new Point(current.x - 1, current.y);
+			} else if (current.x == next.x && current.y < next.y) {
+				current = new Point(current.x, current.y + 1);
+			} else if (current.x == next.x && current.y > next.y) {
+				current = new Point(current.x, current.y - 1);
+			}
+		}
+		return newPath;
+
 	}
 
 	/**
@@ -279,7 +349,7 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			visited.add(current);
 			for (int i = 0; i < 8; i++) {
-				translation = translations.get(i);
+				translation = gridTranslations.get(i);
 				// Key is x translation, Value is y translation
 				translated = new Point(current.x + translation.getKey(), current.y + (int) translation.getValue());
 				if (level.getCoords(translated.x, translated.y) == 0) {
