@@ -15,8 +15,6 @@ import com.aticatac.world.World;
 
 public class UDPServer extends Thread{
 	
-	private boolean running;
-	private byte[] buffer = new byte[256];
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
 	private ServerSender sender;
@@ -96,6 +94,16 @@ public class UDPServer extends Thread{
 		}
 		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), this.lobbyInfo.ID, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");
+	}
+	
+	public void addAI() {
+		int numAI=0;
+		for (Player p : model.getPlayers()) {
+			if (p.controller == Controller.AI) {
+				numAI++;
+			}
+		}
+		this.lobby.addAI("AI"+numAI, this.lobby.getNextColour());
 	}
 	
 	public void leaveLobby(String name, InetAddress address, int colour, int destPort, int originPort) {

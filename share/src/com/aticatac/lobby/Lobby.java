@@ -16,7 +16,7 @@ public class Lobby implements Serializable {
 
 	private ClientInfo lobbyLeader;
 
-	public class ai{
+	public class ai implements Serializable{
 		public String name;
 		public int colour;
 		public ai(String newName, int newColour) {
@@ -72,6 +72,7 @@ public class Lobby implements Serializable {
 	}
 
 	public boolean addAI(String aiName, int colour) {
+		
 		if (this.lobbySize()==4) {
 			return false;
 		}

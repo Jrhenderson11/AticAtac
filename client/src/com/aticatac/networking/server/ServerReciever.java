@@ -111,7 +111,6 @@ public class ServerReciever extends Thread {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.joinLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);
-
 		} else if (data.equals("ready")) {
 			// SET LOBBY TO READY
 			this.master.setClientReady(origin, originPort);
@@ -128,18 +127,8 @@ public class ServerReciever extends Thread {
 			//this.master.startGame();
 
 		} else if (data.equals("addAI")) {
-
-			int numAI=0;
-			for (Player p : model.getPlayers()) {
-				if (p.controller == Controller.AI) {
-					numAI++;
-				}
-			}
-			int colour = 3;
-			AIPlayer aiPlayer = new AIPlayer(Controller.AI, model, ("ai" + numAI), colour);
-	        master.getLobby().addAI("ai"+numAI, colour);
-			model.addPlayerWithoutPosition(aiPlayer);
-		
+			master.addAI();
+					
 		} else if (data.equals("leavelobby")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.leaveLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
