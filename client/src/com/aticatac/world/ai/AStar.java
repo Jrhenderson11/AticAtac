@@ -34,7 +34,7 @@ public class AStar {
 		this.identifier = identifier;
 		this.cost = new HashMap<>();
 		this.parent = new HashMap<>();
-		this.translations = Translations.TRANSLATIONS;
+		this.translations = Translations.TRANSLATIONS_GRID;
 	}
 
 	public int getH(Point point, Point finishPoint) {
