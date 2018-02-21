@@ -25,7 +25,7 @@ public class KickButton extends Button {
 
     @Override
     public void click() {
-
+    
     }
 
     @Override
