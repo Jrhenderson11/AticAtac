@@ -1,20 +1,25 @@
 package com.aticatac.ui.lobby.display.utils;
 
+import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class BackButton extends Button{
 
-    public BackButton(Rectangle hitbox) {
+	private LobbyServer server;
+	
+    public BackButton(Rectangle hitbox, LobbyServer newServer) {
         super(hitbox, "Leave Lobby");
+        this.server = newServer;
     }
 
     @Override
     public void click() {
-
+    	this.server.leaveLobby();
     }
 
     @Override

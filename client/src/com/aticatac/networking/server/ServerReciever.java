@@ -130,9 +130,8 @@ public class ServerReciever extends Thread {
 			master.addAI();
 					
 		} else if (data.equals("leavelobby")) {
-			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
-			master.leaveLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
-					originPort);
+			//ConnectionInfo info = this.getConnectionInfo(origin, originPort);
+			master.leaveLobby(origin, originPort);
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {

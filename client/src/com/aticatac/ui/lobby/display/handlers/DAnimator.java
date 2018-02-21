@@ -56,20 +56,19 @@ public class DAnimator extends AnimationTimer {
         for (int i = 0; i < peasants.size(); i++) {
             ClientInfo c = peasants.get(i);
             Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1));
-            Displayer.getDrawables().add(new KickButton(i));
+            Displayer.getDrawables().add(new KickButton(i, server));
         }
 
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-        Displayer.getDrawables().add(new BackButton(hitbox));
+        Displayer.getDrawables().add(new BackButton(hitbox, this.server));
         Displayer.getDrawables().add(new LobbyHeader(lobby));
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
 
         if (isLead) {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Start"));
+            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Start", server));
         } else {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Ready"));
+            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Ready", server));
         }
-
     }
 
     @Override

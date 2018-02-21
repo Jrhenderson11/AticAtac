@@ -80,8 +80,14 @@ public class Lobby implements Serializable {
 		return true;
 	}
 	
-	public void removeClient(ClientInfo client) {
-		serfs.remove(client);
+	public void removeClient(String id) {
+		//if is lobby leader delete lobby
+		
+		for (ClientInfo client : this.getPeasants()) {
+			if (client.getID().equals(id)) {
+				this.serfs.remove(client);
+			}
+		}
 	}
 
 	public void setStarted() {

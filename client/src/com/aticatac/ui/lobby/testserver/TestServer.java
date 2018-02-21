@@ -59,7 +59,6 @@ public class TestServer implements LobbyServer {
 
     @Override
     public boolean leaveLobby() {
-        lobbies.get(1).removeClient(client);
         return true;
     }
 
