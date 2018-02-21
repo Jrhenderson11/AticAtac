@@ -46,8 +46,9 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update() {
-		if (i++ == 15) {
+		if (i++ == 10) {
 			// Updates too fast
+			// This speed is good for moving perhaps but not for shooting
 			makeDecision();
 			i = 0;
 		}
@@ -63,7 +64,7 @@ public class AIPlayer extends Player {
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
-		if (currentPath.isEmpty() && intermediatePath.isEmpty()) {
+		if (currentPath.isEmpty()) {
 			for (Player player : otherPlayers) {
 				// Fix hasLOS to work a bit better
 				if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
@@ -78,19 +79,23 @@ public class AIPlayer extends Player {
 					// For now this is random which one it chooses but in the future
 					// we can have a way to decide which one will do more damage
 					if (r.nextInt() % 2 == 1) {
-						System.out.println("spray");
+						//System.out.println("spray");
 						setGun(new SprayGun(this));
 					} else {
-						System.out.println("shoot");
+						//System.out.println("shoot");
 						setGun(new ShootGun(this));
 					}
 					gun.fire(lookDirection, target, world);
 					break;
 				}
 			}
+			if(!foundTarget && !intermediatePath.isEmpty()) {
+				//System.out.println("move");
+				makeNextMove();
+			}
 			// Need to get the reduced Map method to do what we want it to
-			if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
-				System.out.println("calculate path");
+			else if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
+				//System.out.println("calculate path");
 				Point point = closestFreePoint();
 				pathToFreePoint(point);
 				makeNextMove();
@@ -126,20 +131,20 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			System.out.println("Quad 2");
+			//System.out.println("Quad 2");
 			// If in quadrant IV
 			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			System.out.println("Quad 3");
+			//System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			System.out.println("Quad 4");
+			//System.out.println("Quad 4");
 			// If in quadrant II
 			return (Math.PI/2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		System.out.println("Quad 1");
+		//System.out.println("Quad 1");
 		return Math.PI / 2 - angle;
 	}
 
