@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.networking.globals.Globals;
+import com.aticatac.utils.Controller;
+import com.aticatac.world.AIPlayer;
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 import javafx.scene.input.KeyCode;
@@ -44,7 +47,6 @@ public class ServerReciever extends Thread {
 		running = true;
 		System.out.println("Server Listening");
 		while (running) {
-
 			// make packet
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 			// System.out.println("waiting for data");
@@ -125,6 +127,19 @@ public class ServerReciever extends Thread {
 		} else if (parts[0].equals("name")) {
 			//this.master.startGame();
 
+		} else if (data.equals("addAI")) {
+
+			int numAI=0;
+			for (Player p : model.getPlayers()) {
+				if (p.controller == Controller.AI) {
+					numAI++;
+				}
+			}
+			int colour = 3;
+			AIPlayer aiPlayer = new AIPlayer(Controller.AI, model, ("ai" + numAI), colour);
+	        master.getLobby().addAI("ai"+numAI, colour);
+			model.addPlayerWithoutPosition(aiPlayer);
+		
 		} else if (data.equals("leavelobby")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.leaveLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),

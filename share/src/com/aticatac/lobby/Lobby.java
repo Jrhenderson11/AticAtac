@@ -16,6 +16,16 @@ public class Lobby implements Serializable {
 
 	private ClientInfo lobbyLeader;
 
+	public class ai{
+		public String name;
+		public int colour;
+		public ai(String newName, int newColour) {
+			this.name = newName;
+			this.colour = newColour;
+		}
+	}
+	
+	private ArrayList<ai> bots;
 	private ArrayList<ClientInfo> serfs;
 	public final int ID;
 	public final String NAME;
@@ -23,6 +33,7 @@ public class Lobby implements Serializable {
 	public Lobby(ClientInfo lobbyLeader, LobbyInfo info) {
 		this.lobbyLeader = lobbyLeader;
 		serfs = new ArrayList<>();
+		bots = new ArrayList<>();
 		this.game_started = false;
 		this.ID = info.ID;
 		this.NAME = info.NAME;
@@ -42,9 +53,17 @@ public class Lobby implements Serializable {
 		return all;
 	}
 
+	public ArrayList<ai> getBots() {
+		return this.bots;
+	}
+	
+	public int lobbySize() {
+		return this.getAll().size() + this.bots.size();
+	}
+	
 	// Make sure not full
 	public boolean addClient(ClientInfo client) {
-		if (serfs.size() == 3) {
+		if (lobbySize()==4) {
 			return false;
 		} else {
 			serfs.add(client);
@@ -52,6 +71,14 @@ public class Lobby implements Serializable {
 		}
 	}
 
+	public boolean addAI(String aiName, int colour) {
+		if (this.lobbySize()==4) {
+			return false;
+		}
+		this.bots.add(new ai(aiName, colour));
+		return true;
+	}
+	
 	public void removeClient(ClientInfo client) {
 		serfs.remove(client);
 	}
@@ -84,4 +111,27 @@ public class Lobby implements Serializable {
 		}
 		return null;
 	}
+	
+	public int getNextColour() {
+		for (int colour=2; colour<6; colour++) {
+			boolean in = false;
+			for (ClientInfo c : this.getAll()) {
+				if (c.getColour()==colour) {
+					in = true;
+				}
+			}
+			for (ai a: this.getBots()) {
+				if (a.colour==colour) {
+					in = true;
+				}
+			}
+			
+			//if nobody has this as their colour then return it
+			if (!in) {
+				return colour;
+			}
+		} 
+		return 6;
+	}
+
 }

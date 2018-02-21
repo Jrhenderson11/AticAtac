@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.aticatac.lobby.ClientInfo;
+import com.aticatac.lobby.Lobby;
+import com.aticatac.lobby.Lobby.ai;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.items.Bullet;
@@ -27,7 +30,7 @@ public class World implements Serializable {
 	private Collection<Bullet> bullets;
 	private Collection<GunBox> gunboxes;
 	private Level level;
-	private final Point[] startLocs = {new Point(50, 50), new Point(100, 100)};
+	private final Point[] startLocs = {new Point(50, 50), new Point(50, 100), new Point(100, 50), new Point(100, 100)};
 	private int regenTimer;
 
 	int[][] map;
@@ -40,9 +43,20 @@ public class World implements Serializable {
 		this.gunboxes = new LinkedList<GunBox>();
 		this.regenTimer = 0;
 	}
+
 	// sets up world
-	public void init(Player player) {
-		this.addPlayer(player);
+	public void init(Lobby lobby) {
+		
+		for (ClientInfo client: lobby.getAll()) {
+			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour());
+			this.addPlayer(newPlayer);
+		}
+		
+		for(ai a: lobby.getBots()) {
+			AIPlayer aiPlayer = new AIPlayer(Controller.AI, this, a.name, a.colour);
+			this.addPlayer(aiPlayer);
+		}
+		
 	}
 	
 	public Level getLevel() {
@@ -239,6 +253,7 @@ public class World implements Serializable {
 				return p;
 			} 
 		}
+		//System.out.println("cant find " + id);
 		return null;
 	}
 
@@ -287,5 +302,4 @@ public class World implements Serializable {
 		this.players.add(player);
 		return true;
 	}
-
 }

@@ -161,6 +161,10 @@ public class UDPClient extends Task implements LobbyServer {
 
 	}
 
+	public void addAIPlayer() {
+		this.sendData("addAI");
+	}
+	
 	@Override
 	public boolean startGame() {
 		if (this.status == Globals.IN_LOBBY) {

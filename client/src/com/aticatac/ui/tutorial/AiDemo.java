@@ -59,8 +59,7 @@ public class AiDemo extends Scene {
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
         AIPlayer aiPlayer = new AIPlayer(Controller.AI, world, "aiPlayer", 3);
-        aiPlayer.setPosition(new Point(50,100));
-        world.addPlayer(aiPlayer);
+        world.addPlayerWithoutPosition(aiPlayer);
         
         /* ================ */
         //add key event listeners

@@ -8,5 +8,7 @@ public class Globals {
 
 	public static int IN_LIMBO = 0;
 	public static int IN_LOBBY = 1;
-	public static int IN_GAME = 2;				
+	public static int IN_GAME = 2;
+
+
 }
