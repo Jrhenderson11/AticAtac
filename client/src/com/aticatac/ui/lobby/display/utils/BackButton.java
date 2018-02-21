@@ -1,15 +1,19 @@
 package com.aticatac.ui.lobby.display.utils;
 
 import com.aticatac.ui.utils.Button;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 
-public class BackButton extends Button{
+import static java.lang.StrictMath.sin;
+
+public class BackButton extends Button {
 
     public BackButton(Rectangle hitbox) {
-        super(hitbox, "Leave Lobby");
+        super(hitbox, "Back");
     }
 
     @Override
@@ -22,11 +26,26 @@ public class BackButton extends Button{
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
 
-        gc.setFill(Color.RED);
-        gc.setStroke(Color.BLACK);
+        Color fill = Color.RED;
+        if (this.isSelected()) {
+            double animation = (double) now / 1000000000;
+            fill = Color.rgb((int) (200 + 50 * sin(animation)), 0, 0);
+        }
 
-        gc.fillRect(0, 0.8 * height, width * 0.1, height * 0.1);
-        gc.strokeRect(0, 0.8 * height, width * 0.1, height * 0.1);
+        // Border
+        gc.setFill(fill);
+        gc.setStroke(Color.BLACK);
+        Rectangle hit = this.getHitbox();
+        gc.fillRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
+        gc.strokeRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
+
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setFont(UIDrawer.LOBBY_DISPLAY_TEXT);
+        gc.setFill(Color.WHITE);
+        gc.setStroke(Color.GRAY);
+
+        gc.strokeText(this.getText(), 0.05 * width, 0.955 * height);
+        gc.fillText(this.getText(), 0.05 * width, 0.955 * height);
 
     }
 }

@@ -32,5 +32,8 @@ public class ClientInfoBrick implements Drawable{
         gc.strokeRect(x, y, w, h);
         gc.fillRect(x, y, w, h);
 
+        // info
+
+
     }
 }

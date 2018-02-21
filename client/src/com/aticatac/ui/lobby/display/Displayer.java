@@ -6,6 +6,8 @@ import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.display.handlers.DAnimator;
 import com.aticatac.ui.lobby.display.utils.BackButton;
 import com.aticatac.ui.lobby.display.utils.ClientInfoBrick;
+import com.aticatac.ui.lobby.display.utils.DOnMouseMove;
+import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.utils.SystemSettings;
 import javafx.scene.Group;
@@ -20,6 +22,7 @@ import java.util.HashSet;
 public class Displayer extends Scene {
 
     private static HashSet<Drawable> drawables;
+    private static HashSet<Button> buttons;
 
     public Displayer(Group root, int selected, LobbyServer server) {
         super(root);
@@ -32,7 +35,8 @@ public class Displayer extends Scene {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         DAnimator animator = new DAnimator(gc, selected, server);
-        //animator.start();
+        this.setOnMouseMoved(new DOnMouseMove());
+        animator.start();
     }
 
     public static HashSet<Drawable> getDrawables() {
