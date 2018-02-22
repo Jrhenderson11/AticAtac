@@ -58,7 +58,7 @@ public class Tutorial extends Scene {
         Canvas canvas = new Canvas(displayWidth, displayHeight);
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        this.level = new Level(200, 200);
+        this.level = new Level(100, 100);
         //level.randomiseMap();
         level.loadMap("assets/maps/tutorial.txt");
         World world = new World(level);
