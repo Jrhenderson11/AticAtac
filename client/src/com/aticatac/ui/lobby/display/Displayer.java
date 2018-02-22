@@ -46,4 +46,12 @@ public class Displayer extends Scene {
     public static void setDrawables(HashSet<Drawable> drawables) {
         Displayer.drawables = drawables;
     }
+
+    public static HashSet<Button> getButtons() {
+        return buttons;
+    }
+
+    public static void setButtons(HashSet<Button> buttons) {
+        Displayer.buttons = buttons;
+    }
 }

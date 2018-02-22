@@ -34,20 +34,22 @@ public class DAnimator extends AnimationTimer {
         // TODO: might have to move this to handle V if its not updating
 
         Displayer.setDrawables(new HashSet<>());
+        Displayer.setButtons(new HashSet<>());
 
         Lobby lobby = server.updateLobby(selected);
         //don't be greedy: let the server take some time to get it's lobby object
-        while (lobby==null) {
-        	System.out.println("waiting for lobby obj");
-        	try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {}
-        	lobby = server.updateLobby(selected);
+        while (lobby == null) {
+            System.out.println("waiting for lobby obj");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+            }
+            lobby = server.updateLobby(selected);
         }
         System.out.println("finished waiting");
         ClientInfo leader = lobby.getLobbyLeader();
-        
-        ArrayList<ClientInfo> peasants  = lobby.getPeasants();
+
+        ArrayList<ClientInfo> peasants = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
 
         Displayer.getDrawables().add(new ClientInfoBrick(leader, 0));
@@ -55,20 +57,27 @@ public class DAnimator extends AnimationTimer {
         for (int i = 0; i < peasants.size(); i++) {
             ClientInfo c = peasants.get(i);
             Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1));
-            Displayer.getDrawables().add(new KickButton(i));
+            KickButton kbutton = new KickButton(i);
+            Displayer.getButtons().add(kbutton);
+            Displayer.getDrawables().add(kbutton);
         }
 
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-        Displayer.getDrawables().add(new BackButton(hitbox));
+        BackButton backButton = new BackButton(hitbox);
+        Displayer.getButtons().add(backButton);
+        Displayer.getDrawables().add(backButton);
         Displayer.getDrawables().add(new LobbyHeader(lobby));
         hitbox = new Rectangle(0.9 * width, 9 * height / 10, width / 10, height / 10);
 
+        ReadyStartButton sbutton;
         if (isLead) {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Start"));
+            sbutton = new ReadyStartButton(hitbox, "Start");
         } else {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Ready"));
+            sbutton = new ReadyStartButton(hitbox, "Start");
         }
 
+        Displayer.getDrawables().add(sbutton);
+        Displayer.getButtons().add(sbutton);
     }
 
     @Override
