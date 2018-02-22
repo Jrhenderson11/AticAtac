@@ -106,11 +106,11 @@ public class UDPServer extends Thread{
 		this.lobby.addAI("AI"+numAI, this.lobby.getNextColour());
 	}
 	
-	public void leaveLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
+	public void leaveLobby(InetAddress address, int originPort) {
 		ClientInfo newClient = this.getClientInfo(address, originPort);
-				//new ClientInfo("id", name, false, 2, address, destPort, originPort);
+
 		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
-			this.lobby.removeClient(newClient);
+			this.lobby.removeClient(newClient.getID());
 		} 
 		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
 		if (this.lobby.getAll().size() == 0) {
