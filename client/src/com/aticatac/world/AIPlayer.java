@@ -9,6 +9,7 @@ import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
 import com.aticatac.world.ai.utils.Translations;
 import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.SplatGun;
 import com.aticatac.world.items.SprayGun;
 
 import javafx.util.Pair;
@@ -27,6 +28,7 @@ public class AIPlayer extends Player {
 	private LinkedList<Point> intermediatePath;
 	private Random r;
 	private ArrayList<Pair<Integer, Integer>> gridTranslations = Translations.TRANSLATIONS_GRID;
+	private boolean hasGun;
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
@@ -36,14 +38,15 @@ public class AIPlayer extends Player {
 		this.currentPath = new LinkedList<>();
 		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
+		this.hasGun = false;
 		this.gridPosition = new Point(3, 11);
 	}
 
 	@Override
 	public void update() {
 		if (i++ == 10) {
-			// Updates too fast
-			// This speed is good for moving perhaps but not for shooting
+		// Updates too fast
+		// This speed is good for moving perhaps but not for shooting
 			makeDecision();
 			i = 0;
 		}
@@ -60,49 +63,41 @@ public class AIPlayer extends Player {
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
 		if (currentPath.isEmpty()) {
-			for (Player player : otherPlayers) {
-				// Fix hasLOS to work a bit better
-				if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
-						&& inRange(player.getPosition())) {
-					// Spray or spit gun
-					foundTarget = true;
-					Point target = world.displayPositionToCoords(player.getPosition());
-					double angle = calculateLookDirection(target);
-					setLookDirection(angle);
-					// Decide between spray and spit weapon depending on paint levels of each??
-					foundTarget = true;
-					// For now this is random which one it chooses but in the future
-					// we can have a way to decide which one will do more damage
-					if (r.nextInt() % 2 == 1) {
-						//System.out.println("spray");
-						setGun(new SprayGun(this));
-					} else {
-						//System.out.println("shoot");
-						setGun(new ShootGun(this));
+			if (hasGun) {
+				for (Player player : otherPlayers) {
+					// Fix hasLOS to work a bit better
+					if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
+							&& inRange(player.getPosition())) {
+						foundTarget = true;
+						Point target = world.displayPositionToCoords(player.getPosition());
+						double angle = calculateLookDirection(target);
+						setLookDirection(angle);
+						// Decide between spray and spit weapon depending on paint levels of each??
+						foundTarget = true;
+						// For now this is random which one it chooses but in the future
+						// we can have a way to decide which one will do more damage
+						getGun().fire(lookDirection, target, world);
+						break;
 					}
-					gun.fire(lookDirection, target, world);
-					break;
+				}
+				if (!foundTarget && getGun() instanceof SplatGun) {
+					Point target = getQuadrant();
+					setLookDirection(calculateLookDirection(target));
+					getGun().fire(lookDirection, target, world);
+				}
+			} else if (!intermediatePath.isEmpty()) {
+				makeNextMove();
+			} else {
+				// Need to get the reduced Map method to do what we want it to
+				// System.out.println("calculate path");
+				Point point = closestFreePoint();
+				if (point != null) {
+					pathToFreePoint(point);
+					makeNextMove();
 				}
 			}
-			if(!foundTarget && !intermediatePath.isEmpty()) {
-				//System.out.println("move");
-				makeNextMove();
-			}
-			// Need to get the reduced Map method to do what we want it to
-			else if (!foundTarget /* && getCurrentPercentage(reducedMap) > PERCENTAGE_TO_MOVE */) {
-				//System.out.println("calculate path");
-				Point point = closestFreePoint();
-				pathToFreePoint(point);
-				makeNextMove();
-			} /*
-				 * else if (!foundTarget) { System.out.println("splat"); setGun(new
-				 * SplatGun(this)); // Work on getting this to make better choices for the splat
-				 * gun Point target = getQuadrant();
-				 * setLookDirection(calculateLookDirection(world.displayPositionToCoords(target)
-				 * )); gun.fire(lookDirection, target, world); }
-				 */
 		} else {
-			System.out.println("move");
+			// System.out.println("move");
 			makeNextMove();
 		}
 	}
@@ -126,20 +121,20 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			//System.out.println("Quad 2");
+			// System.out.println("Quad 2");
 			// If in quadrant IV
 			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			//System.out.println("Quad 3");
+			// System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			//System.out.println("Quad 4");
+			// System.out.println("Quad 4");
 			// If in quadrant II
-			return (Math.PI/2 + angle);
+			return (Math.PI / 2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		//System.out.println("Quad 1");
+		// System.out.println("Quad 1");
 		return Math.PI / 2 - angle;
 	}
 
@@ -255,10 +250,9 @@ public class AIPlayer extends Player {
 	}
 
 	public double calculateDistance(Point p1, Point p2) {
-		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2))
-				+ Math.pow(p1.getY() - p2.getY(), 2));
+		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2)) + Math.pow(p1.getY() - p2.getY(), 2));
 	}
-	
+
 	/**
 	 * Method to get the next movement from a path that has been generated
 	 */
@@ -268,15 +262,17 @@ public class AIPlayer extends Player {
 			gridPosition.setLocation(world.displayPositionToCoords(position));
 			Point next = currentPath.poll();
 			intermediatePath = gridToDisplay(position, next);
-			if(!intermediatePath.isEmpty()) {
+			if (!intermediatePath.isEmpty()) {
 				Point intermediate = intermediatePath.poll();
 				move(intermediate.x - position.x, intermediate.y - position.y);
 				gridPosition.setLocation(world.displayPositionToCoords(position));
 			}
+		} else {
+			Point intermediate = intermediatePath.poll();
+			move(intermediate.x - position.x, intermediate.y - position.y);
+			gridPosition.setLocation(world.displayPositionToCoords(position));
 		}
-		Point intermediate = intermediatePath.poll();
-		move(intermediate.x - position.x, intermediate.y - position.y);
-		
+
 		// move(world.coordsToDisplayPosition(next).x - position.x,
 		// world.coordsToDisplayPosition(next).y - position.y);
 		// gridPosition.setLocation(next);
@@ -286,7 +282,8 @@ public class AIPlayer extends Player {
 		LinkedList<Point> newPath = new LinkedList<>();
 		Point current = currentGrid;
 		Point next = world.coordsToDisplayPosition(nextGrid);
-		while (!current.equals(next) && calculateDistance(current, next) > 1.5) {
+		while (!world.displayPositionToCoords(current).equals(world.displayPositionToCoords(next))
+				&& calculateDistance(current, next) > 1.5) {
 			// 1.5 used as a cutoff for when distance is at most a 1,1 translation
 			if (current.x < next.x && current.y < next.y) {
 				current = new Point(current.x + 2, current.y + 2);
@@ -307,7 +304,7 @@ public class AIPlayer extends Player {
 			}
 			newPath.add(current);
 		}
-		if(calculateDistance(current, next) != 0) {
+		if (calculateDistance(current, next) != 0) {
 			if (current.x < next.x && current.y < next.y) {
 				current = new Point(current.x + 1, current.y + 1);
 			} else if (current.x < next.x && current.y > next.y) {
