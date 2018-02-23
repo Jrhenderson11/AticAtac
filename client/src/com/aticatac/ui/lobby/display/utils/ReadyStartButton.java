@@ -52,7 +52,7 @@ public class ReadyStartButton extends Button {
 
         Color fill = Color.GREEN;
         if (this.isSelected()) {
-            double animation = (double) now / 1000000000;
+            double animation = (double) now / 500000000;
             fill = Color.rgb(0, (int) (200 + 50 * sin(animation)),  0);
         }
 
