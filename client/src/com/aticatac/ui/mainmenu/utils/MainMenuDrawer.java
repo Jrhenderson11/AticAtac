@@ -77,7 +77,7 @@ public class MainMenuDrawer {
             gc.strokeText(item.getName(), x, y);
             gc.fillText(item.getName(), x, y);
 
-            item.setHitbox(x - 100, y - 30,  200, 40);
+            item.setHitbox(x - 140, y - 35,  280, 47);
 
             gc.restore();
 

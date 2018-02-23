@@ -3,14 +3,23 @@ package com.aticatac.ui.utils;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
-public abstract class Button implements Drawable{
+public abstract class Button implements Drawable {
     private Rectangle hitbox;
     private String text;
+    private boolean selected;
 
     public Button(Rectangle hitbox, String text) {
         this.hitbox = hitbox;
         this.text = text;
+        this.selected = false;
+    }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
     public abstract void click();

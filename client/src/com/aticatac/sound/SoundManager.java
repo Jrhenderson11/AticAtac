@@ -1,11 +1,7 @@
 package com.aticatac.sound;
-import javafx.application.Application;
 
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 import sun.audio.AudioData;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -136,8 +132,4 @@ public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 		return mediaPlayer;
 	}
 
-
-	
-	
-	
 }

@@ -61,7 +61,7 @@ public class LBDrawer {
         gc.fillRect(x, y, w, h);
 
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.setFont(UIDrawer.LOBBYBROWSTEXT);
+        gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
         gc.setStroke(Color.GRAY);
         gc.setFill(Color.WHITE);
 
@@ -92,7 +92,7 @@ public class LBDrawer {
         hitboxs.add(hitbox);
 
 
-        gc.setFont(UIDrawer.LOBBYBROWSTEXT);
+        gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
         gc.setFill(Color.BLACK);
         gc.fillText("JOIN", x + width * 0.635, y + height * 0.085);
 

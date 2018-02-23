@@ -7,9 +7,12 @@ import com.aticatac.networking.client.UDPClient;
 import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application{
 
@@ -48,7 +51,14 @@ public class Main extends Application{
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
         primaryStage.show();
         SoundManager m = new SoundManager();
-       m.playBgMenu2();
+        
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.out.println("Stage is closing");
+                System.exit(0);
+            }
+        });   
+        m.playBgMenu2();
 
     }
 }

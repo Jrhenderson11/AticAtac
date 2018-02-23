@@ -14,6 +14,9 @@ public class UIDrawer {
     public static final Font LOBBYBROWSTEXT = Font.font("Gentium", FontWeight.BOLD, 18);
     public static final Font TUTORIAL_FONT = Font.font("Nimbus Mono L", FontWeight.BOLD, 13);
 		
+    public static final Font LOBBY_BROWS_TEXT = Font.font("Gentium", FontWeight.BOLD, 18);
+    public static final Font LOBBY_DISPLAY_TEXT = Font.font("Nimbus Mono L", FontWeight.BOLD, 20);
+
     public static void background(GraphicsContext gc, Color color) {
         gc.save();
         int width = SystemSettings.getNativeWidth();
