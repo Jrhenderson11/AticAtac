@@ -1,12 +1,9 @@
 package com.aticatac.ui.lobby.display;
 
-import com.aticatac.lobby.ClientInfo;
-import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.display.handlers.DAnimator;
-import com.aticatac.ui.lobby.display.utils.BackButton;
-import com.aticatac.ui.lobby.display.utils.ClientInfoBrick;
-import com.aticatac.ui.lobby.display.utils.DOnMouseMove;
+import com.aticatac.ui.lobby.display.handlers.DOnMouseClick;
+import com.aticatac.ui.lobby.display.handlers.DOnMouseMove;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.utils.SystemSettings;
@@ -16,7 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Displayer extends Scene {
@@ -36,6 +32,7 @@ public class Displayer extends Scene {
 
         DAnimator animator = new DAnimator(gc, selected, server);
         this.setOnMouseMoved(new DOnMouseMove());
+        this.setOnMouseClicked(new DOnMouseClick());
         animator.start();
     }
 
@@ -46,4 +43,23 @@ public class Displayer extends Scene {
     public static void setDrawables(HashSet<Drawable> drawables) {
         Displayer.drawables = drawables;
     }
+
+    public static HashSet<Button> getButtons() {
+        return buttons;
+    }
+
+    public static void setButtons(HashSet<Button> buttons) {
+        Displayer.buttons = buttons;
+    }
+
+    public static boolean moused(Rectangle box, double x, double y) {
+
+        if (x >= box.getX() && x <= box.getWidth() + box.getX()
+                && y >= box.getY() && y <= box.getY() + box.getHeight()) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

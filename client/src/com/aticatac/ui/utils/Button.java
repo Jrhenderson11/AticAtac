@@ -14,8 +14,8 @@ public abstract class Button implements Drawable {
         this.selected = false;
     }
 
-    public void toggle() {
-        this.selected = !this.selected;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public boolean isSelected() {

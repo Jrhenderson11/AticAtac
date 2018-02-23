@@ -34,7 +34,7 @@ public class BackButton extends Button {
 
         Color fill = Color.RED;
         if (this.isSelected()) {
-            double animation = (double) now / 1000000000;
+            double animation = (double) now / 500000000;
             fill = Color.rgb((int) (200 + 50 * sin(animation)), 0, 0);
         }
 
