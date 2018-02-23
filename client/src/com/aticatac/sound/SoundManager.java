@@ -14,12 +14,15 @@ import sun.audio.ContinuousAudioDataStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 public class SoundManager{
 	
 public static MediaPlayer bgMenu, bgBattle;
 public static AudioPlayer apMenu, apBattle;
 public static AudioStream asMenu, asBattle;
 public static ContinuousAudioDataStream cadsMenu, cadsBattle;
+public static boolean debug = true;
+public static boolean bgMenuIsRunning = false, bgGameIsRunning = false;
 
 	public SoundManager(){
 		//bgMenu = play(fileMenu);
@@ -50,7 +53,7 @@ public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 	    AudioData audioData;
 
 	    ContinuousAudioDataStream loop = null;
-
+	    
 	    try
 	    {
 	    	//https://opengameart.org/content/halloween-rocknroll-music-loop
@@ -67,20 +70,26 @@ public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 	        System.out.println("cant find the file");
 	    }
 	    
-	    apMenu = audioPlayer;
-	    apMenu.start(loop);
+	    if (!debug){
+	    	apMenu = audioPlayer;
+		    apMenu.start(loop);
+		    bgMenuIsRunning = true;
+	    }
+	    
 	}
 	
 	public void stopMenuBg(){
-		try {
-			apMenu.stop(cadsMenu);
-			cadsMenu.close();
-			asMenu.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (bgMenuIsRunning){
+			try {
+				apMenu.stop(cadsMenu);
+				cadsMenu.close();
+				asMenu.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
+		
 		System.out.println("attempt to stop");
 	}
 	
@@ -91,11 +100,12 @@ public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 	    AudioStream audioStream;
 	    AudioData audioData;
 
+
 	    ContinuousAudioDataStream loop = null;
 
 	    try
 	    {
-	    	//https://opengameart.org/content/halloween-rocknroll-music-loop
+	    	//https://opengameart.org/content/hesitation-synth-electronic-loop
 	    	String file = "./assets/music/hesitation.wav";
 	    	System.out.println(file);
 	        audioStream = new AudioStream(new FileInputStream(file));
@@ -109,21 +119,27 @@ public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 	        System.out.println("cant find the file");
 	    }
 	    
-	    apBattle = audioPlayer;
-	    audioPlayer.start(loop);
+	    if (!debug){
+	    	apBattle = audioPlayer; 
+		    audioPlayer.start(loop);
+		    bgGameIsRunning = true;
+	    }
+	    
 	}
 	
 	public void stopBattleBg(){
-		try {
-			apBattle.stop(cadsBattle);
-			cadsBattle.close();
-			asBattle.close();
+		if (bgGameIsRunning){
+			try {
+				apBattle.stop(cadsBattle);
+				cadsBattle.close();
+				asBattle.close();
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
+		
 		System.out.println("attempt to stop");
 	}
 	
