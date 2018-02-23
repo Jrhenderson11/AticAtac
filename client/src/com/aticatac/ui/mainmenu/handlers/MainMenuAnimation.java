@@ -25,7 +25,7 @@ public class MainMenuAnimation extends AnimationTimer {
     @Override
     public void handle(long now) {
 
-        UIDrawer.background(gc, Color.GRAY);
+        UIDrawer.background(gc, Color.gray(0.3));
         MainMenuDrawer.title(gc, now - then);
         MainMenuDrawer.menuItems(gc, menuItems, now - then);
 

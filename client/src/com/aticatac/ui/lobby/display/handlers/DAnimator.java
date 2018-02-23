@@ -6,9 +6,11 @@ import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.lobby.display.utils.*;
 import com.aticatac.ui.utils.Drawable;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
@@ -82,6 +84,7 @@ public class DAnimator extends AnimationTimer {
 
     @Override
     public void handle(long now) {
+        UIDrawer.background(gc, Color.gray(0.3));
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);
         }

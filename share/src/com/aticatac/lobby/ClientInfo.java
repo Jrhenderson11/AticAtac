@@ -48,6 +48,10 @@ public class ClientInfo  implements Serializable {
 	public String getID() {
 		return this.id;
 	}
+
+    public boolean isReady() {
+        return ready;
+    }
     // TODO: maybe add connection strength and might want to store socket instead of ip
 
 }

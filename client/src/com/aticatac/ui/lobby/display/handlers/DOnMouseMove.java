@@ -1,10 +1,11 @@
-package com.aticatac.ui.lobby.display.utils;
+package com.aticatac.ui.lobby.display.handlers;
 
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.utils.Button;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
+
+import static com.aticatac.ui.lobby.display.Displayer.moused;
 
 public class DOnMouseMove implements EventHandler<MouseEvent> {
     @Override
@@ -14,13 +15,4 @@ public class DOnMouseMove implements EventHandler<MouseEvent> {
         }
     }
 
-    private boolean moused(Rectangle box, double x, double y) {
-
-        if (x >= box.getX() && x <= box.getWidth() + box.getX()
-                && y >= box.getY() && y <= box.getY() + box.getHeight()) {
-            return true;
-        }
-
-        return false;
-    }
 }
