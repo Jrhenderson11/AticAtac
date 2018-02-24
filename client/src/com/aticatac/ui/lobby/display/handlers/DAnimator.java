@@ -54,13 +54,13 @@ public class DAnimator extends AnimationTimer {
         ArrayList<ClientInfo> peasants = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
 
-        Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead));
+        Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
 
         for (int i = 0; i < peasants.size(); i++) {
             ClientInfo c = peasants.get(i);
             boolean led = false;
             if (leader.equals(c)) led = true;
-            Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led));
+            Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led,server));
         }
 
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
