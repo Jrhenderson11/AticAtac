@@ -21,7 +21,9 @@ public class ReadyStartButton extends Button {
 		super(hitbox, text);
 		this.server = newServer;
 		// TODO: replace placeholder 0
-		if (server.myInfo().equals(server.updateLobby(0).getLobbyLeader())) {
+		//nullptr exception
+		while(server.myInfo()==null);
+		if (server.myInfo().getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
 			this.isLeader = true;
 		} else {
 			this.isLeader = false;

@@ -14,5 +14,7 @@ public class LobbyHeader implements Drawable{
     @Override
     public void draw(GraphicsContext gc, long now) {
 
+        // TODO: Lobby id here, bu need method
+
     }
 }

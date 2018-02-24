@@ -225,7 +225,6 @@ public class UDPClient extends Task implements LobbyServer {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 	
 	@Override
 	public ClientInfo myInfo() {

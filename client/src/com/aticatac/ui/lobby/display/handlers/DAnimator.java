@@ -6,9 +6,11 @@ import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.lobby.display.utils.*;
 import com.aticatac.ui.utils.Drawable;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
@@ -42,8 +44,8 @@ public class DAnimator extends AnimationTimer {
             System.out.println("waiting for lobby obj");
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException ignored) {}
+            
             lobby = server.updateLobby(selected);
         }
         System.out.println("finished waiting");
@@ -52,18 +54,20 @@ public class DAnimator extends AnimationTimer {
         ArrayList<ClientInfo> peasants = lobby.getPeasants();
         if (leader.equals(server.myInfo())) isLead = true;
 
-        Displayer.getDrawables().add(new ClientInfoBrick(leader, 0));
+        Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
 
         for (int i = 0; i < peasants.size(); i++) {
             ClientInfo c = peasants.get(i);
-            Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1));
-            KickButton kbutton = new KickButton(i, server);
-            Displayer.getButtons().add(kbutton);
-            Displayer.getDrawables().add(kbutton);
+
+        hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+        //BackButton backButton = new BackButton(hitbox, this.server);
+            boolean led = false;
+            if (leader.equals(c)) led = true;
+            Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led,server));
         }
 
         hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-        BackButton backButton = new BackButton(hitbox, this.server);
+        BackButton backButton = new BackButton(hitbox, server);
         Displayer.getButtons().add(backButton);
         Displayer.getDrawables().add(backButton);
 
@@ -72,14 +76,18 @@ public class DAnimator extends AnimationTimer {
 
         ReadyStartButton sbutton;
         if (isLead) {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Start", server));
+            sbutton = new ReadyStartButton(hitbox, "Start", server);
         } else {
-            Displayer.getDrawables().add(new ReadyStartButton(hitbox, "Ready", server));
+            sbutton = new ReadyStartButton(hitbox, "Start", server);
         }
+
+        Displayer.getDrawables().add(sbutton);
+        Displayer.getButtons().add(sbutton);
     }
 
     @Override
     public void handle(long now) {
+        UIDrawer.background(gc, Color.gray(0.3));
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);
         }
