@@ -57,7 +57,7 @@ public class MenuItem {
     public Scene choose() { 
     	SoundManager m = new SoundManager();
     	m.stopMenuBg();
-    	//m.playClick();
+    	m.playClick();
     	return link.get(); }
  
 

@@ -16,6 +16,7 @@ import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.tutorial.AiDemo;
 import com.aticatac.ui.tutorial.Tutorial;
 import com.aticatac.ui.tutorial.TutorialNetworked;
+import com.aticatac.ui.tutorial.SinglePlayer;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
 
@@ -38,6 +39,7 @@ public class MainMenu extends Scene {
         menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("AI Demo", () -> new AiDemo(new Group())));
         menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group())));
+        menuItems.add(new MenuItem("SinglePlayer Demo", () -> new SinglePlayer(new Group())));
         menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));
         menuItems.add(new MenuItem("Settings", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));

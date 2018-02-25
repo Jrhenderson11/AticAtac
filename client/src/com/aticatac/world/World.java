@@ -25,12 +25,17 @@ import com.aticatac.world.items.SprayGunBox;
 
 import javafx.scene.input.KeyCode;
 
+@SuppressWarnings("serial")
 public class World implements Serializable {
 	
 	/**
-	 * Delay between paint regeneration ticks
+	 * Delay between paint regeneration ticks.
 	 */
 	private static final int REGEN_DELAY = 60;
+	/**
+	 * The duration, in seconds of a round.
+	 */
+	private static final int ROUND_DURATION = 60;
 	/**
 	 * The Collection of Players in the world, should be up to 4.
 	 */
@@ -47,72 +52,49 @@ public class World implements Serializable {
 	 * The Level of this world that defines the walls and floors of the map.
 	 */
 	private Level level;
-	private final Point[] startLocs = {new Point(50, 50), new Point(50, 100), new Point(100, 50), new Point(100, 100)};
+	/**
+	 * Some start locations for Players
+	 */
+	private Point[] startLocs;
+	/**
+	 * An array of locations for gunbox spawns
+	 */
+	private Point[] gunBoxLocs;
 	/**
 	 * The current 'tick' of the paint regen timer, increased every update.
 	 */
 	private int regenTimer;
-
-	int[][] map;
-
+	/**
+	 * The current second of the round time.
+	 */
+	private int roundTime;
+	
+	
+	// -----------
+	// Constructor
+	// -----------
+	
+	
+	/**
+	 * Creates a World with the given Level
+	 * @param level The Level object.
+	 */
 	public World(Level level) {
 		this.level = level;
-		map = getLevel().getGrid();
 		this.players = new LinkedList<Player>();
 		this.bullets = new LinkedList<Bullet>();
 		this.gunboxes = new LinkedList<GunBox>();
 		this.regenTimer = 0;
+		this.roundTime = 0;
+		this.startLocs = generatePlayerSpawnPoints();
 	}
 
-	/**
-	 * Sets up world for a given lobby
-	 * @param lobby The Lobby object to initialise the world with
-	 */
-	public void init(Lobby lobby) {
-		
-		for (ClientInfo client: lobby.getAll()) {
-			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour());
-			this.addPlayer(newPlayer);
-		}
-		
-		for(ai a: lobby.getBots()) {
-			AIPlayer aiPlayer = new AIPlayer(Controller.AI, this, a.name, a.colour);
-			this.addPlayer(aiPlayer);
-		}
-		
-	}
 	
-	/**
-	 * Gets the level this World is based on
-	 * @return The Level object
-	 */
-	public Level getLevel() {
-		return level;
-	}
-
-	/**
-	 * Shoots the gun of the given Player at the target location
-	 * @param targetX The target X position to shoot towards
-	 * @param targetY The target Y position to shoot towards
-	 * @param id The unique ID of the Player shooting the gun
-	 */
-	public void shoot(int targetX, int targetY, String id) {
-		
-		Player player = this.getPlayerById(id);
-
-		if (player.getGun() != null) {
-      		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
-      	}
-	}
+	// -------
+	// Methods
+	// -------
 	
-	/**
-	 * Returns the number of Players in the World
-	 * @return Returns the number of players.
-	 */
-	public int getNumPlayers() {
-		return players.size();
-	}
-
+	
 	/**
 	 * Updates the world, calls the update method for all Bullets, Player and GunBoxes
 	 */
@@ -141,6 +123,50 @@ public class World implements Serializable {
 		for (int i=0; i<gunboxes.size(); i++) {
 			((GunBox) gunboxes.toArray()[i]).update(this);
 		}
+		// respawn gunboxes at 20 and 40 seconds in the round
+		if (getRoundTime() == 20 || getRoundTime() == 40) {
+			respawnGunBoxes();
+		}
+		// check for round over
+		if (getRoundTime() == ROUND_DURATION) {
+			//reset players, calculate winner and award point
+			int maxControl = 0;
+			Player winner = null;
+			for (Player player: players) {
+				player.reset();
+				int control = level.getPercentTiles(player.getColour());
+				if (control > maxControl) {
+					maxControl = control;
+					winner = player;
+				}
+			}
+			winner.awardPoint();
+			//notify winner, change to a visual display at some point
+			System.out.println("winner of the round is: " + winner.getIdentifier());
+			newRound();
+		}
+	}
+	
+	/**
+	 * Resets the World for a new round
+	 */
+	public void newRound() {
+		// clear items
+		bullets.clear();
+		gunboxes.clear();
+		// reset timer
+		setRoundTime(0);
+		// generate new map
+		level.randomiseMap();
+		// generate player spawns
+		this.startLocs = generatePlayerSpawnPoints();
+		int i = 0;
+		for (Player player: players) {
+			player.setPosition(startLocs[i++]);
+		}
+		// generate gunbox spawns
+		this.gunBoxLocs = generateBoxSpawnPoints(3);
+		respawnGunBoxes();
 	}
 
 	/**
@@ -221,6 +247,130 @@ public class World implements Serializable {
 	}
 	
 	/**
+	 * Sets up world for a given lobby
+	 * @param lobby The Lobby object to initialise the world with
+	 */
+	public void init(Lobby lobby) {
+		
+		for (ClientInfo client: lobby.getAll()) {
+			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour());
+			this.addPlayer(newPlayer);
+		}
+		
+		for(ai a: lobby.getBots()) {
+			AIPlayer aiPlayer = new AIPlayer(Controller.AI, this, a.name, a.colour);
+			this.addPlayer(aiPlayer);
+		}
+		
+	}
+	
+	/**
+	 * Shoots the gun of the given Player at the target location
+	 * @param targetX The target X position to shoot towards
+	 * @param targetY The target Y position to shoot towards
+	 * @param id The unique ID of the Player shooting the gun
+	 */
+	public void shoot(int targetX, int targetY, String id) {
+		
+		Player player = this.getPlayerById(id);
+
+		if (player.getGun() != null) {
+      		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
+      	}
+	}
+	
+	/**
+	 * Respawns random GunBoxes in each of the gunBoxLocs
+	 */
+	public void respawnGunBoxes() {
+		Random rand = new Random();
+		for (Point point: gunBoxLocs) {
+			int r = rand.nextInt(3); //random box type
+			if (r == 0) {
+				spawnShootGunBox(point);
+			} else if (r == 1) {
+				spawnSplatGunBox(point);
+			} else if (r == 2) {
+				spawnSprayGunBox(point);
+			}
+		}
+	}
+	
+	/**
+	 * Randomly generates a set amount of spawn positions, used for GunBox spawns
+	 * @param amount The amount of points to generate
+	 * @return An array of Points
+	 */
+	public Point[] generateBoxSpawnPoints(int amount) {
+		Point[] points = new Point[amount];
+		Random rand = new Random();
+		for (int i=0; i<amount; i++) {
+			int x, y;
+			do {
+				x = rand.nextInt(level.getWidth());
+				y = rand.nextInt(level.getHeight());
+			} while (level.getCoords(x, y) != 0); //generate points, keep randomising until point is not on a wall tile.
+			points[i] = coordsToDisplayPosition(new Point(x, y));
+		}
+		return points;
+	}
+	
+	/**
+	 * Generates 4 spawn points for Players
+	 * Point[0] will be a spawn point in the top left quadrant
+	 * Point[1] will be a spawn point in the top right quadrant
+	 * Point[2] will be a spawn point in the bottom left quadrant
+	 * Point[3] will be a spawn point in the borrom right quadrant
+	 * @return Returns an array of 4 spawn points
+	 */
+	public Point[] generatePlayerSpawnPoints() {
+		int x, y;
+		Point[] points = new Point[4];
+		Random rand = new Random();
+		//top left
+		do {
+			x = rand.nextInt(level.getWidth()/2);
+			y = rand.nextInt(level.getHeight()/2);
+		} while (level.getCoords(x, y) != 0);
+		points[0] = coordsToDisplayPosition(new Point(x, y));
+		//top right
+		do {
+			x = (level.getWidth()/2) + rand.nextInt(level.getWidth()/2);
+			y = rand.nextInt(level.getHeight()/2);
+		} while (level.getCoords(x, y) != 0);
+		points[1] = coordsToDisplayPosition(new Point(x, y));
+		//bottom left
+		do {
+			x = rand.nextInt(level.getWidth()/2);
+			y = (level.getHeight()/2) + rand.nextInt(level.getHeight()/2);
+		} while (level.getCoords(x, y) != 0);
+		points[2] = coordsToDisplayPosition(new Point(x, y));
+		//bottom right
+		do {
+			x = (level.getWidth()/2) + rand.nextInt(level.getWidth()/2);
+			y = (level.getHeight()/2) + rand.nextInt(level.getHeight()/2);
+		} while (level.getCoords(x, y) != 0);
+		points[3] = coordsToDisplayPosition(new Point(x, y));
+		return points;
+	}
+	
+	/**
+	 * Gets the level this World is based on
+	 * @return The Level object
+	 */
+	public Level getLevel() {
+		return level;
+	}
+	
+	/**
+	 * Returns the number of Players in the World
+	 * @return Returns the number of players.
+	 */
+	public int getNumPlayers() {
+		return players.size();
+	}
+	
+	/**
 	 * Returns the Collection of Bullets currently travelling
 	 * @return A Collection of Bullets
 	 */
@@ -297,25 +447,6 @@ public class World implements Serializable {
 	}
 	
 	/**
-	 * Randomly generates a set amount of spawn positions, used for GunBox spawns
-	 * @param amount The amount of points to generate
-	 * @return An array of Points
-	 */
-	public Point[] generateBoxSpawnPoints(int amount) {
-		Point[] points = new Point[amount];
-		Random rand = new Random();
-		for (int i=0; i<amount; i++) {
-			int x,y;
-			do {
-				x = rand.nextInt(level.getWidth());
-				y = rand.nextInt(level.getHeight());
-			} while (level.getCoords(x, y) != 0); //generate points, keep randomising until point is not on a wall tile.
-			points[i] = coordsToDisplayPosition(new Point(x, y));
-		}
-		return points;
-	}
-	
-	/**
 	 * Get the Players in this World
 	 * @return A Collection of Players
 	 */
@@ -329,10 +460,12 @@ public class World implements Serializable {
 	 * @returns whether it was succesful
 	 */
 	public boolean addPlayer(Player player) {
-		System.out.println("adding player " + player.getIdentifier());
-		player.setPosition(this.startLocs[players.size()]);
-		this.players.add(player);
-		return true;
+		if (players.size() < 4) {
+			System.out.println("adding player " + player.getIdentifier());
+			player.setPosition(this.startLocs[players.size()]);
+			this.players.add(player);
+			return true;
+		} else return false;
 	}
 	
 	/**
@@ -418,5 +551,34 @@ public class World implements Serializable {
 		System.out.println("adding player " + player.getIdentifier());
 		this.players.add(player);
 		return true;
+	}
+
+	/**
+	 * Returns the current second of the round time
+	 * @return The current second as an integer.
+	 */
+	public int getRoundTime() {
+		return roundTime;
+	}
+
+	/**
+	 * Sets the current round time
+	 * @param roundTime
+	 * @return
+	 */
+	public boolean setRoundTime(int roundTime) {
+		if (roundTime < ROUND_DURATION && roundTime > 0) {
+			this.roundTime = roundTime;
+			return true;
+		} else return false;
+	}
+	
+	/**
+	 * Changes the current round time by the given value
+	 * @param change The number of seconds to change the time by
+	 * @return True if the round time has been changed
+	 */
+	public boolean changeRoundTime(int change) {
+		return setRoundTime(roundTime + change);
 	}
 }
