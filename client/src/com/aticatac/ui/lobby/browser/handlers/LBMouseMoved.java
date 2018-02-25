@@ -12,14 +12,12 @@ public class LBMouseMoved implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-
         int mSelect = getHitboxSelected(event.getX(), event.getY());
         Browser.select(mSelect);
-
     }
 
     private int getHitboxSelected(double x, double y) {
-
+    	//TODO: null ptr exception here
         ArrayList<Rectangle> hitboxes = (ArrayList<Rectangle>) LBDrawer.getHitboxs().clone();
 
         for (int i = 0; i < hitboxes.size(); i++) {

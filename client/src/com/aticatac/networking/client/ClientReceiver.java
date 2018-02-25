@@ -47,7 +47,6 @@ public class ClientReceiver extends Thread {
 		System.out.println(name + " bound to " + port);
 		this.master = newMaster;
 	}
-
 	
 	@Override
 	public void run() {
@@ -140,7 +139,6 @@ public class ClientReceiver extends Thread {
 	 * @return
 	 */
 	public World getModel() {
-		System.out.println(this.model==null);
 		return this.model;
 	}
 }

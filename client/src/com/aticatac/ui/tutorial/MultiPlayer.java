@@ -35,7 +35,7 @@ public class MultiPlayer extends Scene {
 
 		//network
 		System.out.println("starting waiting");
-		while (client.getModel() == null);
+		while (client.getModel() == null) System.out.println("wait");;
 		System.out.println("finished waiting for world");
 		
 		// init display stuff

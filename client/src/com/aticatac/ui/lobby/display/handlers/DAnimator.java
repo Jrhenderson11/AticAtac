@@ -34,6 +34,9 @@ public class DAnimator extends AnimationTimer {
     private Browser parent;
     private Stage stage;
     
+    BackButton backButton;
+    ReadyStartButton sbutton;
+    
     private int width;
     private int height;
     
@@ -68,6 +71,25 @@ public class DAnimator extends AnimationTimer {
         ClientInfo leader = lobby.getLobbyLeader();
         if (leader.equals(server.myInfo())) isLead = true;
 
+        //create back and ready boxes
+        Rectangle hitbox;
+        hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+        backButton = new BackButton(hitbox, server, parent, stage);
+        Displayer.getButtons().add(backButton);
+        Displayer.getDrawables().add(backButton);
+
+        Displayer.getDrawables().add(new LobbyHeader(lobby));
+        hitbox = new Rectangle(0.9 * width, 9 * height / 10, width / 10, height / 10);
+
+        if (isLead) {
+            sbutton = new ReadyStartButton(hitbox, "Start", server, stage);
+        } else {
+            sbutton = new ReadyStartButton(hitbox, "Ready", server, stage);
+        }
+
+        Displayer.getDrawables().add(sbutton);
+        Displayer.getButtons().add(sbutton);
+        
     }
 
     @Override
@@ -78,7 +100,6 @@ public class DAnimator extends AnimationTimer {
         ArrayList<ClientInfo> peasants = lobby.getPeasants();
         
         Displayer.setDrawables(new HashSet<>());
-        Displayer.setButtons(new HashSet<>());
         Rectangle hitbox;
         //draw leader
         Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
@@ -91,23 +112,10 @@ public class DAnimator extends AnimationTimer {
             Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led,server));
         }
 
-        hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-        BackButton backButton = new BackButton(hitbox, server, parent, stage);
-        Displayer.getButtons().add(backButton);
-        Displayer.getDrawables().add(backButton);
-
-        Displayer.getDrawables().add(new LobbyHeader(lobby));
-        hitbox = new Rectangle(0.9 * width, 9 * height / 10, width / 10, height / 10);
-
-        ReadyStartButton sbutton;
-        if (isLead) {
-            sbutton = new ReadyStartButton(hitbox, "Start", server, stage);
-        } else {
-            sbutton = new ReadyStartButton(hitbox, "Ready", server, stage);
-        }
-
+        //add ready and back buttons
         Displayer.getDrawables().add(sbutton);
-        Displayer.getButtons().add(sbutton);
+        Displayer.getDrawables().add(backButton);
+        
         UIDrawer.background(gc, Color.gray(0.3));
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);

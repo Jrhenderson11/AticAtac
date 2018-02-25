@@ -15,11 +15,11 @@ public abstract class Button implements Drawable {
     }
 
     public void setSelected(boolean selected) {
-        this.selected = selected;
+    	this.selected = selected;
     }
 
     public boolean isSelected() {
-        return selected;
+    	return selected;
     }
 
     public abstract void click();

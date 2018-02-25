@@ -36,7 +36,7 @@ public class ClientInfoBrick implements Drawable {
             int width = SystemSettings.getNativeWidth();
             int height = SystemSettings.getNativeHeight();
 
-            int x = width / 10;
+            int x = -(width /10);//(width / 20);
             int y = (1 + offset) * height / 6;
             int w = 8 * width / 10;
             int h = height / 6;
@@ -55,9 +55,9 @@ public class ClientInfoBrick implements Drawable {
         // Container
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.gray(0.1));
-        int x = width / 10;
+        int x = width / 15;
         int y = (1 + offset) * height / 6;
-        int w = 8 * width / 10;
+        int w = 7 * width / 10;
         int h = height / 6;
         gc.strokeRect(x, y, w, h);
         gc.fillRect(x, y, w, h);

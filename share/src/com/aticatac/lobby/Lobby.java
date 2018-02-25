@@ -153,14 +153,11 @@ public class Lobby implements Serializable {
 	}
 
 	public boolean allReady() {
-		System.out.println("checking if all ready");
 		for (ClientInfo c : this.getAll()) {
 			if (!c.isReady()) {
-				System.out.println("not ready");
 				return false;
 			}
 		}
-		System.out.println("all are ready");
 		return true;
 	}
 
