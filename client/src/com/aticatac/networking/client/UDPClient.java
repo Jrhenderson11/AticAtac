@@ -19,7 +19,6 @@ public class UDPClient extends Task implements LobbyServer {
 
 	private String name;
 	private InetAddress address;
-	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
 	private ClientReceiver receiver;
 	private ClientSender sender;

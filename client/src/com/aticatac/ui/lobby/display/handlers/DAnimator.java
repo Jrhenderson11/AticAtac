@@ -6,17 +6,20 @@ import java.util.HashSet;
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.networking.client.UDPClient;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.lobby.display.utils.BackButton;
 import com.aticatac.ui.lobby.display.utils.ClientInfoBrick;
 import com.aticatac.ui.lobby.display.utils.LobbyHeader;
 import com.aticatac.ui.lobby.display.utils.ReadyStartButton;
+import com.aticatac.ui.tutorial.MultiPlayer;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -70,6 +73,7 @@ public class DAnimator extends AnimationTimer {
 
     @Override
     public void handle(long now) {
+    	System.out.println("im still going");
     	Lobby lobby = server.updateLobby(selected);
     	ClientInfo leader = lobby.getLobbyLeader();
         ArrayList<ClientInfo> peasants = lobby.getPeasants();
@@ -108,6 +112,13 @@ public class DAnimator extends AnimationTimer {
         UIDrawer.background(gc, Color.gray(0.3));
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);
+        }
+        if (lobby.getStarted()) {
+        	//TODO: maybe add transition screen
+        	System.out.println("starting!!!");
+        	this.stop();
+
+        	stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
         }
     }
 }

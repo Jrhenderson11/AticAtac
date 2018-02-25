@@ -56,7 +56,7 @@ public class ClientInfo  implements Serializable {
 
     @Override
     public boolean equals(Object clientInfo) {
-        return ((ClientInfo) clientInfo).getID().equals(this.getID());
+    	if (clientInfo==null) return false;
+    	return (((ClientInfo) clientInfo).getID().equals(id));
     }
-
 }

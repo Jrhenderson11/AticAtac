@@ -5,12 +5,10 @@ import java.util.ArrayList;
 
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.networking.client.UDPClient;
-import com.aticatac.networking.globals.Globals;
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
-import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
@@ -115,10 +113,13 @@ public class MultiPlayer extends Scene {
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
+				
 				World world = null;
+				System.out.println("starting waiting");
 				while (world == null) {
 					world = client.getModel();
 				}
+				System.out.println("finihsed waiting for world");
 				renderer.setWorld(world);
 
 				ClientInfo myInfo = client.myInfo();
@@ -126,13 +127,11 @@ public class MultiPlayer extends Scene {
 				try {
 					Player p = (world.getPlayerById(myInfo.getID()));
 					player.setPosition(p.getPosition());
-
 				} catch (Exception e) {
 					// shhhh, let's just pretend this never happened
 				}
 
 				renderer.render(gc);
-
 				overlay.drawOverlay(gc, world, myInfo.getID());
 			}
 		}.start();

@@ -140,6 +140,7 @@ public class ClientReceiver extends Thread {
 	 * @return
 	 */
 	public World getModel() {
+		System.out.println(this.model==null);
 		return this.model;
 	}
 }

@@ -91,7 +91,6 @@ public class LBDrawer {
 
         hitboxs.add(hitbox);
 
-
         gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
         gc.setFill(Color.BLACK);
         gc.fillText("JOIN", x + width * 0.635, y + height * 0.085);
