@@ -175,14 +175,12 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public void readyUp() {
-		// TODO Auto-generated method stub
 		this.ready = true;
 		this.sendData("ready");
 	}
 
 	@Override
 	public void unready() {
-		// TODO Auto-generated method stub
 		this.ready = false;
 		this.sendData("unready");
 	}
@@ -212,10 +210,6 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public Lobby updateLobby(int id) {
-		/*System.out.println("updating");
-		System.out.println("status: " + this.status);
-		System.out.println(this.lobby == null);
-		System.out.println("========");*/
         return this.lobby;
 	}
 

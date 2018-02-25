@@ -25,6 +25,8 @@ public interface LobbyServer {
 
     boolean changeColor(Color color);
 
+    int getStatus();
+    
     ClientInfo myInfo();
 
     // Get list of all public lobbies

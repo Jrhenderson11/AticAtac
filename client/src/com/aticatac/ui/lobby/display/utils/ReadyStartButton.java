@@ -42,9 +42,8 @@ public class ReadyStartButton extends Button {
 
 		if (this.isLeader) {
 			server.startGame();
-			stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
 		} else {
-			if (this.ready) {
+			if (!server.myInfo().isReady()) {
 				this.server.readyUp();
 				this.ready = true;
 			} else {

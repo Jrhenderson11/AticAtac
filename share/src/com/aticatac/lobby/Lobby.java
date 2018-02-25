@@ -16,15 +16,16 @@ public class Lobby implements Serializable {
 
 	private ClientInfo lobbyLeader;
 
-	public class ai implements Serializable{
+	public class ai implements Serializable {
 		public String name;
 		public int colour;
+
 		public ai(String newName, int newColour) {
 			this.name = newName;
 			this.colour = newColour;
 		}
 	}
-	
+
 	private ArrayList<ai> bots;
 	private ArrayList<ClientInfo> serfs;
 	public final int ID;
@@ -32,13 +33,14 @@ public class Lobby implements Serializable {
 
 	public Lobby(ClientInfo lobbyLeader, LobbyInfo info) {
 		this.lobbyLeader = lobbyLeader;
+		this.lobbyLeader.ready();
 		serfs = new ArrayList<>();
 		bots = new ArrayList<>();
 		this.game_started = false;
 		this.ID = info.ID;
 		this.NAME = info.NAME;
 	}
-	
+
 	public ClientInfo getLobbyLeader() {
 		return lobbyLeader;
 	}
@@ -49,7 +51,7 @@ public class Lobby implements Serializable {
 
 	public ArrayList<ClientInfo> getAll() {
 		ArrayList<ClientInfo> all = new ArrayList<ClientInfo>(serfs);
-		if (lobbyLeader !=null) {
+		if (lobbyLeader != null) {
 			all.add(lobbyLeader);
 		}
 		return all;
@@ -58,14 +60,14 @@ public class Lobby implements Serializable {
 	public ArrayList<ai> getBots() {
 		return this.bots;
 	}
-	
+
 	public int lobbySize() {
 		return this.getAll().size() + this.bots.size();
 	}
-	
+
 	// Make sure not full
 	public boolean addClient(ClientInfo client) {
-		if (lobbySize()==4) {
+		if (lobbySize() == 4) {
 			return false;
 		} else {
 			serfs.add(client);
@@ -74,25 +76,25 @@ public class Lobby implements Serializable {
 	}
 
 	public boolean addAI(String aiName, int colour) {
-		
-		if (this.lobbySize()==4) {
+
+		if (this.lobbySize() == 4) {
 			return false;
 		}
 		this.bots.add(new ai(aiName, colour));
 		return true;
 	}
-	
+
 	public void removeClient(String id) {
-		//System.out.println("trying to remove " +id);
-		if (this.getAll().size()==1) {
+		// System.out.println("trying to remove " +id);
+		if (this.getAll().size() == 1) {
 			this.lobbyLeader = null;
 		}
-		
-		for (int i=0; i< this.serfs.size(); i++) {
+
+		for (int i = 0; i < this.serfs.size(); i++) {
 			ClientInfo client = this.serfs.get(i);
 			if (client.getID().equals(id)) {
 				System.out.println("removing " + id + " from lobby");
-				
+
 				this.serfs.remove(client);
 				System.out.println(this.getAll().size());
 			}
@@ -127,27 +129,39 @@ public class Lobby implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public int getNextColour() {
-		for (int colour=2; colour<6; colour++) {
+		for (int colour = 2; colour < 6; colour++) {
 			boolean in = false;
 			for (ClientInfo c : this.getAll()) {
-				if (c.getColour()==colour) {
+				if (c.getColour() == colour) {
 					in = true;
 				}
 			}
-			for (ai a: this.getBots()) {
-				if (a.colour==colour) {
+			for (ai a : this.getBots()) {
+				if (a.colour == colour) {
 					in = true;
 				}
 			}
-			
-			//if nobody has this as their colour then return it
+
+			// if nobody has this as their colour then return it
 			if (!in) {
 				return colour;
 			}
-		} 
+		}
 		return 6;
+	}
+
+	public boolean allReady() {
+		System.out.println("checking if all ready");
+		for (ClientInfo c : this.getAll()) {
+			if (!c.isReady()) {
+				System.out.println("not ready");
+				return false;
+			}
+		}
+		System.out.println("all are ready");
+		return true;
 	}
 
 }

@@ -33,6 +33,11 @@ public class MultiPlayer extends Scene {
 		super(root);
 		this.client = newClient;
 
+		//network
+		System.out.println("starting waiting");
+		while (client.getModel() == null);
+		System.out.println("finished waiting for world");
+		
 		// init display stuff
 		this.displayWidth = SystemSettings.getNativeWidth();
 		this.displayHeight = SystemSettings.getNativeHeight();
@@ -114,12 +119,7 @@ public class MultiPlayer extends Scene {
 			public void handle(long currentNanoTime) {
 				client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
 				
-				World world = null;
-				System.out.println("starting waiting");
-				while (world == null) {
-					world = client.getModel();
-				}
-				System.out.println("finihsed waiting for world");
+				World world = client.getModel();
 				renderer.setWorld(world);
 
 				ClientInfo myInfo = client.myInfo();

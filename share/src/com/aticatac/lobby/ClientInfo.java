@@ -26,6 +26,7 @@ public class ClientInfo  implements Serializable {
     }
 
     public void unready() {
+    	System.out.println("unreadied");
         ready = false;
     }
 
@@ -50,7 +51,7 @@ public class ClientInfo  implements Serializable {
 	}
 
     public boolean isReady() {
-        return ready;
+        return this.ready;
     }
     // TODO: maybe add connection strength and might want to store socket instead of ip
 

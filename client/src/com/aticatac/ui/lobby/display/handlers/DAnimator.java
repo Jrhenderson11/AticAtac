@@ -7,6 +7,7 @@ import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyServer;
 import com.aticatac.networking.client.UDPClient;
+import com.aticatac.networking.globals.Globals;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.lobby.display.utils.BackButton;
@@ -44,8 +45,6 @@ public class DAnimator extends AnimationTimer {
         this.parent = newParent;
         this.stage = newStage;
         
-        Rectangle hitbox;
-
         this.width = SystemSettings.getNativeWidth();
         this.height = SystemSettings.getNativeHeight();
 
@@ -73,7 +72,7 @@ public class DAnimator extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-    	System.out.println("im still going");
+    	//System.out.println("im still going");
     	Lobby lobby = server.updateLobby(selected);
     	ClientInfo leader = lobby.getLobbyLeader();
         ArrayList<ClientInfo> peasants = lobby.getPeasants();
@@ -113,7 +112,7 @@ public class DAnimator extends AnimationTimer {
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);
         }
-        if (lobby.getStarted()) {
+        if (lobby.getStarted() || this.server.getStatus()==Globals.IN_GAME) {
         	//TODO: maybe add transition screen
         	System.out.println("starting!!!");
         	this.stop();

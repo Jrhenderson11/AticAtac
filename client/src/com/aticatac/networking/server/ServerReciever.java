@@ -135,7 +135,6 @@ public class ServerReciever extends Thread {
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {
-
 			this.master.halt();
 
 			// GAME

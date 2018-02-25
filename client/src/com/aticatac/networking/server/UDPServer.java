@@ -143,12 +143,13 @@ public class UDPServer extends Thread{
 	}
 	
 	public void setClientUnReady(InetAddress origin, int originPort) {
-		this.getClientInfo(origin, originPort);
+		this.getClientInfo(origin, originPort).unready();
 	}
 	
 	public void startGame() {
-		//TODO: check all clients are ready
-		
+		if (!this.lobby.allReady()) {
+			return;
+		}
 		//give world lobby
 		model.init(this.lobby);
 		if (this.status == Globals.IN_LOBBY) {
@@ -162,7 +163,5 @@ public class UDPServer extends Thread{
 		} else {
 			this.sender.sendAllLobby();
 		}
-		
 	}
-	
 }

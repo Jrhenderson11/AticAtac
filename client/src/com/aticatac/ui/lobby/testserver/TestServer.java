@@ -82,4 +82,10 @@ public class TestServer implements LobbyServer {
 
         return lobbyInfos;
     }
+
+	@Override
+	public int getStatus() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
