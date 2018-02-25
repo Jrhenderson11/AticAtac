@@ -54,4 +54,9 @@ public class ClientInfo  implements Serializable {
     }
     // TODO: maybe add connection strength and might want to store socket instead of ip
 
+    @Override
+    public boolean equals(Object clientInfo) {
+        return ((ClientInfo) clientInfo).getID().equals(this.getID());
+    }
+
 }
