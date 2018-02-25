@@ -98,9 +98,9 @@ public class DAnimator extends AnimationTimer {
 
         ReadyStartButton sbutton;
         if (isLead) {
-            sbutton = new ReadyStartButton(hitbox, "Start", server);
+            sbutton = new ReadyStartButton(hitbox, "Start", server, stage);
         } else {
-            sbutton = new ReadyStartButton(hitbox, "Ready", server);
+            sbutton = new ReadyStartButton(hitbox, "Ready", server, stage);
         }
 
         Displayer.getDrawables().add(sbutton);

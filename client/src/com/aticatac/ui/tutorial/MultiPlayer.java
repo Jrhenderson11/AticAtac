@@ -24,38 +24,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
-public class TutorialNetworked extends Scene {
+public class MultiPlayer extends Scene {
 
 	private int displayWidth;
 	private int displayHeight;
 	private Renderer renderer;
 	private UDPClient client;
-	
-	private void skipLobby() {
-		client.joinLobby(1, "password");
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		client.startGame();
-//		client.setStatus(Globals.IN_GAME);
-		System.out.println("waiting for network");
-		
-		while (client.getStatus() != Globals.IN_GAME) {
-			System.out.println("waiting");
-		}
-		System.out.println("DONE");
-		
-	}
 
-	public TutorialNetworked(Group root, UDPClient newClient) {
+	public MultiPlayer(Group root, UDPClient newClient) {
 		super(root);
 		this.client = newClient;
+
 		// init display stuff
-		this.skipLobby();
-		System.out.println("skip lobby");
 		this.displayWidth = SystemSettings.getNativeWidth();
 		this.displayHeight = SystemSettings.getNativeHeight();
 		this.renderer = new Renderer(displayWidth, displayHeight);
@@ -130,27 +110,29 @@ public class TutorialNetworked extends Scene {
 				client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
 			}
 		});
-	
-		
+
 		// sets up an AnimationTimer to update the display
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
-				World world = client.getModel();
+				World world = null;
+				while (world == null) {
+					world = client.getModel();
+				}
 				renderer.setWorld(world);
-				
+
 				ClientInfo myInfo = client.myInfo();
-				
+
 				try {
 					Player p = (world.getPlayerById(myInfo.getID()));
 					player.setPosition(p.getPosition());
 
-				} catch (Exception e){
-					//shhhh, let's just pretend this never happened
+				} catch (Exception e) {
+					// shhhh, let's just pretend this never happened
 				}
-				
+
 				renderer.render(gc);
-				
+
 				overlay.drawOverlay(gc, world, myInfo.getID());
 			}
 		}.start();

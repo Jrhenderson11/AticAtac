@@ -1,15 +1,20 @@
 package com.aticatac.ui.lobby.display.utils;
 
+import static java.lang.StrictMath.sin;
+
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.networking.client.UDPClient;
+import com.aticatac.ui.tutorial.MultiPlayer;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
+
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-
-import static java.lang.StrictMath.sin;
+import javafx.stage.Stage;
 
 public class ReadyStartButton extends Button {
 
@@ -17,11 +22,13 @@ public class ReadyStartButton extends Button {
 	private boolean ready = false;
 	private final boolean isLeader;
 
-	public ReadyStartButton(Rectangle hitbox, String text, LobbyServer newServer) {
+	private Stage stage;
+	
+	public ReadyStartButton(Rectangle hitbox, String text, LobbyServer newServer, Stage newStage) {
 		super(hitbox, text);
+		this.stage = newStage;
 		this.server = newServer;
 		// TODO: replace placeholder 0
-		//nullptr exception
 		while(server.myInfo()==null);
 		if (server.myInfo().getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
 			this.isLeader = true;
@@ -35,6 +42,7 @@ public class ReadyStartButton extends Button {
 
 		if (this.isLeader) {
 			server.startGame();
+			stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
 		} else {
 			if (this.ready) {
 				this.server.readyUp();
