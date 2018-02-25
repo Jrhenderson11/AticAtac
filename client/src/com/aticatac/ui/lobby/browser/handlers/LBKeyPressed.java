@@ -9,14 +9,18 @@ import com.aticatac.ui.lobby.browser.Browser;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class LBKeyPressed implements EventHandler<KeyEvent> {
     private final Scene back;
     private final LobbyServer server;
     private final Stage stage;
-
-    public LBKeyPressed(Scene back, LobbyServer server, Stage primaryStage) {
+private Browser browser;
+	
+	
+    public LBKeyPressed(Scene back, LobbyServer server, Stage primaryStage, Browser newBrowser) {
+		this.browser = newBrowser;
         this.back = back;
         this.server = server;
         this.stage = primaryStage;
@@ -55,7 +59,7 @@ public class LBKeyPressed implements EventHandler<KeyEvent> {
 
             case ENTER:
 
-                Browser.join();
+                browser.join();
                 break;
 
             case BACK_SPACE:

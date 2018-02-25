@@ -49,7 +49,9 @@ public class Lobby implements Serializable {
 
 	public ArrayList<ClientInfo> getAll() {
 		ArrayList<ClientInfo> all = new ArrayList<ClientInfo>(serfs);
-		all.add(lobbyLeader);
+		if (lobbyLeader !=null) {
+			all.add(lobbyLeader);
+		}
 		return all;
 	}
 
@@ -81,12 +83,18 @@ public class Lobby implements Serializable {
 	}
 	
 	public void removeClient(String id) {
-		//TODO: if is lobby leader delete lobby
+		//System.out.println("trying to remove " +id);
+		if (this.getAll().size()==1) {
+			this.lobbyLeader = null;
+		}
 		
 		for (int i=0; i< this.serfs.size(); i++) {
 			ClientInfo client = this.serfs.get(i);
 			if (client.getID().equals(id)) {
+				System.out.println("removing " + id + " from lobby");
+				
 				this.serfs.remove(client);
+				System.out.println(this.getAll().size());
 			}
 		}
 	}

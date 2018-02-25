@@ -5,8 +5,15 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 public class LBMouseClicked implements EventHandler<MouseEvent> {
-    @Override
+    
+	private Browser browser;
+	
+	public LBMouseClicked(Browser newBrowser) {
+		this.browser = newBrowser;
+	}
+	
+	@Override
     public void handle(MouseEvent event) {
-        Browser.join();
+        this.browser.join();
     }
 }
