@@ -139,10 +139,16 @@ public class UDPServer extends Thread{
 	}
 	
 	public void setClientReady(InetAddress origin, int originPort) {
+		if (this.getClientInfo(origin, originPort)==null) {
+			return;
+		}
 		this.getClientInfo(origin, originPort).ready();
 	}
 	
 	public void setClientUnReady(InetAddress origin, int originPort) {
+		if (this.getClientInfo(origin, originPort)==null) {
+			return;
+		}
 		this.getClientInfo(origin, originPort).unready();
 	}
 	

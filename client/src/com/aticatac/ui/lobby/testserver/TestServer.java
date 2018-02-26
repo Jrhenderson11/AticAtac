@@ -88,4 +88,16 @@ public class TestServer implements LobbyServer {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void kickClient(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setStatus(int newStatus) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -34,6 +34,7 @@ public class Lobby implements Serializable {
 	public Lobby(ClientInfo lobbyLeader, LobbyInfo info) {
 		this.lobbyLeader = lobbyLeader;
 		this.lobbyLeader.ready();
+		System.out.println("Client " + lobbyLeader.getID() + " added as leader");
 		serfs = new ArrayList<>();
 		bots = new ArrayList<>();
 		this.game_started = false;
@@ -85,8 +86,9 @@ public class Lobby implements Serializable {
 	}
 
 	public void removeClient(String id) {
-		// System.out.println("trying to remove " +id);
-		if (this.getAll().size() == 1) {
+		System.out.println("trying to remove " +id);
+		if (this.lobbyLeader.getID().equals(id)) {
+			System.out.println("deleting lobby");
 			this.lobbyLeader = null;
 		}
 

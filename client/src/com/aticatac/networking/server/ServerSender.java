@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -44,7 +45,11 @@ public class ServerSender extends Thread {
 					buffer = SerializationUtils.serialize(master.getLobbyInfo());
 				} else if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
-					buffer = SerializationUtils.serialize(master.getLobby());
+					try {
+						buffer = SerializationUtils.serialize(master.getLobby());
+					} catch (ConcurrentModificationException e) {
+						buffer = new byte[256];
+					}
 				} else {
 					// serve game object
 					buffer = SerializationUtils.serialize(model);

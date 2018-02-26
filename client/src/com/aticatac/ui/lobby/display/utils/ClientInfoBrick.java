@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 public class ClientInfoBrick implements Drawable {
 
     private final int offset;
-    private final Optional<KickButton> kbutton;
+    private Optional<KickButton> kbutton;
     private ClientInfo mine;
 
     public ClientInfoBrick(ClientInfo info, int i, boolean isLead, LobbyServer server) {
@@ -27,8 +27,10 @@ public class ClientInfoBrick implements Drawable {
         this.mine = info;
         this.offset = i;
         kbutton1 = Optional.empty();
-        if (isLead) {
-            KickButton kick = new KickButton(offset, server);
+ //       if (info==null) return; 
+        
+        if (isLead && mine!=null) {
+            KickButton kick = new KickButton(offset, server, info.getID());
             Displayer.getButtons().add(kick);
             Displayer.getDrawables().add(kick);
             kbutton1 = Optional.of(kick);
@@ -47,7 +49,7 @@ public class ClientInfoBrick implements Drawable {
 
     @Override
     public void draw(GraphicsContext gc, long now) {
-
+        if (mine==null) return; 
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
         double animation = (double) now / 500000000;

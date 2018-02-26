@@ -233,4 +233,9 @@ public class UDPClient extends Task implements LobbyServer {
 		}*/
 		return this.lobby.getClientBySocket(this.address, this.sender.getPort());//lobby.getClientBySocket(this.address, this.sender.getPort());
 	}
+	
+	@Override
+	public void kickClient(String id) {
+		this.sendData("kick:" + id);
+	}
 }

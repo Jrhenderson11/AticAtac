@@ -89,7 +89,6 @@ public class DAnimator extends AnimationTimer {
 
         Displayer.getDrawables().add(sbutton);
         Displayer.getButtons().add(sbutton);
-        
     }
 
     @Override
@@ -102,10 +101,12 @@ public class DAnimator extends AnimationTimer {
         Displayer.setDrawables(new HashSet<>());
         Rectangle hitbox;
         //draw leader
+        //leader is null ffs
+        //System.out.println("drawing " + leader.getID());
         Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
         for (int i = 0; i < peasants.size(); i++) {
             ClientInfo c = peasants.get(i);
-
+            //System.out.println("drawing " + c.getID());
 	        hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
             boolean led = false;
             if (leader.equals(c)) led = true;
@@ -120,12 +121,20 @@ public class DAnimator extends AnimationTimer {
         for (Drawable d : Displayer.getDrawables()) {
             d.draw(gc, now);
         }
+        //if game has been started go to game screen
         if (lobby.getStarted() || this.server.getStatus()==Globals.IN_GAME) {
         	//TODO: maybe add transition screen
         	System.out.println("starting!!!");
         	this.stop();
 
         	stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
+        }
+        
+        //If I am kicked go to previous menu
+        if (this.server.myInfo()==null) {
+        	this.stop();
+        	this.server.setStatus(Globals.IN_LIMBO);
+        	stage.setScene(parent);
         }
     }
 }
