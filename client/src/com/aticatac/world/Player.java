@@ -90,7 +90,6 @@ public class Player implements Serializable{
      * Updates the player
      */
     public void update() {
-    	//regenerate paint and other things
     	if (gun != null) {
     		gun.update(); //updates gun, used for gun cooldowns
     	}

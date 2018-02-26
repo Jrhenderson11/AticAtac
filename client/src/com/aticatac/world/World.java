@@ -13,6 +13,8 @@ import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.Lobby.ai;
 import com.aticatac.utils.Controller;
+import com.aticatac.utils.GameState;
+import com.aticatac.utils.GameTimer;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.items.Bullet;
 import com.aticatac.world.items.GunBox;
@@ -32,10 +34,6 @@ public class World implements Serializable {
 	 * Delay between paint regeneration ticks.
 	 */
 	private static final int REGEN_DELAY = 60;
-	/**
-	 * The duration, in seconds of a round.
-	 */
-	private static final int ROUND_DURATION = 60;
 	/**
 	 * The Collection of Players in the world, should be up to 4.
 	 */
@@ -68,6 +66,18 @@ public class World implements Serializable {
 	 * The current second of the round time.
 	 */
 	private int roundTime;
+	/**
+	 * The current state of the game.
+	 */
+	private GameState gameState;
+	/**
+	 * The timer for the round system
+	 */
+	private GameTimer gameTimer;
+	/**
+	 * The last winner of the game, initially null
+	 */
+	private Player winner;
 	
 	
 	// -----------
@@ -87,6 +97,9 @@ public class World implements Serializable {
 		this.regenTimer = 0;
 		this.roundTime = 0;
 		this.startLocs = generatePlayerSpawnPoints();
+		this.gameState = GameState.READY;
+		this.gameTimer = new GameTimer(this);
+		this.setWinner(null);
 	}
 
 	
@@ -107,11 +120,11 @@ public class World implements Serializable {
 		for (Player player : players) {
 			if(player.controller == Controller.AI) {
 				((AIPlayer) player).update();
-				Point p = displayPositionToCoords(player.getPosition());
-  	        	if(level.getGrid()[p.x][p.y] != 1) {
-  	        		level.updateCoords(p.x, p.y, player.getColour());
-  	        	}
 			}
+			Point p = displayPositionToCoords(player.getPosition());
+  	        if(level.getGrid()[p.x][p.y] == 0) {
+  	        	level.updateCoords(p.x, p.y, player.getColour());
+  	        }
 			player.update();
 			if (regenTimer == REGEN_DELAY) { //used for a delay between each regeneraction call
 				player.regenPaint(level.getPercentTiles(player.getColour()));
@@ -128,7 +141,9 @@ public class World implements Serializable {
 			respawnGunBoxes();
 		}
 		// check for round over
-		if (getRoundTime() == ROUND_DURATION) {
+		if (getRoundTime() == GameTimer.ROUND_DURATION && gameState != GameState.OVER) {
+			System.out.println("world game over");
+			setGameState(GameState.OVER);
 			//reset players, calculate winner and award point
 			int maxControl = 0;
 			Player winner = null;
@@ -141,9 +156,10 @@ public class World implements Serializable {
 				}
 			}
 			winner.awardPoint();
+			setWinner(winner);
 			//notify winner, change to a visual display at some point
 			System.out.println("winner of the round is: " + winner.getIdentifier());
-			newRound();
+			gameTimer.startEndRoundDelay();
 		}
 	}
 	
@@ -151,11 +167,11 @@ public class World implements Serializable {
 	 * Resets the World for a new round
 	 */
 	public void newRound() {
+		System.out.println("world new round");
+		setGameState(GameState.READY);
 		// clear items
 		bullets.clear();
 		gunboxes.clear();
-		// reset timer
-		setRoundTime(0);
 		// generate new map
 		level.randomiseMap();
 		// generate player spawns
@@ -167,6 +183,18 @@ public class World implements Serializable {
 		// generate gunbox spawns
 		this.gunBoxLocs = generateBoxSpawnPoints(3);
 		respawnGunBoxes();
+		gameTimer.startCountdownTimer();
+	}
+	
+	/**
+	 * Set the gamestate to playing and starts the game.
+	 */
+	public void startGame() {
+		// reset timer
+		setRoundTime(0);
+		System.out.println("world start game");
+		setGameState(GameState.PLAYING);
+		gameTimer.startRoundTimer();
 	}
 
 	/**
@@ -176,6 +204,7 @@ public class World implements Serializable {
 	 * @param id The unique identifier of this Player
 	 */
 	public void handleInput(ArrayList<KeyCode> input, double dir, String id) {
+		
 		Player player = this.getPlayerById(id);
 		// left
 		if (input.contains(KeyCode.A)) {
@@ -234,12 +263,6 @@ public class World implements Serializable {
 		if (input.contains(KeyCode.P)) {
 			player.setGun(new SprayGun(player));
 			// input.remove(KeyCode.P);
-		}
-
-		Point p = this.displayPositionToCoords(player.getPosition());
-		
-		if (level.getGrid()[p.x][p.y] != 1) {
-			level.updateCoords(p.x, p.y, player.getColour());
 		}
 
 		player.setLookDirection(dir);
@@ -567,7 +590,7 @@ public class World implements Serializable {
 	 * @return
 	 */
 	public boolean setRoundTime(int roundTime) {
-		if (roundTime < ROUND_DURATION && roundTime > 0) {
+		if (roundTime <= GameTimer.ROUND_DURATION && roundTime > 0) {
 			this.roundTime = roundTime;
 			return true;
 		} else return false;
@@ -580,5 +603,25 @@ public class World implements Serializable {
 	 */
 	public boolean changeRoundTime(int change) {
 		return setRoundTime(roundTime + change);
+	}
+
+
+	public GameState getGameState() {
+		return gameState;
+	}
+
+
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+
+	public Player getWinner() {
+		return winner;
+	}
+
+
+	public void setWinner(Player winner) {
+		this.winner = winner;
 	}
 }
