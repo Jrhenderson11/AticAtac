@@ -101,7 +101,6 @@ public class DAnimator extends AnimationTimer {
         Displayer.setDrawables(new HashSet<>());
         Rectangle hitbox;
         //draw leader
-        //leader is null ffs
         //System.out.println("drawing " + leader.getID());
         Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
         for (int i = 0; i < peasants.size(); i++) {

@@ -27,9 +27,8 @@ public class ClientInfoBrick implements Drawable {
         this.mine = info;
         this.offset = i;
         kbutton1 = Optional.empty();
- //       if (info==null) return; 
-        
-        if (isLead && mine!=null) {
+        //TODO: replace placeholder 0 in lobby
+        if (isLead && mine!=null && !info.getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
             KickButton kick = new KickButton(offset, server, info.getID());
             Displayer.getButtons().add(kick);
             Displayer.getDrawables().add(kick);
