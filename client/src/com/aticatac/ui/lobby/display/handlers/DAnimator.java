@@ -136,7 +136,8 @@ public class DAnimator extends AnimationTimer {
 		// add ready and back buttons
 		Displayer.getDrawables().add(sbutton);
 		Displayer.getDrawables().add(backButton);
-		if (server.myInfo().getID().equals(leader.getID())) {
+		
+		if (!(server.myInfo()==null) && server.myInfo().getID().equals(leader.getID())) {
 			Displayer.getDrawables().add(aiButton);
 		}
 		// if leader draw add AI button
