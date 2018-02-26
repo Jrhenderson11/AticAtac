@@ -113,7 +113,8 @@ public abstract class Bullet implements Collidable, Serializable{
 		}
 		
 		//check for collision with collideables. Currently only other Bullets.
-		for (Collidable collidable: world.getBullets()) {
+		for (int i=0; i<world.getBullets().size(); i++) {
+			Collidable collidable = (Collidable) world.getBullets().toArray()[i];
 			if (collidable != this && collidable.getRect().intersects(this.getRect())) {
 				hit(world, after); //splat where the bullet hits
 			}
