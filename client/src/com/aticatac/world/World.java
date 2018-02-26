@@ -78,6 +78,10 @@ public class World implements Serializable {
 	 * The last winner of the game, initially null
 	 */
 	private Player winner;
+	/**
+	 * Number of times the GunBoxes have been respawned, used to avoid respawning multiple times
+	 */
+	private int boxRespawns;
 	
 	
 	// -----------
@@ -100,6 +104,7 @@ public class World implements Serializable {
 		this.gameState = GameState.READY;
 		this.gameTimer = new GameTimer(this);
 		this.setWinner(null);
+		this.boxRespawns = 0;
 	}
 
 	
@@ -137,8 +142,9 @@ public class World implements Serializable {
 			((GunBox) gunboxes.toArray()[i]).update(this);
 		}
 		// respawn gunboxes at 20 and 40 seconds in the round
-		if (getRoundTime() == 20 || getRoundTime() == 40) {
+		if ((getRoundTime() == 20 && boxRespawns == 0)|| (getRoundTime() == 40) && boxRespawns == 1) {
 			respawnGunBoxes();
+			boxRespawns += 1;
 		}
 		// check for round over
 		if (getRoundTime() == GameTimer.ROUND_DURATION && gameState != GameState.OVER) {
@@ -184,6 +190,8 @@ public class World implements Serializable {
 		this.gunBoxLocs = generateBoxSpawnPoints(3);
 		respawnGunBoxes();
 		gameTimer.startCountdownTimer();
+		//reset box respawn counter
+		boxRespawns = 0;
 	}
 	
 	/**
@@ -306,6 +314,7 @@ public class World implements Serializable {
 	 * Respawns random GunBoxes in each of the gunBoxLocs
 	 */
 	public void respawnGunBoxes() {
+		gunboxes.clear();
 		Random rand = new Random();
 		for (Point point: gunBoxLocs) {
 			int r = rand.nextInt(3); //random box type
