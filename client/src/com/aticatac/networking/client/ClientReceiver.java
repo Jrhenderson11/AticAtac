@@ -47,7 +47,6 @@ public class ClientReceiver extends Thread {
 		System.out.println(name + " bound to " + port);
 		this.master = newMaster;
 	}
-
 	
 	@Override
 	public void run() {

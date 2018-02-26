@@ -11,9 +11,10 @@ public class KickButton extends Button {
 
 	private LobbyServer server;
 	private final boolean isLeader;
-
+	private String id;
+	private int lastclicked=1000;
 	
-    public KickButton(int offset, LobbyServer newServer) {
+    public KickButton(int offset, LobbyServer newServer, String newId) {
         super(new Rectangle(), "Kick");
         this.server = newServer;
         // TODO: replace placeholder 0
@@ -22,16 +23,20 @@ public class KickButton extends Button {
         } else {
           this.isLeader = false;
         }
+        this.id = newId;
     }
 
     @Override
     public void click() {
-    
+    	if (lastclicked>1000) {
+    		this.server.kickClient(id);
+    		this.lastclicked=0;
+    	}
     }
 
     @Override
     public void draw(GraphicsContext gc, long now) {
-
+    	lastclicked++;
         gc.setFill(Color.ORANGE);
         gc.setStroke(Color.BLACK);
         Rectangle box = this.getHitbox();

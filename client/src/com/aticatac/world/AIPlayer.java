@@ -38,7 +38,6 @@ public class AIPlayer extends Player {
 		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
 		this.hasGun = false;
-		this.gridPosition = new Point(3, 11);
 	}
 
 	@Override
@@ -372,4 +371,14 @@ public class AIPlayer extends Player {
 	public void pathToFreePoint(Point endPoint) {
 		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
 	}
+
+	 /* Sets the Players position to the given display position
+	 * @param position The display position of the player
+	 */
+	@Override
+	public void setPosition(Point position) {
+		this.position = position;
+		this.gridPosition = world.displayPositionToCoords(position);
+	}
+
 }

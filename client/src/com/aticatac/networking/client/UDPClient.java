@@ -19,7 +19,6 @@ public class UDPClient extends Task implements LobbyServer {
 
 	private String name;
 	private InetAddress address;
-	private byte[] buffer;
 	private BlockingQueue<String> messageQueue;
 	private ClientReceiver receiver;
 	private ClientSender sender;
@@ -162,6 +161,7 @@ public class UDPClient extends Task implements LobbyServer {
 	}
 
 	public void addAIPlayer() {
+		System.out.println("sending addAI");
 		this.sendData("addAI");
 	}
 	
@@ -176,14 +176,12 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public void readyUp() {
-		// TODO Auto-generated method stub
 		this.ready = true;
 		this.sendData("ready");
 	}
 
 	@Override
 	public void unready() {
-		// TODO Auto-generated method stub
 		this.ready = false;
 		this.sendData("unready");
 	}
@@ -213,10 +211,6 @@ public class UDPClient extends Task implements LobbyServer {
 
 	@Override
 	public Lobby updateLobby(int id) {
-		/*System.out.println("updating");
-		System.out.println("status: " + this.status);
-		System.out.println(this.lobby == null);
-		System.out.println("========");*/
         return this.lobby;
 	}
 
@@ -225,7 +219,6 @@ public class UDPClient extends Task implements LobbyServer {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 	
 	@Override
 	public ClientInfo myInfo() {
@@ -240,5 +233,10 @@ public class UDPClient extends Task implements LobbyServer {
 			System.out.println("===================");
 		}*/
 		return this.lobby.getClientBySocket(this.address, this.sender.getPort());//lobby.getClientBySocket(this.address, this.sender.getPort());
+	}
+	
+	@Override
+	public void kickClient(String id) {
+		this.sendData("kick:" + id);
 	}
 }

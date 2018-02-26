@@ -1,15 +1,20 @@
 package com.aticatac.ui.lobby.display.utils;
 
+import static java.lang.StrictMath.sin;
+
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.networking.client.UDPClient;
+import com.aticatac.ui.tutorial.MultiPlayer;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
+
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-
-import static java.lang.StrictMath.sin;
+import javafx.stage.Stage;
 
 public class ReadyStartButton extends Button {
 
@@ -17,11 +22,16 @@ public class ReadyStartButton extends Button {
 	private boolean ready = false;
 	private final boolean isLeader;
 
-	public ReadyStartButton(Rectangle hitbox, String text, LobbyServer newServer) {
+	private Stage stage;
+
+	public ReadyStartButton(Rectangle hitbox, String text, LobbyServer newServer, Stage newStage) {
 		super(hitbox, text);
+		this.stage = newStage;
 		this.server = newServer;
 		// TODO: replace placeholder 0
-		if (server.myInfo().equals(server.updateLobby(0).getLobbyLeader())) {
+		while (server.myInfo() == null)
+			;
+		if (server.myInfo().getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
 			this.isLeader = true;
 		} else {
 			this.isLeader = false;
@@ -34,7 +44,7 @@ public class ReadyStartButton extends Button {
 		if (this.isLeader) {
 			server.startGame();
 		} else {
-			if (this.ready) {
+			if (!server.myInfo().isReady()) {
 				this.server.readyUp();
 				this.ready = true;
 			} else {
@@ -47,29 +57,36 @@ public class ReadyStartButton extends Button {
 	@Override
 	public void draw(GraphicsContext gc, long now) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+		int width = SystemSettings.getNativeWidth();
+		int height = SystemSettings.getNativeHeight();
 
-        Color fill = Color.GREEN;
-        if (this.isSelected()) {
-            double animation = (double) now / 500000000;
-            fill = Color.rgb(0, (int) (200 + 50 * sin(animation)),  0);
-        }
+		//TODO: replace placeholder 0
+		Color fill = Color.GREEN;
+		if (isLeader && !server.updateLobby(0).allReady()) {
+			fill=Color.GRAY;
+		} else {
 
-        // Border
-        gc.setFill(fill);
-        gc.setStroke(Color.BLACK);
-        Rectangle hit = this.getHitbox();
-        gc.fillRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
-        gc.strokeRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
+			
+			if (this.isSelected()) {
+				double animation = (double) now / 500000000;
+				fill = Color.rgb(0, (int) (200 + 50 * sin(animation)), 0);
+			}
+		}
 
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setFont(UIDrawer.LOBBY_DISPLAY_TEXT);
-        gc.setFill(Color.WHITE);
-        gc.setStroke(Color.GRAY);
+		// Border
+		gc.setFill(fill);
+		gc.setStroke(Color.BLACK);
+		Rectangle hit = this.getHitbox();
+		gc.fillRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
+		gc.strokeRect(hit.getX(), hit.getY(), hit.getWidth(), hit.getHeight());
 
-        gc.strokeText(this.getText(), 0.95 * width, 0.955 * height);
-        gc.fillText(this.getText(),0.95 * width, 0.955 * height);
+		gc.setTextAlign(TextAlignment.CENTER);
+		gc.setFont(UIDrawer.LOBBY_DISPLAY_TEXT);
+		gc.setFill(Color.WHITE);
+		gc.setStroke(Color.GRAY);
 
-    }
+		gc.strokeText(this.getText(), 0.95 * width, 0.955 * height);
+		gc.fillText(this.getText(), 0.95 * width, 0.955 * height);
+
+	}
 }

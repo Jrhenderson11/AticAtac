@@ -126,6 +126,11 @@ public class ServerReciever extends Thread {
 		} else if (parts[0].equals("name")) {
 			//this.master.startGame();
 
+		} else if (parts[0].equals("kick")) {
+			String id = parts[1];
+			//TODO: check if this user is actually lobby leader
+			this.master.getLobby().removeClient(id);
+
 		} else if (data.equals("addAI")) {
 			master.addAI();
 					
@@ -135,7 +140,6 @@ public class ServerReciever extends Thread {
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {
-
 			this.master.halt();
 
 			// GAME

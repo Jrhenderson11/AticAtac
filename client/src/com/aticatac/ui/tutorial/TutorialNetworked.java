@@ -28,10 +28,8 @@ public class TutorialNetworked extends Scene {
 
 	private int displayWidth;
 	private int displayHeight;
-	private Level level;
 	private Renderer renderer;
 	private UDPClient client;
-	private World world;
 	
 	private void skipLobby() {
 		client.joinLobby(1, "password");

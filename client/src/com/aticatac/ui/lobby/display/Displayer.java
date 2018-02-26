@@ -1,28 +1,35 @@
 package com.aticatac.ui.lobby.display;
 
+import java.util.HashSet;
+
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.display.handlers.DAnimator;
 import com.aticatac.ui.lobby.display.handlers.DOnMouseClick;
 import com.aticatac.ui.lobby.display.handlers.DOnMouseMove;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.utils.SystemSettings;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
-
-import java.util.HashSet;
+import javafx.stage.Stage;
 
 public class Displayer extends Scene {
 
     private static HashSet<Drawable> drawables;
     private static HashSet<Button> buttons;
-
-    public Displayer(Group root, int selected, LobbyServer server) {
+    private static Browser parent;
+    private static Stage stage;
+    
+    public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage) {
         super(root);
 
+        this.parent = newParent;
+        this.stage = newStage;
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
@@ -30,7 +37,7 @@ public class Displayer extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        DAnimator animator = new DAnimator(gc, selected, server);
+        DAnimator animator = new DAnimator(gc, selected, server, parent, stage);
         this.setOnMouseMoved(new DOnMouseMove());
         this.setOnMouseClicked(new DOnMouseClick());
         animator.start();

@@ -23,8 +23,17 @@ public interface LobbyServer {
     // True if successful, false otherwise. Retry if false
     boolean leaveLobby();
 
+    //kicks client with this id
+    void kickClient(String id);
+    
     boolean changeColor(Color color);
 
+    int getStatus();
+
+    void setStatus(int newStatus);
+
+    void addAIPlayer();
+    
     ClientInfo myInfo();
 
     // Get list of all public lobbies

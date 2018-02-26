@@ -1,6 +1,5 @@
 package com.aticatac.ui.lobby.browser.handlers;
 
-import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.browser.utils.LBDrawer;

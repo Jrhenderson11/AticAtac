@@ -1,6 +1,5 @@
 package com.aticatac.networking.server;
 
-import java.awt.Point;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -97,13 +96,13 @@ public class UDPServer extends Thread{
 	}
 	
 	public void addAI() {
-		int numAI=0;
-		for (Player p : model.getPlayers()) {
-			if (p.controller == Controller.AI) {
-				numAI++;
-			}
+		int numAI=this.lobby.getBots().size()+1;
+		
+		if (!this.lobby.addAI("AI"+numAI, this.lobby.getNextColour())) {
+			System.out.println("lobby is full, not adding AI");
+		} else {
+			System.out.println("server adding AI");
 		}
-		this.lobby.addAI("AI"+numAI, this.lobby.getNextColour());
 	}
 	
 	public void leaveLobby(InetAddress address, int originPort) {
@@ -139,16 +138,23 @@ public class UDPServer extends Thread{
 	}
 	
 	public void setClientReady(InetAddress origin, int originPort) {
+		if (this.getClientInfo(origin, originPort)==null) {
+			return;
+		}
 		this.getClientInfo(origin, originPort).ready();
 	}
 	
 	public void setClientUnReady(InetAddress origin, int originPort) {
-		this.getClientInfo(origin, originPort);
+		if (this.getClientInfo(origin, originPort)==null) {
+			return;
+		}
+		this.getClientInfo(origin, originPort).unready();
 	}
 	
 	public void startGame() {
-		//TODO: check all clients are ready
-		
+		if (!this.lobby.allReady()) {
+			return;
+		}
 		//give world lobby
 		model.init(this.lobby);
 		if (this.status == Globals.IN_LOBBY) {
@@ -162,7 +168,5 @@ public class UDPServer extends Thread{
 		} else {
 			this.sender.sendAllLobby();
 		}
-		
 	}
-	
 }

@@ -1,30 +1,38 @@
 package com.aticatac.ui.lobby.display.utils;
 
+import static java.lang.StrictMath.sin;
+
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-
-import static java.lang.StrictMath.sin;
+import javafx.stage.Stage;
 
 public class BackButton extends Button {
 
 	private LobbyServer server;
+	private Stage stage;
+	private Browser parent;
 	
-    public BackButton(Rectangle hitbox, LobbyServer newServer) {
+    public BackButton(Rectangle hitbox, LobbyServer newServer,Browser newParent, Stage newStage) {
         super(hitbox, "Back");
         this.server = newServer;
+        this.parent = newParent;
+        this.stage = newStage;
     }
 
     @Override
     public void click() {
     	System.out.println("CLICK BACK");
     	this.server.leaveLobby();
+    	this.stage.setScene(parent);
     }
 
     @Override
