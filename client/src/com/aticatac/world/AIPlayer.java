@@ -2,6 +2,7 @@ package com.aticatac.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -26,15 +27,13 @@ public class AIPlayer extends Player {
 
 	private LinkedList<Point> currentPath;
 	private LinkedList<Point> intermediatePath;
-	private Random r;
-	private ArrayList<Pair<Integer, Integer>> gridTranslations = Translations.TRANSLATIONS_GRID;
+	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS_GRID;
 	private boolean hasGun;
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
 		this.world = world;
 		this.level = world.getLevel();
-		this.r = new Random();
 		this.currentPath = new LinkedList<>();
 		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
@@ -335,7 +334,8 @@ public class AIPlayer extends Player {
 	public Point closestFreePoint() {
 		LinkedList<Point> toOpen = new LinkedList<>();
 		ArrayList<Point> visited = new ArrayList<>();
-
+		Collections.shuffle(translations);
+		
 		boolean foundClosest = false;
 
 		Point current = gridPosition;
@@ -345,7 +345,7 @@ public class AIPlayer extends Player {
 		while (!foundClosest) {
 			visited.add(current);
 			for (int i = 0; i < 8; i++) {
-				translation = gridTranslations.get(i);
+				translation = translations.get(i);
 				// Key is x translation, Value is y translation
 				translated = new Point(current.x + translation.getKey(), current.y + (int) translation.getValue());
 				if (level.getCoords(translated.x, translated.y) == 0) {
