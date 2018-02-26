@@ -98,7 +98,12 @@ public class Lobby implements Serializable {
 				System.out.println("removing " + id + " from lobby");
 
 				this.serfs.remove(client);
-				System.out.println(this.getAll().size());
+			}
+		}
+		for (int i = 0; i < this.bots.size(); i++) {
+			if (this.bots.get(i).name.equals(id)) {
+				System.out.println("removing ai " + id + " from lobby");
+				this.bots.remove(this.bots.get(i));
 			}
 		}
 	}

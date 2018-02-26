@@ -100,4 +100,10 @@ public class TestServer implements LobbyServer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void addAIPlayer() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -31,6 +31,8 @@ public interface LobbyServer {
     int getStatus();
 
     void setStatus(int newStatus);
+
+    void addAIPlayer();
     
     ClientInfo myInfo();
 

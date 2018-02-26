@@ -161,6 +161,7 @@ public class UDPClient extends Task implements LobbyServer {
 	}
 
 	public void addAIPlayer() {
+		System.out.println("sending addAI");
 		this.sendData("addAI");
 	}
 	
