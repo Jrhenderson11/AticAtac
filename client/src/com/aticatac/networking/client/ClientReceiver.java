@@ -10,7 +10,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
 import com.aticatac.world.World;
 
 public class ClientReceiver extends Thread {
@@ -50,10 +49,8 @@ public class ClientReceiver extends Thread {
 	
 	@Override
 	public void run() {
-		int count = 0;
 		this.running = true;
 		System.out.println(name + " Listening");
-		int numFail=0;
 		while (running) {
 
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -89,11 +86,7 @@ public class ClientReceiver extends Thread {
 						master.setStatus(Globals.IN_GAME);
 					}
 				} catch (Exception e) {
-					numFail++;
-					if (numFail>20000) { 
-						master.setStatus(Globals.IN_GAME);
-					}
-					System.out.println("cannot deserialise lobby (is it a model?)" + numFail);
+					System.out.println("cannot deserialise lobby (is it a model?)");
 					try {
 						this.model = SerializationUtils.deserialize(packet.getData());
 						this.master.setStatus(Globals.IN_GAME);
