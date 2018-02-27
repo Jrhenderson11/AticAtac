@@ -3,6 +3,7 @@ package com.aticatac.networking.client;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -62,6 +63,18 @@ public class ClientReceiver extends Thread {
 			} catch (IOException e) {
 				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
+			}
+			
+			try {
+				String s = new String(packet.getData(), 0,packet.getLength());
+				if (s.contains("IP:")) {
+					//System.out.println(s);
+					master.setMyIP(InetAddress.getByName(s));
+				} else {
+				//	System.out.println(s);
+				}
+			} catch (Exception e) {
+				System.out.println("fail");
 			}
 			if (master.getStatus() == Globals.IN_LIMBO) {
 				// deserialise into lobby obj

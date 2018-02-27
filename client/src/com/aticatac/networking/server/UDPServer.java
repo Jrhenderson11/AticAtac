@@ -1,5 +1,7 @@
 package com.aticatac.networking.server;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -12,17 +14,17 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-public class UDPServer extends Thread{
-	
+public class UDPServer extends Thread {
+
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
 	private ServerSender sender;
 	private World model;
 	private Lobby lobby;
 	private LobbyInfo lobbyInfo;
-		
+
 	private int status;
-	
+
 	public UDPServer() {
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
@@ -34,7 +36,7 @@ public class UDPServer extends Thread{
 		Level level = new Level(100, 100);
 		level.randomiseMap();
 		this.model = new World(level);
-		this.receiver = new ServerReciever(model, clientList, this); 
+		this.receiver = new ServerReciever(model, clientList, this);
 		this.sender = new ServerSender(model, clientList, this);
 		receiver.start();
 		sender.start();
@@ -45,10 +47,10 @@ public class UDPServer extends Thread{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		System.out.println("TestServer stopped");
 	}
-	
+
 	public void halt() {
 		this.receiver.halt();
 		this.sender.halt();
@@ -63,22 +65,22 @@ public class UDPServer extends Thread{
 		this.status = Globals.IN_LOBBY;
 		System.out.println("new lobby created");
 	}
-	
+
 	public void sendAllLobby() {
 		this.sender.sendAllLobby();
 	}
-	
+
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
 		ClientInfo newClient;
-		//create new lobby
-		if (this.lobby==null) {
+		// create new lobby
+		if (this.lobby == null) {
 			newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
 		} else {
 			newClient = new ClientInfo(name, false, this.lobby.getNextColour(), address, destPort, originPort);
 		}
-		
+
 		if (this.status == Globals.IN_LIMBO) {
-			//no lobby started so start one
+			// no lobby started so start one
 			this.startLobby(newClient, this.lobbyInfo);
 		} else if (this.status == Globals.IN_LOBBY) {
 			System.out.println("adding " + newClient.getID() + " to lobby");
@@ -86,8 +88,8 @@ public class UDPServer extends Thread{
 		} else if (this.status == Globals.IN_GAME) {
 			System.out.println("adding " + newClient.getID() + " to lobby");
 			this.lobby.addClient(newClient);
-			
-			if (this.model.getNumPlayers()<4) {
+
+			if (this.model.getNumPlayers() < 4) {
 				Player newPlayer = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
 				this.model.addPlayer(newPlayer);
 			}
@@ -95,40 +97,40 @@ public class UDPServer extends Thread{
 		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), this.lobbyInfo.ID, this.lobbyInfo.NAME);
 		System.out.println("Client joined lobby");
 	}
-	
+
 	public void addAI() {
-		int numAI=this.lobby.getBots().size()+1;
-		
-		if (!this.lobby.addAI("AI"+numAI, this.lobby.getNextColour())) {
+		int numAI = this.lobby.getBots().size() + 1;
+
+		if (!this.lobby.addAI("AI" + numAI, this.lobby.getNextColour())) {
 			System.out.println("lobby is full, not adding AI");
 		} else {
 			System.out.println("server adding AI");
 		}
 	}
-	
+
 	public void leaveLobby(InetAddress address, int originPort) {
 		ClientInfo newClient = this.getClientInfo(address, originPort);
 
 		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
 			this.lobby.removeClient(newClient.getID());
-		} 
+		}
 		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
 		if (this.lobby.getAll().size() == 0) {
 			this.status = Globals.IN_LIMBO;
 		}
 		System.out.println("Client left lobby");
 	}
-	
+
 	public Lobby getLobby() {
 		return this.lobby;
 	}
-	
+
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
 	}
-	
+
 	public ClientInfo getClientInfo(InetAddress address, int port) {
-		
+
 		for (ClientInfo info : this.lobby.getAll()) {
 			if (info.getAddress().equals(address) && info.getOriginPort() == port) {
 				return info;
@@ -137,26 +139,26 @@ public class UDPServer extends Thread{
 		System.out.println("invalid client address to search for");
 		return null;
 	}
-	
+
 	public void setClientReady(InetAddress origin, int originPort) {
-		if (this.getClientInfo(origin, originPort)==null) {
+		if (this.getClientInfo(origin, originPort) == null) {
 			return;
 		}
 		this.getClientInfo(origin, originPort).ready();
 	}
-	
+
 	public void setClientUnReady(InetAddress origin, int originPort) {
-		if (this.getClientInfo(origin, originPort)==null) {
+		if (this.getClientInfo(origin, originPort) == null) {
 			return;
 		}
 		this.getClientInfo(origin, originPort).unready();
 	}
-	
+
 	public void startGame() {
 		if (!this.lobby.allReady()) {
 			return;
 		}
-		//give world lobby
+		// give world lobby
 		model.init(this.lobby);
 		if (this.status == Globals.IN_LOBBY) {
 			System.out.println("Game started");
@@ -169,5 +171,10 @@ public class UDPServer extends Thread{
 		} else {
 			this.sender.sendAllLobby();
 		}
+	}
+
+	public void replyIP(InetAddress origin, int originPort) {
+		String msg = "IP:" + (origin.toString());
+		this.sender.sendClientMessage(origin, originPort, msg);
 	}
 }

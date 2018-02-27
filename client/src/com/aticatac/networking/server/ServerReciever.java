@@ -107,7 +107,9 @@ public class ServerReciever extends Thread {
 
 		String[] parts = data.split(":");
 		// LOBBY STUFF
-		if (data.equals("init")) {
+		if (data.equals("whatismyip")) {
+			master.replyIP(origin, originPort);
+		} if (data.equals("init")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.joinLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);
