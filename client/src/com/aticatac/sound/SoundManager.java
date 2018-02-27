@@ -13,7 +13,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager{
 	
-public static boolean debug = false;
+public static boolean debug = true;
 public static Clip menuClip, battleClip;
 	
 	public void playClick() {	
@@ -56,7 +56,7 @@ public static Clip menuClip, battleClip;
 	}
 	
 	public void stopMenuBg(){
-		if(menuClip.isRunning()){
+		if(menuClip != null && menuClip.isRunning()){
 			menuClip.close();
 		}
 	}
@@ -87,7 +87,7 @@ public static Clip menuClip, battleClip;
 	}
 	
 	public void stopBattleBg(){
-		if (battleClip.isRunning()){
+		if (battleClip != null && battleClip.isRunning()){
 			battleClip.stop();
 		}
 	}
