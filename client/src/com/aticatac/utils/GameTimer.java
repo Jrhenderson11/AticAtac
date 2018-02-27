@@ -1,12 +1,14 @@
 package com.aticatac.utils;
 
+import java.io.Serializable;
+
 import com.aticatac.world.World;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-public class GameTimer {
+public class GameTimer implements Serializable {
 	
 	public static final int ROUND_DURATION = 60; 
 	public static final int POST_ROUND_DURATION = 8;

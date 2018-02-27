@@ -70,6 +70,7 @@ public class UDPServer extends Thread{
 	
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
 		ClientInfo newClient;
+		//create new lobby
 		if (this.lobby==null) {
 			newClient = new ClientInfo(name, false, 2, address, destPort, originPort);
 		} else {

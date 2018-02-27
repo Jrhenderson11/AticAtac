@@ -10,7 +10,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
-import com.aticatac.networking.model.Model;
 import com.aticatac.world.World;
 
 public class ClientReceiver extends Thread {
@@ -74,7 +73,7 @@ public class ClientReceiver extends Thread {
 					//System.out.println("cannot deserialise lobbyinfo (is it a model?)");
 					try {
 						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, name));
+						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, newLobby.NAME));
 					} catch (Exception e2) {}
 				}
 				//System.out.println("getting info");
@@ -140,5 +139,21 @@ public class ClientReceiver extends Thread {
 	 */
 	public World getModel() {
 		return this.model;
+	}
+
+	private static String byteArrayToHexString(byte[] data) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < data.length; i++) {
+			int halfbyte = (data[i] >>> 4) & 0x0F;
+			int two_halfs = 0;
+			do {
+				if ((0 <= halfbyte) && (halfbyte <= 9))
+					buf.append((char) ('0' + halfbyte));
+				else
+					buf.append((char) ('a' + (halfbyte - 10)));
+				halfbyte = data[i] & 0x0F;
+			} while (two_halfs++ < 1);
+		}
+		return buf.toString();
 	}
 }
