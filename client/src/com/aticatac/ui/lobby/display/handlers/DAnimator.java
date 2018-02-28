@@ -30,135 +30,143 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class DAnimator extends AnimationTimer {
-	private final GraphicsContext gc;
-	private final int selected;
-	private final LobbyServer server;
-	private boolean isLead;
-	private Browser parent;
-	private Stage stage;
+    private final GraphicsContext gc;
+    private final int selected;
+    private final LobbyServer server;
+    private final LobbyHeader lobbyHeader;
+    private boolean isLead;
+    private Browser parent;
+    private Stage stage;
 
-	BackButton backButton;
-	ReadyStartButton sbutton;
-	AddAIButton aiButton;
+    private BackButton backButton;
+    private ReadyStartButton sbutton;
+    private AddAIButton aiButton;
 
-	private int width;
-	private int height;
+    private int width;
+    private int height;
 
-	public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage) {
-		this.gc = gc;
-		this.selected = selected;
-		this.server = server;
-		this.isLead = false;
-		this.parent = newParent;
-		this.stage = newStage;
+    public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage) {
+        this.gc = gc;
+        this.selected = selected;
+        this.server = server;
+        this.isLead = false;
+        this.parent = newParent;
+        this.stage = newStage;
 
-		this.width = SystemSettings.getNativeWidth();
-		this.height = SystemSettings.getNativeHeight();
+        this.width = SystemSettings.getNativeWidth();
+        this.height = SystemSettings.getNativeHeight();
 
-		// TODO: might have to move this to handle V if its not updating
+        // TODO: might have to move this to handle V if its not updating
 
-		Displayer.setDrawables(new HashSet<>());
-		Displayer.setButtons(new HashSet<>());
+        Displayer.setDrawables(new HashSet<>());
+        Displayer.setButtons(new HashSet<>());
 
-		Lobby lobby = server.updateLobby(selected);
-		// don't be greedy: let the server take some time to get it's lobby object
-		while (lobby == null) {
-			System.out.println("waiting for lobby obj");
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ignored) {
-			}
+        Lobby lobby = server.updateLobby(selected);
+        // don't be greedy: let the server take some time to get it's lobby object
+        while (lobby == null) {
+            System.out.println("waiting for lobby obj");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {
+            }
 
-			lobby = server.updateLobby(selected);
-		}
-		System.out.println("finished waiting");
+            lobby = server.updateLobby(selected);
+        }
+        System.out.println("finished waiting");
 
-		ClientInfo leader = lobby.getLobbyLeader();
-		if (leader.equals(server.myInfo()))
-			isLead = true;
 
-		// create back and ready boxes
-		Rectangle hitbox;
-		hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-		backButton = new BackButton(hitbox, server, parent, stage);
-		Displayer.getButtons().add(backButton);
-		Displayer.getDrawables().add(backButton);
+        ClientInfo leader = lobby.getLobbyLeader();
+        if (leader.equals(server.myInfo()))
+            isLead = true;
 
-		Displayer.getDrawables().add(new LobbyHeader(lobby));
-		hitbox = new Rectangle(0.9 * width, 9 * height / 10, width / 10, height / 10);
+        // create back and ready boxes
+        Rectangle hitbox;
+        hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+        backButton = new BackButton(hitbox, server, parent, stage);
+        Displayer.getButtons().add(backButton);
+        Displayer.getDrawables().add(backButton);
 
-		if (isLead) {
-			sbutton = new ReadyStartButton(hitbox, "Start", server, stage);
-		} else {
-			sbutton = new ReadyStartButton(hitbox, "Ready", server, stage);
-		}
+        lobbyHeader = new LobbyHeader(lobby);
 
-		Displayer.getDrawables().add(sbutton);
-		Displayer.getButtons().add(sbutton);
+        Displayer.getDrawables().add(lobbyHeader);
 
-		if (server.myInfo().getID().equals(leader.getID())) {
-			hitbox = new Rectangle(0.35 * width, 0.9 * height, (width / 5), height / 10);
-			aiButton = new AddAIButton(hitbox, server);
-			Displayer.getDrawables().add(aiButton);
-			Displayer.getButtons().add(aiButton);
-		}
-	}
+        hitbox = new Rectangle(0.9 * width, 9 * height / 10, width / 10, height / 10);
 
-	@Override
-	public void handle(long now) {
-		// System.out.println("im still going");
-		Lobby lobby = server.updateLobby(selected);
-		ClientInfo leader = lobby.getLobbyLeader();
-		ArrayList<ClientInfo> peasants = lobby.getPeasants();
-		ArrayList<ai> bots = server.updateLobby(0).getBots();
-		Displayer.setDrawables(new HashSet<>());
-		Rectangle hitbox;
-		// draw leader
-		// System.out.println("drawing " + leader.getID());
-		Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
-		for (int i = 0; i < peasants.size(); i++) {
-			ClientInfo c = peasants.get(i);
-			// System.out.println("drawing " + c.getID());
-			hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-			boolean led = false;
-			if (leader.equals(c))
-				led = true;
-			Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led, server));
-		}
-		//TODO: replace placeholder 0
-		for (int i = 0; i < bots.size(); i++) {
-			// System.out.println("drawing " + c.getID());
-			hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
-			boolean led = false;
-			Displayer.getDrawables().add(new AIInfoBrick(bots.get(i), i+peasants.size()+1, isLead && !led, server));
-		}
+        if (isLead) {
+            sbutton = new ReadyStartButton(hitbox, "Start", server, stage);
+        } else {
+            sbutton = new ReadyStartButton(hitbox, "Ready", server, stage);
+        }
 
-		// add ready and back buttons
-		Displayer.getDrawables().add(sbutton);
-		Displayer.getDrawables().add(backButton);
-		if (server.myInfo().getID().equals(leader.getID())) {
-			Displayer.getDrawables().add(aiButton);
-		}
-		// if leader draw add AI button
+        Displayer.getDrawables().add(sbutton);
+        Displayer.getButtons().add(sbutton);
 
-		UIDrawer.background(gc, Color.gray(0.3));
-		for (Drawable d : Displayer.getDrawables()) {
-			d.draw(gc, now);
-		}
-		// if game has been started go to game screen
-		if (lobby.getStarted() || this.server.getStatus() == Globals.IN_GAME) {
-			// TODO: maybe add transition screen
-			System.out.println("starting!!!");
-			this.stop();
+        if (server.myInfo().getID().equals(leader.getID())) {
+            hitbox = new Rectangle(0.35 * width, 0.9 * height, (width / 5), height / 10);
+            aiButton = new AddAIButton(hitbox, server);
+            Displayer.getDrawables().add(aiButton);
+            Displayer.getButtons().add(aiButton);
+        }
+    }
 
-			stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
-		}
+    @Override
+    public void handle(long now) {
+        // System.out.println("im still going");
+        Lobby lobby = server.updateLobby(selected);
+        ClientInfo leader = lobby.getLobbyLeader();
+        ArrayList<ClientInfo> peasants = lobby.getPeasants();
+        ArrayList<ai> bots = server.updateLobby(0).getBots();
+        Displayer.setDrawables(new HashSet<>());
+        Rectangle hitbox;
+        // draw leader
+        // System.out.println("drawing " + leader.getID());
+        Displayer.getDrawables().add(new ClientInfoBrick(leader, 0, isLead, server));
+        for (int i = 0; i < peasants.size(); i++) {
+            ClientInfo c = peasants.get(i);
+            // System.out.println("drawing " + c.getID());
+            hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+            boolean led = false;
+            if (leader.equals(c))
+                led = true;
+            Displayer.getDrawables().add(new ClientInfoBrick(c, i + 1, isLead && !led, server));
+        }
+        //TODO: replace placeholder 0
+        for (int i = 0; i < bots.size(); i++) {
+            // System.out.println("drawing " + c.getID());
+            hitbox = new Rectangle(0, 9 * height / 10, width / 10, height / 10);
+            boolean led = false;
+            Displayer.getDrawables().add(new AIInfoBrick(bots.get(i), i + peasants.size() + 1, isLead && !led, server));
+        }
 
-		// If I am kicked go to previous menu
-		if (this.server.myInfo() == null) {
-			this.stop();
-			this.server.setStatus(Globals.IN_LIMBO);
-			stage.setScene(parent);
-		}
-	}
+        // add ready and back buttons
+        Displayer.getDrawables().add(sbutton);
+        Displayer.getDrawables().add(backButton);
+        if (server.myInfo().getID().equals(leader.getID())) {
+            Displayer.getDrawables().add(aiButton);
+        }
+        // if leader draw add AI button
+
+        // if game has been started go to game screen
+        if (lobby.getStarted() || this.server.getStatus() == Globals.IN_GAME) {
+            // TODO: maybe add transition screen
+            System.out.println("starting!!!");
+            this.stop();
+
+            stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
+        }
+
+        // If I am kicked go to previous menu
+        if (this.server.myInfo() == null) {
+            this.stop();
+            this.server.setStatus(Globals.IN_LIMBO);
+            stage.setScene(parent);
+        }
+
+        Displayer.getDrawables().add(lobbyHeader);
+
+        UIDrawer.background(gc, Color.gray(0.3));
+        for (Drawable d : Displayer.getDrawables()) {
+            d.draw(gc, now);
+        }
+    }
 }

@@ -222,9 +222,9 @@ public class UDPClient extends Task implements LobbyServer {
 	
 	@Override
 	public ClientInfo myInfo() {
-		/*System.out.println("lobby players:" + this.lobby.getAll().size());
+		System.out.println("lobby players:" + this.lobby.getAll().size());
 		
-		for (ClientInfo i : this.lobby.getAll()) {
+		/*for (ClientInfo i : this.lobby.getAll()) {
 			System.out.println(i.getAddress());
 			System.out.println(i.getOriginPort());
 			System.out.println("---------------");
