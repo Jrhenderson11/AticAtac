@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
+import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 @SuppressWarnings("serial")
@@ -110,6 +111,14 @@ public abstract class Bullet implements Collidable, Serializable{
 		//check for wall collision after movement
 		if (world.getLevel().getCoords(after.x, after.y) == 1) {
 			hit(world, before); //paint splat on floor just before the wall it hits
+		}
+		
+		//check for collisions with players
+		for (Player player: world.getPlayers()) {
+			if (player.getRect().intersects(getRect())) {
+				player.decreasePaintLevel(20);
+				hit(world, world.displayPositionToCoords(player.getPosition()));
+			}
 		}
 		
 		//check for collision with collideables. Currently only other Bullets.
