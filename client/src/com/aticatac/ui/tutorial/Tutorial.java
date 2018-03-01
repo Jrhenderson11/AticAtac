@@ -51,7 +51,7 @@ public class Tutorial extends Scene {
         //init display stuff
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
-        this.renderer = new Renderer(displayWidth, displayHeight);
+        this.renderer = new Renderer();
         this.overlay = new Overlay();
         this.tips = true;
         

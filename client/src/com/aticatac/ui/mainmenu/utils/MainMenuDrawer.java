@@ -20,8 +20,8 @@ public class MainMenuDrawer {
     public static void title(GraphicsContext gc, long time) {
         gc.save();
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        double width = gc.getCanvas().getWidth();
+        double height = gc.getCanvas().getHeight();
         double animation = (double) time / 1000000000;
 
         gc.rotate(Math.sin(animation));
@@ -43,8 +43,8 @@ public class MainMenuDrawer {
     public static void menuItems(GraphicsContext gc, ArrayList<MenuItem> items, double time) {
 
         double animation = time / 500000000;
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        double width = gc.getCanvas().getWidth();
+        double height = gc.getCanvas().getHeight();
 
 
         gc.save();

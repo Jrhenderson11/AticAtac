@@ -115,7 +115,7 @@ public abstract class Bullet implements Collidable, Serializable{
 		
 		//check for collisions with players
 		for (Player player: world.getPlayers()) {
-			if (player.getRect().intersects(getRect())) {
+			if (player.getColour() != shooter && player.getRect().intersects(getRect())) {
 				player.decreasePaintLevel(20);
 				hit(world, world.displayPositionToCoords(player.getPosition()));
 			}
