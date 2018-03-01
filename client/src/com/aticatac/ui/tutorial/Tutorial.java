@@ -49,8 +49,8 @@ public class Tutorial extends Scene {
         this.setCursor(new ImageCursor(image));
         
         //init display stuff
-        this.displayWidth = SystemSettings.getNativeWidth();
-        this.displayHeight = SystemSettings.getNativeHeight();
+        this.displayWidth = SystemSettings.getScreenWidth();
+        this.displayHeight = SystemSettings.getScreenHeight();
         this.renderer = new Renderer();
         this.overlay = new Overlay();
         this.tips = true;
@@ -108,8 +108,8 @@ public class Tutorial extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	Point p = player.getPosition();
-  	        	double dy = me.getY() - p.y; //y axis goes down
-  	        	double dx = me.getX() - p.x;
+  	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
+  	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
   	        	double r = 0.0;
   	        	
   	        	//upper right angles
@@ -142,7 +142,10 @@ public class Tutorial extends Scene {
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
   	        		m.playShoot();
-  	        		player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
+  	        		player.getGun().fire(player.getLookDirection(), 
+  							new Point((int) SystemSettings.getDescaledX(me.getX()), 
+  									  (int) SystemSettings.getDescaledY(me.getY())), 
+  							world);
   	        	}
   	        }
   		});
@@ -150,6 +153,10 @@ public class Tutorial extends Scene {
   		//sets up an AnimationTimer to update the display
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	//resize canvas to screen height for matching window resizing
+  	        	canvas.setWidth(SystemSettings.getScreenWidth());
+  	        	canvas.setHeight(SystemSettings.getScreenHeight());
+  	        	GraphicsContext gc = canvas.getGraphicsContext2D();
   	        	//handle movement, reverting moves when detecting collision
   	        	//left
   	        	if (input.contains(KeyCode.A)) {
@@ -240,21 +247,21 @@ public class Tutorial extends Scene {
   	  	        	}	
   	        	}
   	        	texts[0][0]  ="Use WASD to move";
-  	        	pos[0][0] = new Point(10, 75);
+  	        	pos[0][0] = new Point((int) SystemSettings.getScaledX(60), (int) SystemSettings.getScaledY(75));
   	        	texts[2][0]  ="Use mouse to aim";
-  	        	pos[2][0] = new Point(170, 20);
+  	        	pos[2][0] = new Point((int) SystemSettings.getScaledX(170), (int) SystemSettings.getScaledY(20));
   	        	texts[2][1]  ="Use mouse to aim";
-  	        	pos[2][1] = new Point(170, 20);
+  	        	pos[2][1] = new Point((int) SystemSettings.getScaledX(170), (int) SystemSettings.getScaledY(20));
   	        	
   	        	
   	        	texts[4][2]  ="press O to select splat cannon";
-	        	pos[4][2] = new Point(190, 105);
+	        	pos[4][2] = new Point((int) SystemSettings.getScaledX(190), (int) SystemSettings.getScaledY(105));
 	        	
   	        	
   	        	texts[6][0]  ="and left click to shoot";
-	        	pos[6][0] = new Point(330, 20);
+	        	pos[6][0] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(20));
 	        	texts[6][1]  ="and left click to shoot";
-	        	pos[6][1] = new Point(330, 20);
+	        	pos[6][1] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(20));
   	        	gc.setFill(Color.WHITE);
   	        	gc.setFont(UIDrawer.TUTORIAL_FONT);
   	        	

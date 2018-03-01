@@ -52,6 +52,7 @@ public class MainMenu extends Scene {
 
         root.getChildren().add(canvas);
         
+        //Listeners for change of window size, resizing canvas to new size
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
             canvas.setHeight((int) ((double) newValue));
