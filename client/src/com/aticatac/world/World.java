@@ -33,7 +33,7 @@ public class World implements Serializable {
 	/**
 	 * Delay between paint regeneration ticks.
 	 */
-	private static final int REGEN_DELAY = 60;
+	private static final int REGEN_DELAY = 100;
 	/**
 	 * The Collection of Players in the world, should be up to 4.
 	 */

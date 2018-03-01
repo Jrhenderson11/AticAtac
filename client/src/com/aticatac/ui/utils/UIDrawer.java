@@ -19,10 +19,8 @@ public class UIDrawer {
 
     public static void background(GraphicsContext gc, Color color) {
         gc.save();
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
         gc.setFill(color);
-        gc.fillRect(0, 0, width, height);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getWidth());
         gc.restore();
     }
 }

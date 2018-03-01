@@ -4,6 +4,7 @@ import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.mainmenu.utils.MainMenuDrawer;
 import com.aticatac.ui.utils.UIDrawer;
 import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -11,13 +12,13 @@ import java.util.ArrayList;
 
 public class MainMenuAnimation extends AnimationTimer {
 
-    private final GraphicsContext gc;
+    private final Canvas canvas;
     private final long then;
     private final ArrayList<MenuItem> menuItems;
 
-    public MainMenuAnimation(GraphicsContext gc, ArrayList<MenuItem> menuItems, long then) {
+    public MainMenuAnimation(Canvas canvas, ArrayList<MenuItem> menuItems, long then) {
         super();
-        this.gc = gc;
+        this.canvas = canvas;
         this.then = then;
         this.menuItems = menuItems;
     }
@@ -25,9 +26,9 @@ public class MainMenuAnimation extends AnimationTimer {
     @Override
     public void handle(long now) {
 
-        UIDrawer.background(gc, Color.gray(0.3));
-        MainMenuDrawer.title(gc, now - then);
-        MainMenuDrawer.menuItems(gc, menuItems, now - then);
+        UIDrawer.background(canvas.getGraphicsContext2D(), Color.gray(0.3));
+        MainMenuDrawer.title(canvas.getGraphicsContext2D(), now - then);
+        MainMenuDrawer.menuItems(canvas.getGraphicsContext2D(), menuItems, now - then);
 
     }
 
