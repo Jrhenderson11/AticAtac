@@ -120,4 +120,23 @@ public class ServerSender extends Thread {
 		this.running = false;
 	}
 
+	public void sendClientMessage(InetAddress origin, int originPort, String msg) {
+		for (ConnectionInfo i : this.clientList) {
+			if (i.getAddress().equals(origin) && (i.getOriginPort() == originPort)) {
+		//		System.out.println("sending message to " + i.getAddress() + " " + msg);
+				byte[] buffer = msg.getBytes();
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, i.getAddress(), Globals.SERVER_PORT);
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+					System.out.println("error sending message from server");
+					System.exit(-1);
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}	
+	
+	
 }

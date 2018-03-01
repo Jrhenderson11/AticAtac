@@ -30,6 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class DAnimator extends AnimationTimer {
+
     private final GraphicsContext gc;
     private final int selected;
     private final LobbyServer server;
@@ -109,6 +110,7 @@ public class DAnimator extends AnimationTimer {
         }
     }
 
+    
     @Override
     public void handle(long now) {
         // System.out.println("im still going");
@@ -169,4 +171,5 @@ public class DAnimator extends AnimationTimer {
             d.draw(gc, now);
         }
     }
+
 }
