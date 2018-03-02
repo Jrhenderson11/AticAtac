@@ -79,7 +79,7 @@ public class Tutorial extends Scene {
         world.spawnSprayGunBox(points[2]);
         
         SoundManager m = new SoundManager();
-        m.playBgGame();
+        m.playBgBattle();
         
         /* ================ */
         //add key event listeners

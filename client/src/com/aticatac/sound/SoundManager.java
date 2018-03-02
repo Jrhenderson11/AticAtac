@@ -1,20 +1,20 @@
 package com.aticatac.sound;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager{
 	
-public static boolean debug = true;
+public static boolean debug = false;
 public static Clip menuClip, battleClip;
+private static float menuVol = 0, battleVol = 0;
+private final static float max = 6, min = -10;
 	
 	public void playClick() {	
 		//https://opengameart.org/content/menu-selection-click
@@ -40,6 +40,8 @@ public static Clip menuClip, battleClip;
 			if (!debug){
 				System.out.println("clip is started");
 				clip.open(in);
+				FloatControl vol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				vol.setValue(menuVol);
 				clip.start();
 				clip.loop(Clip.LOOP_CONTINUOUSLY);
 				menuClip = clip;
@@ -56,13 +58,13 @@ public static Clip menuClip, battleClip;
 	}
 	
 	public void stopMenuBg(){
-		if(menuClip != null && menuClip.isRunning()){
+		if(check(menuClip)){
 			menuClip.close();
 		}
 	}
 	
 	
-	public void playBgGame(){
+	public void playBgBattle(){
 		try {
 			//https://opengameart.org/content/hesitation-synth-electronic-loop	
 			File file = new File("./assets/music/hesitation.wav");
@@ -71,6 +73,8 @@ public static Clip menuClip, battleClip;
 			Clip clip = AudioSystem.getClip();
 			if (!debug){
 				clip.open(in);
+				FloatControl vol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				vol.setValue(battleVol);
 				clip.start();
 				clip.loop(Clip.LOOP_CONTINUOUSLY);
 				battleClip = clip;
@@ -87,8 +91,8 @@ public static Clip menuClip, battleClip;
 	}
 	
 	public void stopBattleBg(){
-		if (battleClip != null && battleClip.isRunning()){
-			battleClip.stop();
+		if (check(battleClip)){
+			battleClip.close();
 		}
 	}
 	
@@ -99,8 +103,6 @@ public static Clip menuClip, battleClip;
 			Clip clip = AudioSystem.getClip();
 			clip.open(in);
 			return clip;
-			
-			
 			
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
@@ -113,13 +115,35 @@ public static Clip menuClip, battleClip;
 		return null;
 	}
 	
-	public MediaPlayer play(String url){
-
-		Media sound = new Media(new File(url).toURI().toString());
+	//gain can be negative
+	public void setMenuVolume(float gain){
+		float gained = menuVol + gain;
+		if (gained > max){
+			menuVol = max;
+		}else if (gained < min){
+			stopMenuBg();
+		}else{
+			menuVol += gain;
+		}
 		
-		MediaPlayer mediaPlayer = new MediaPlayer(sound);
-
-		return mediaPlayer;
+	}
+	
+	public void setGameVolume(float gain){
+		float gained = battleVol + gain;
+		if (gained > max){
+			battleVol = max;
+		}else if (gained < min){
+			stopBattleBg();
+		}else{
+			battleVol += gain;
+		}
+	}
+	
+	public boolean check(Clip clip){
+		if (clip != null && clip.isRunning()){
+			return true;
+		}
+		return false;
 	}
 
 }
