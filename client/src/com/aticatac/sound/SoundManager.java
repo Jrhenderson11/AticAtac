@@ -9,11 +9,13 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.aticatac.world.items.Gun;
+
 public class SoundManager{
 	
-public static boolean debug = false;
+public static boolean debug = false, shoot = true;
 public static Clip menuClip, battleClip;
-private static float menuVol = 0, battleVol = 0;
+private static float menuVol = -2, battleVol = -2, shootVol = -2;
 private final static float max = 6, min = -10;
 	
 	public void playClick() {	
@@ -23,11 +25,30 @@ private final static float max = 6, min = -10;
 		clip.start();
 	}
 	
-	public void playShoot(){
+	public void playShoot(int choice){
 		//https://opengameart.org/content/flatshot-complete-sfx-pack
-		File file = new File("assets/music/shoot.wav");
+		
+		File file = new File("assets/music/dryfire.wav"); //choice 0, out of paint/default
+		
+		switch(choice){
+		case 1:
+			//https://opengameart.org/content/flatshot-complete-sfx-pack
+			file = new File("assets/music/shoot.wav");
+			break;
+		case 2:
+			//http://soundbible.com/642-Splat.html
+			file = new File("assets/music/splat.wav");
+			break;
+		case 3:
+			//http://soundbible.com/144-Spraying-Deodorant.html
+			file = new File("assets/music/spray.wav");
+		}
 		Clip clip = play(file);
-		clip.start();
+		FloatControl vol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		vol.setValue(shootVol);
+		if (shoot){
+			clip.start();
+		}
 	}
 
 	public void playBgMenu(){
@@ -67,7 +88,7 @@ private final static float max = 6, min = -10;
 	public void playBgBattle(){
 		try {
 			//https://opengameart.org/content/hesitation-synth-electronic-loop	
-			File file = new File("./assets/music/hesitation.wav");
+			File file = new File("./assets/music/battle2.wav");
 			AudioInputStream in = AudioSystem.getAudioInputStream(file);
 			
 			Clip clip = AudioSystem.getClip();
@@ -115,7 +136,8 @@ private final static float max = 6, min = -10;
 		return null;
 	}
 	
-	//gain can be negative
+	//gain can be negative.
+	//Setting the volume only works if you change it before playing the clip.
 	public void setMenuVolume(float gain){
 		float gained = menuVol + gain;
 		if (gained > max){
@@ -128,7 +150,7 @@ private final static float max = 6, min = -10;
 		
 	}
 	
-	public void setGameVolume(float gain){
+	public void setBattleVolume(float gain){
 		float gained = battleVol + gain;
 		if (gained > max){
 			battleVol = max;
@@ -136,6 +158,20 @@ private final static float max = 6, min = -10;
 			stopBattleBg();
 		}else{
 			battleVol += gain;
+		}
+	}
+	
+	public void setShootVolume(float gain){
+		float gained = shootVol + gain;
+		if (gained > max){
+			shoot = true;
+			shootVol = max;
+		}else if (gained < min){
+			shoot = false;
+			shootVol = min;
+		}else{
+			shoot = true;
+			shootVol += gain;
 		}
 	}
 	
