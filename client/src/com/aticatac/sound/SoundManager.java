@@ -2,141 +2,115 @@ package com.aticatac.sound;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import sun.audio.AudioData;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import sun.audio.ContinuousAudioDataStream;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager{
 	
-public static MediaPlayer bgMenu, bgBattle;
-public static AudioPlayer apMenu, apBattle;
-public static AudioStream asMenu, asBattle;
-public static ContinuousAudioDataStream cadsMenu, cadsBattle;
 public static boolean debug = true;
-public static boolean bgMenuIsRunning = false, bgGameIsRunning = false;
-
-	public SoundManager(){
-		//bgMenu = play(fileMenu);
-		//bgGame = play(fileGame);
-	}
+public static Clip menuClip, battleClip;
 	
 	public void playClick() {	
 		//https://opengameart.org/content/menu-selection-click
-		String file = "assets/music/click.wav";
-
-		MediaPlayer m = play(file);
-		m.play();
+		File file = new File("assets/music/click.wav");
+		Clip clip = play(file);
+		clip.start();
 	}
 	
 	public void playShoot(){
 		//https://opengameart.org/content/flatshot-complete-sfx-pack
-		String file = "assets/music/shoot.wav";
-		
-		MediaPlayer m = play(file);
-		m.play();
-		
+		File file = new File("assets/music/shoot.wav");
+		Clip clip = play(file);
+		clip.start();
 	}
 
-	
-	public void playBgMenu2(){
-		AudioPlayer audioPlayer = AudioPlayer.player;
-	    AudioStream audioStream;
-	    AudioData audioData;
-
-	    ContinuousAudioDataStream loop = null;
-	    
-	    try
-	    {
-	    	//https://opengameart.org/content/halloween-rocknroll-music-loop
-	    	String file = "./assets/music/menubg.wav";
-	    	System.out.println(file);
-	        audioStream = new AudioStream(new FileInputStream(file));
-	        audioData = audioStream.getData();
-	        loop = new ContinuousAudioDataStream(audioData);
-	        asMenu = audioStream;
-	        cadsMenu = loop;
-	    }
-	    catch(IOException e)
-	    {
-	        System.out.println("cant find the file");
-	    }
-	    
-	    if (!debug){
-	    	apMenu = audioPlayer;
-		    apMenu.start(loop);
-		    bgMenuIsRunning = true;
-	    }
-	    
+	public void playBgMenu(){
+		try {
+	    	//https://opengameart.org/content/halloween-rocknroll-music-loop	
+			File file = new File("./assets/music/menubg.wav");
+			AudioInputStream in = AudioSystem.getAudioInputStream(file);
+			
+			Clip clip = AudioSystem.getClip();
+			if (!debug){
+				System.out.println("clip is started");
+				clip.open(in);
+				clip.start();
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+				menuClip = clip;
+			}
+			
+			
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void stopMenuBg(){
-		if (bgMenuIsRunning){
-			try {
-				apMenu.stop(cadsMenu);
-				cadsMenu.close();
-				asMenu.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(menuClip != null && menuClip.isRunning()){
+			menuClip.close();
 		}
-		
-		System.out.println("attempt to stop");
 	}
 	
-
 	
 	public void playBgGame(){
-		AudioPlayer audioPlayer = AudioPlayer.player;
-	    AudioStream audioStream;
-	    AudioData audioData;
-
-
-	    ContinuousAudioDataStream loop = null;
-
-	    try
-	    {
-	    	//https://opengameart.org/content/hesitation-synth-electronic-loop
-	    	String file = "./assets/music/hesitation.wav";
-	    	System.out.println(file);
-	        audioStream = new AudioStream(new FileInputStream(file));
-	        audioData = audioStream.getData();
-	        loop = new ContinuousAudioDataStream(audioData);
-	        asBattle = audioStream;
-	        cadsBattle = loop;
-	    }
-	    catch(IOException e)
-	    {
-	        System.out.println("cant find the file");
-	    }
-	    
-	    if (!debug){
-	    	apBattle = audioPlayer; 
-		    audioPlayer.start(loop);
-		    bgGameIsRunning = true;
-	    }
-	    
+		try {
+			//https://opengameart.org/content/hesitation-synth-electronic-loop	
+			File file = new File("./assets/music/hesitation.wav");
+			AudioInputStream in = AudioSystem.getAudioInputStream(file);
+			
+			Clip clip = AudioSystem.getClip();
+			if (!debug){
+				clip.open(in);
+				clip.start();
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+				battleClip = clip;
+			}
+			
+			
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void stopBattleBg(){
-		if (bgGameIsRunning){
-			try {
-				apBattle.stop(cadsBattle);
-				cadsBattle.close();
-				asBattle.close();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (battleClip != null && battleClip.isRunning()){
+			battleClip.stop();
+		}
+	}
+	
+	public Clip play(File file){
+		try {
+			AudioInputStream in = AudioSystem.getAudioInputStream(file);
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(in);
+			return clip;
+			
+			
+			
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
 		}
 		
-		System.out.println("attempt to stop");
+		return null;
 	}
 	
 	public MediaPlayer play(String url){

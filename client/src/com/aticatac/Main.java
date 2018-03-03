@@ -56,8 +56,10 @@ public class Main extends Application{
             public void handle(WindowEvent we) {
                 System.exit(0);
             }
-        });   
-        m.playBgMenu2();
+
+        });  
+        m.playBgMenu();
+        //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
