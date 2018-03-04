@@ -82,6 +82,10 @@ public class World implements Serializable {
 	 * Number of times the GunBoxes have been respawned, used to avoid respawning multiple times
 	 */
 	private int boxRespawns;
+	/**
+	 * The current round number of the game.
+	 */
+	private int round;
 	
 	
 	// -----------
@@ -105,6 +109,7 @@ public class World implements Serializable {
 		this.gameTimer = new GameTimer(this);
 		this.setWinner(null);
 		this.boxRespawns = 0;
+		this.round = 0;
 	}
 
 	
@@ -192,6 +197,7 @@ public class World implements Serializable {
 		gameTimer.startCountdownTimer();
 		//reset box respawn counter
 		boxRespawns = 0;
+		
 	}
 	
 	/**
@@ -200,6 +206,7 @@ public class World implements Serializable {
 	public void startGame() {
 		// reset timer
 		setRoundTime(0);
+		round += 1;
 		System.out.println("world start game");
 		setGameState(GameState.PLAYING);
 		gameTimer.startRoundTimer();
@@ -632,5 +639,15 @@ public class World implements Serializable {
 
 	public void setWinner(Player winner) {
 		this.winner = winner;
+	}
+
+
+	public int getRound() {
+		return round;
+	}
+
+
+	public void setRound(int rounds) {
+		this.round = rounds;
 	}
 }
