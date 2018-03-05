@@ -140,25 +140,9 @@ public class Tutorial extends Scene {
   		setOnMouseClicked(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
-  	        	if (player.getGun() != null) {
-  	        		int choice = -1;
-  	        		
-  	        		if (!player.getGun().enoughPaint(player.getPaintLevel())){
-  	        			choice = 0;
-  	        		}else if (player.getGun().getClass() == ShootGun.class){
-  	        			choice = 1;
-  	        		}else if (player.getGun().getClass() == SplatGun.class){
-  	        			choice = 2;
-  	        		}else if (player.getGun().getClass() == SprayGun.class){
-  	        			choice = 3;
-  	        		}else{
-  	        			System.out.println("Can't find gun type.");
-  	        		}
-  	        		
-  	        		
-  	        		m.playShoot(choice);
-  	        		player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
-  	        	}
+  	        	m.playShoot(player);
+  	        	player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
+  	        	
   	        }
   		});
   		

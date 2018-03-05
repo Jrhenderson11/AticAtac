@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
@@ -64,7 +65,8 @@ public class AiDemo extends Scene {
         /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
-  		
+  		SoundManager m = new SoundManager();
+        m.playBgBattle();
   		//on key down, keycode is added to input array
   		setOnKeyPressed(new EventHandler<KeyEvent>() {
   			public void handle(KeyEvent e) {
@@ -121,6 +123,7 @@ public class AiDemo extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
+  	        		m.playShoot(player);
   	        		player.getGun().fire(player.getLookDirection(), world.displayPositionToCoords(new Point((int) me.getX(), (int) me.getY())), world);
   	        	}
   	        }

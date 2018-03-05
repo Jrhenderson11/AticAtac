@@ -13,6 +13,7 @@ import com.aticatac.ui.mainmenu.handlers.MainMenuMouseClicked;
 import com.aticatac.ui.mainmenu.handlers.MainMenuMouseMoved;
 import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
+import com.aticatac.ui.settings.Settings;
 import com.aticatac.ui.tutorial.AiDemo;
 import com.aticatac.ui.tutorial.Tutorial;
 import com.aticatac.ui.tutorial.TutorialNetworked;
@@ -41,7 +42,7 @@ public class MainMenu extends Scene {
         menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group())));
         menuItems.add(new MenuItem("SinglePlayer Demo", () -> new SinglePlayer(new Group())));
         menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));
-        menuItems.add(new MenuItem("Settings", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Settings", () -> new Settings(new Group(), this, primaryStage)));
         menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Credits", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Quit", () -> new Quit(new Group(), this, primaryStage)));

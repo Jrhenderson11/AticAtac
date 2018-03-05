@@ -9,14 +9,16 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.aticatac.world.Player;
 import com.aticatac.world.items.Gun;
 
 public class SoundManager{
 	
 public static boolean debug = false, shoot = true;
 public static Clip menuClip, battleClip;
-private static float menuVol = -2, battleVol = -2, shootVol = -2;
+private static float menuVol = -1, battleVol = -1, shootVol = -1;
 private final static float max = 6, min = -10;
+private static String battleFile = "./assets/music/hesitation.wav";
 	
 	public void playClick() {	
 		//https://opengameart.org/content/menu-selection-click
@@ -25,24 +27,34 @@ private final static float max = 6, min = -10;
 		clip.start();
 	}
 	
-	public void playShoot(int choice){
-		//https://opengameart.org/content/flatshot-complete-sfx-pack
-		
+	public void playShoot(Player player){
+		//http://soundbible.com/1405-Dry-Fire-Gun.html
 		File file = new File("assets/music/dryfire.wav"); //choice 0, out of paint/default
+		Gun gun = player.getGun();
+		int choice = 0;
 		
-		switch(choice){
-		case 1:
-			//https://opengameart.org/content/flatshot-complete-sfx-pack
-			file = new File("assets/music/shoot.wav");
-			break;
-		case 2:
-			//http://soundbible.com/642-Splat.html
-			file = new File("assets/music/splat.wav");
-			break;
-		case 3:
-			//http://soundbible.com/144-Spraying-Deodorant.html
-			file = new File("assets/music/spray.wav");
+		if (gun != null){
+			choice = gun.getType();
 		}
+
+		if (gun.enoughPaint(player.getPaintLevel())){
+			switch(choice){
+			case 1:
+				//https://opengameart.org/content/flatshot-complete-sfx-pack
+				file = new File("assets/music/shoot.wav");
+				break;
+			case 2:
+				//http://soundbible.com/642-Splat.html
+				file = new File("assets/music/splat.wav");
+				break;
+			case 3:
+				//http://soundbible.com/144-Spraying-Deodorant.html
+				file = new File("assets/music/spray.wav");
+				break;
+			}
+		}
+		
+		
 		Clip clip = play(file);
 		FloatControl vol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 		vol.setValue(shootVol);
@@ -88,7 +100,7 @@ private final static float max = 6, min = -10;
 	public void playBgBattle(){
 		try {
 			//https://opengameart.org/content/hesitation-synth-electronic-loop	
-			File file = new File("./assets/music/battle2.wav");
+			File file = new File(battleFile);
 			AudioInputStream in = AudioSystem.getAudioInputStream(file);
 			
 			Clip clip = AudioSystem.getClip();
@@ -139,39 +151,41 @@ private final static float max = 6, min = -10;
 	//gain can be negative.
 	//Setting the volume only works if you change it before playing the clip.
 	public void setMenuVolume(float gain){
-		float gained = menuVol + gain;
-		if (gained > max){
-			menuVol = max;
-		}else if (gained < min){
+		muteAll();
+		if (gain == min){
 			stopMenuBg();
 		}else{
-			menuVol += gain;
+			stopMenuBg();
+			menuVol = gain;
+			playBgMenu();
+			
 		}
 		
 	}
 	
 	public void setBattleVolume(float gain){
-		float gained = battleVol + gain;
-		if (gained > max){
-			battleVol = max;
-		}else if (gained < min){
+		muteAll();
+		if (gain == min){
 			stopBattleBg();
 		}else{
-			battleVol += gain;
+			stopBattleBg();
+			battleVol = gain;
+			playBgBattle();
 		}
 	}
 	
 	public void setShootVolume(float gain){
-		float gained = shootVol + gain;
-		if (gained > max){
-			shoot = true;
-			shootVol = max;
-		}else if (gained < min){
+		muteAll();
+		if (gain == min){
 			shoot = false;
-			shootVol = min;
 		}else{
 			shoot = true;
-			shootVol += gain;
+			shootVol = gain;
+			File file = new File("assets/music/shoot.wav");
+			Clip clip = play(file);
+			FloatControl vol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			vol.setValue(shootVol);
+			clip.start();
 		}
 	}
 	
@@ -180,6 +194,30 @@ private final static float max = 6, min = -10;
 			return true;
 		}
 		return false;
+	}
+	
+	public void muteAll(){
+		stopMenuBg();
+		stopBattleBg();
+	}
+	
+	public void setBgChoice(int choice){
+		stopBattleBg();
+		switch(choice){
+		case 1:
+			battleFile = "./assets/music/hesitation.wav";
+			break;
+		case 2:
+			battleFile = "./assets/music/battle.wav";
+			break;
+		case 3:
+			battleFile = "./assets/music/battle2.wav";
+			break;
+		case 4:
+			battleFile = "./assets/music/newbattle.wav";
+		}
+		
+		playBgBattle();
 	}
 
 }
