@@ -4,20 +4,17 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Random;
-
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
 import com.aticatac.world.ai.utils.Translations;
-import com.aticatac.world.items.ShootGun;
+import com.aticatac.world.items.GunBox;
 import com.aticatac.world.items.SplatGun;
-import com.aticatac.world.items.SprayGun;
-
 import javafx.util.Pair;
 
 public class AIPlayer extends Player {
 
 	private final int PERCENTAGE_TO_MOVE = 85;
+	private final int MAXIMUM_DIST_GUNBOXES = 10;
 	private final int RANGE_TO_SHOOT = 100;
 	private int i;
 
@@ -43,8 +40,8 @@ public class AIPlayer extends Player {
 	@Override
 	public void update() {
 		if (i++ == 10) {
-		// Updates too fast
-		// This speed is good for moving perhaps but not for shooting
+			// Updates too fast
+			// This speed is good for moving perhaps but not for shooting
 			makeDecision();
 			i = 0;
 		}
@@ -56,7 +53,7 @@ public class AIPlayer extends Player {
 	 * direction
 	 */
 	public void makeDecision() {
-		int[][] reducedMap = level.getReducedMap(colour);
+		// int[][] reducedMap = level.getReducedMap(colour);
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
@@ -86,16 +83,25 @@ public class AIPlayer extends Player {
 			} else if (!intermediatePath.isEmpty()) {
 				makeNextMove();
 			} else {
-				// Need to get the reduced Map method to do what we want it to
-				// System.out.println("calculate path");
-				Point point = closestFreePoint();
-				if (point != null) {
-					pathToFreePoint(point);
-					makeNextMove();
+				boolean gbInRange = false;
+				ArrayList<GunBox> gunBoxes = new ArrayList<>(world.getGunBoxes());
+				for (GunBox gb : gunBoxes) {
+					if (!gbInRange && gb.getState() == 0
+							&& calculateDistance(position, gb.getRect().getLocation()) <= MAXIMUM_DIST_GUNBOXES) {
+						pathToFreePoint(gb.getRect().getLocation());
+						makeNextMove();
+						gbInRange = true;
+					}
+				}
+				if (!gbInRange) {
+					Point point = closestFreePoint();
+					if (point != null) {
+						pathToFreePoint(point);
+						makeNextMove();
+					}
 				}
 			}
 		} else {
-			// System.out.println("move");
 			makeNextMove();
 		}
 	}
@@ -270,10 +276,6 @@ public class AIPlayer extends Player {
 			move(intermediate.x - position.x, intermediate.y - position.y);
 			gridPosition.setLocation(world.displayPositionToCoords(position));
 		}
-
-		// move(world.coordsToDisplayPosition(next).x - position.x,
-		// world.coordsToDisplayPosition(next).y - position.y);
-		// gridPosition.setLocation(next);
 	}
 
 	public LinkedList<Point> gridToDisplay(Point currentGrid, Point nextGrid) {
@@ -281,8 +283,7 @@ public class AIPlayer extends Player {
 		Point current = currentGrid;
 		Point next = world.coordsToDisplayPosition(nextGrid);
 		while (!world.displayPositionToCoords(current).equals(world.displayPositionToCoords(next))
-				&& calculateDistance(current, next) > 1.5) {
-			// 1.5 used as a cutoff for when distance is at most a 1,1 translation
+				&& (Math.abs(current.x - next.x) != 1 || Math.abs(current.y - next.y) != 1)) {
 			if (current.x < next.x && current.y < next.y) {
 				current = new Point(current.x + 2, current.y + 2);
 			} else if (current.x < next.x && current.y > next.y) {
@@ -302,23 +303,24 @@ public class AIPlayer extends Player {
 			}
 			newPath.add(current);
 		}
-		if (calculateDistance(current, next) != 0) {
-			if (current.x < next.x && current.y < next.y) {
-				current = new Point(current.x + 1, current.y + 1);
-			} else if (current.x < next.x && current.y > next.y) {
-				current = new Point(current.x + 1, current.y - 1);
-			} else if (current.x < next.x && current.y == next.y) {
-				current = new Point(current.x + 1, current.y);
-			} else if (current.x > next.x && current.y < next.y) {
-				current = new Point(current.x - 1, current.y + 1);
-			} else if (current.x > next.x && current.y > next.y) {
-				current = new Point(current.x - 1, current.y - 1);
-			} else if (current.x > next.x && current.y == next.y) {
-				current = new Point(current.x - 1, current.y);
-			} else if (current.x == next.x && current.y < next.y) {
-				current = new Point(current.x, current.y + 1);
-			} else if (current.x == next.x && current.y > next.y) {
-				current = new Point(current.x, current.y - 1);
+
+		if (Math.abs(current.x - next.x) == 1) {
+			while (current.y != next.y && Math.abs(current.y - next.y) != 1) {
+				if (current.y < next.y) {
+					current = new Point(current.x, current.y + 2);
+				} else {
+					current = new Point(current.x, current.y - 2);
+				}
+				newPath.add(current);
+			}
+		} else if (Math.abs(current.y - next.y) == 1) {
+			while (current.x != next.x && Math.abs(current.x - next.x) != 1) {
+				if (current.x < next.x) {
+					current = new Point(current.x + 2, current.y);
+				} else {
+					current = new Point(current.x - 2, current.y);
+				}
+				newPath.add(current);
 			}
 		}
 		return newPath;
@@ -335,7 +337,7 @@ public class AIPlayer extends Player {
 		LinkedList<Point> toOpen = new LinkedList<>();
 		ArrayList<Point> visited = new ArrayList<>();
 		Collections.shuffle(translations);
-		
+
 		boolean foundClosest = false;
 
 		Point current = gridPosition;
@@ -372,7 +374,9 @@ public class AIPlayer extends Player {
 		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
 	}
 
-	 /* Sets the Players position to the given display position
+	/*
+	 * Sets the Players position to the given display position
+	 * 
 	 * @param position The display position of the player
 	 */
 	@Override
