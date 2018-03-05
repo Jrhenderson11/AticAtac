@@ -1,20 +1,16 @@
 package com.aticatac.ui.lobby.display.utils;
 
-import static java.lang.StrictMath.sin;
-
 import com.aticatac.lobby.LobbyServer;
-import com.aticatac.networking.client.UDPClient;
-import com.aticatac.ui.tutorial.MultiPlayer;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
-
-import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import static java.lang.StrictMath.sin;
 
 public class ReadyStartButton extends Button {
 

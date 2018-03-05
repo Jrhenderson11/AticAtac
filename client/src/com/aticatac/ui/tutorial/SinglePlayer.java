@@ -5,8 +5,11 @@ import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.overlay.Overlay;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
+import com.aticatac.utils.GameState;
 import com.aticatac.utils.SystemSettings;
+import com.aticatac.world.AIPlayer;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
@@ -20,28 +23,28 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 public class SinglePlayer extends Scene {
+	
+	public World world;
 
 	public SinglePlayer(Group root) {
 		super(root);
-		
-		//display
-		Renderer renderer = new Renderer(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight());
-		Canvas canvas = new Canvas(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight());
+		Renderer renderer = new Renderer();
+		Canvas canvas = new Canvas(SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
         root.getChildren().add(canvas);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         Overlay overlay = new Overlay();
         
         //world
-        World world = new World(new Level(100, 100));
+        this.world = new World(new Level(100, 100));
         world.newRound();
         renderer.setWorld(world);
         
         Player player = new Player(Controller.REAL, "player", 2);
-        Player ai1 = new Player(Controller.REAL, "ai 1", 3);
-        Player ai2 = new Player(Controller.REAL, "ai 2", 4);
-        Player ai3 = new Player(Controller.REAL, "ai 3", 5);
+        AIPlayer ai1 = new AIPlayer(Controller.AI, world, "ai 1", 3);
+        AIPlayer ai2 = new AIPlayer(Controller.AI, world, "ai 2", 4);
+        AIPlayer ai3 = new AIPlayer(Controller.AI, world, "ai 3", 5);
         
         world.addPlayer(player);
         world.addPlayer(ai1);
@@ -58,6 +61,11 @@ public class SinglePlayer extends Scene {
   				if (!input.contains(code)) {
   					input.add(code);
   				}
+  				if (code == KeyCode.J) {
+  					for (Player player: world.getPlayers()) {
+  						System.out.println(player.getIdentifier() + " controls: " + world.getLevel().getPercentTiles(player.getColour()) + "%");
+  					}
+  				}
   			}
   	    });
   		
@@ -69,13 +77,13 @@ public class SinglePlayer extends Scene {
   	        }
   	    });
   		
-  	//updates player looking direction based on mouse pointer when mouse moves.
+  		//updates player looking direction based on mouse pointer when mouse moves.
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	Point p = player.getPosition();
-  	        	double dy = me.getY() - p.y; //y axis goes down
-  	        	double dx = me.getX() - p.x;
+  	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
+  	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
   	        	double r = 0.0;
   	        	
   	        	//upper right angles
@@ -108,22 +116,52 @@ public class SinglePlayer extends Scene {
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
   	        		//m.playShoot();
-  	        		player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
+  	        		player.getGun().fire(player.getLookDirection(), 
+  	        							new Point((int) SystemSettings.getDescaledX(me.getX()), 
+  	        									  (int) SystemSettings.getDescaledY(me.getY())), 
+  	        							world);
   	        	}
   	        }
   		});
   		
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	canvas.setWidth(SystemSettings.getScreenWidth());
+  	        	canvas.setHeight(SystemSettings.getScreenHeight());
+  	        	GraphicsContext gc = canvas.getGraphicsContext2D();
   	        	//update world
-  	        	world.update();
-  	        	world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+  	        	if (world.getGameState() == GameState.PLAYING) {
+  	        		world.update();
+  	        		world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+  	        	}
   	        	
   	        	//draw scene
   	        	renderer.render(gc);
   	        	
   	        	//draw overlay
   	        	overlay.drawOverlay(gc, world, player.getIdentifier());
+  	        	
+  	        	//check for round over
+  	        	if (world.getGameState() == GameState.OVER) {
+  	        		if (world.getWinner() != null) {
+  	        			Color color = new Color(0, 0, 0, 0.7f);
+  	        			gc.setFill(color);
+  	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+  	        			gc.setFill(Color.WHITE);
+  	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+  	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
+  	        		}
+  	        	}
+  	        	
+  	        	//check for ready message
+  	        	if (world.getGameState() == GameState.READY) {
+        			Color color = new Color(0, 0, 0, 0.7f);
+        			gc.setFill(color);
+        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        			gc.setFill(Color.WHITE);
+        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+        			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
+  	        	}
   	        }
   	    }.start();   
 	}

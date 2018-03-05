@@ -2,6 +2,7 @@ package com.aticatac.ui.lobby.display.utils;
 
 import static java.lang.StrictMath.sin;
 
+import java.io.File;
 import java.util.Optional;
 
 import com.aticatac.Utils;
@@ -9,9 +10,11 @@ import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.LobbyServer;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.utils.Drawable;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
@@ -19,6 +22,7 @@ import javafx.scene.text.TextAlignment;
 public class ClientInfoBrick implements Drawable {
 
     private final int offset;
+    private boolean lead;
     private Optional<KickButton> kbutton;
     private ClientInfo mine;
 
@@ -28,7 +32,9 @@ public class ClientInfoBrick implements Drawable {
         this.offset = i;
         kbutton1 = Optional.empty();
         //TODO: replace placeholder 0 in lobby
+        this.lead = false;
         if (isLead && mine!=null && !info.getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
+            this.lead = isLead;
             KickButton kick = new KickButton(offset, server, info.getID());
             Displayer.getButtons().add(kick);
             Displayer.getDrawables().add(kick);
@@ -70,6 +76,7 @@ public class ClientInfoBrick implements Drawable {
         gc.setFill(Color.WHITE);
         gc.setStroke(Color.BLACK);
         gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(UIDrawer.LOBBY_DISPLAY_TEXT);
         gc.strokeText(username, x + w * 0.1, y + h * 0.55);
         gc.fillText(username, x + w * 0.1, y + h * 0.55);
 
@@ -105,6 +112,11 @@ public class ClientInfoBrick implements Drawable {
         kbutton.ifPresent(kickButton -> {
             kickButton.draw(gc, now);
         });
+
+        // Crown :3
+
+        File crown = new File("assets/ui/crown.png");
+        gc.drawImage(new Image(crown.toURI().toString()), x + w * 0.9, y + h * 0.2, w * 0.1, h * 0.6);
 
     }
 }

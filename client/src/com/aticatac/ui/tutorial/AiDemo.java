@@ -43,7 +43,7 @@ public class AiDemo extends Scene {
         //init display stuff
         this.displayWidth = SystemSettings.getNativeWidth();
         this.displayHeight = SystemSettings.getNativeHeight();
-        this.renderer = new Renderer(displayWidth, displayHeight);
+        this.renderer = new Renderer();
         this.tips = true;
         
         Canvas canvas = new Canvas(displayWidth, displayHeight);
