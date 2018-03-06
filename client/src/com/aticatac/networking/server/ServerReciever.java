@@ -123,7 +123,13 @@ public class ServerReciever extends Thread {
 			this.master.setClientReady(origin, originPort);
 
 		} else if (data.equals("quit")) {
-			
+			//remove player from game
+			master.removePlayer(origin, originPort);
+			//remove player from lobby
+			master.leaveLobby(origin, originPort);
+			//remove from connection table
+			this.master.removeConnection(origin, originPort);
+			System.out.println("client quit successful");
 		} else if (data.equals("lobbypls")) {
 			// SENDLOBBY
 			this.master.sendAllLobby();

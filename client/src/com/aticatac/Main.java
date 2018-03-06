@@ -16,6 +16,8 @@ import javafx.stage.WindowEvent;
 
 public class Main extends Application{
 
+	UDPClient server;
+	
     public static void main(String[] args) {
 
         //SystemSettings.setScreenHeight(480);
@@ -44,7 +46,6 @@ public class Main extends Application{
     
     @Override
     public void start(Stage primaryStage) {
-    	UDPClient server = null;
     	server = this.initialiseConnection(server);
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
@@ -53,7 +54,8 @@ public class Main extends Application{
         
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                System.exit(0);
+                server.quit();
+            	System.exit(0);
             }
 
         });  

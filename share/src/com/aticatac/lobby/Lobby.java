@@ -6,6 +6,7 @@ import java.net.InetAddress;
 //TODO: ClientInfo, Lobby, LobbyInfo all need to be shared by the server project @James
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Lobby implements Serializable {
 
@@ -27,7 +28,7 @@ public class Lobby implements Serializable {
 	}
 
 	private ArrayList<ai> bots;
-	private ArrayList<ClientInfo> serfs;
+	private CopyOnWriteArrayList<ClientInfo> serfs;
 	public final int ID;
 	public final String NAME;
 
@@ -35,7 +36,7 @@ public class Lobby implements Serializable {
 		this.lobbyLeader = lobbyLeader;
 		this.lobbyLeader.ready();
 		System.out.println("Client " + lobbyLeader.getID() + " added as leader");
-		serfs = new ArrayList<>();
+		serfs = new CopyOnWriteArrayList<>();
 		bots = new ArrayList<>();
 		this.game_started = false;
 		this.ID = info.ID;
@@ -47,7 +48,7 @@ public class Lobby implements Serializable {
 	}
 
 	public ArrayList<ClientInfo> getPeasants() {
-		return serfs;
+		return new ArrayList(serfs);
 	}
 
 	public ArrayList<ClientInfo> getAll() {

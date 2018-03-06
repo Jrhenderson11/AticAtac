@@ -263,4 +263,8 @@ public class UDPClient extends Task implements LobbyServer {
 		System.out.println("my ip set as " + newIP);
 		this.myip = newIP;
 	}
+
+	public void quit() {
+		this.sendData("quit");
+	}
 }

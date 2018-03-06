@@ -82,7 +82,7 @@ public class World implements Serializable {
 	 * Number of times the GunBoxes have been respawned, used to avoid respawning multiple times
 	 */
 	private int boxRespawns;
-	
+
 	
 	// -----------
 	// Constructor
@@ -498,6 +498,17 @@ public class World implements Serializable {
 			this.players.add(player);
 			return true;
 		} else return false;
+	}
+
+	public boolean removePlayer(String id) {
+		for (int i=0;i< this.players.size();i++) {
+			Player currentPlayer = (Player) ((LinkedList<Player>) players).get(i); 
+			if (currentPlayer.getIdentifier().equals(id)) {
+				this.players.remove(currentPlayer);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

@@ -109,14 +109,16 @@ public class UDPServer extends Thread {
 	}
 
 	public void leaveLobby(InetAddress address, int originPort) {
-		ClientInfo newClient = this.getClientInfo(address, originPort);
 
-		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
-			this.lobby.removeClient(newClient.getID());
-		}
-		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
-		if (this.lobby.getAll().size() == 0) {
-			this.status = Globals.IN_LIMBO;
+		ClientInfo newClient = this.getClientInfo(address, originPort);
+		if (this.lobby != null) {
+			if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
+				this.lobby.removeClient(newClient.getID());
+			}
+			this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
+			if (this.lobby.getAll().size() == 0) {
+				this.status = Globals.IN_LIMBO;
+			}
 		}
 		System.out.println("Client left lobby");
 	}
@@ -130,11 +132,14 @@ public class UDPServer extends Thread {
 	}
 
 	public ClientInfo getClientInfo(InetAddress address, int port) {
-
-		for (ClientInfo info : this.lobby.getAll()) {
-			if (info.getAddress().equals(address) && info.getOriginPort() == port) {
-				return info;
+		try {
+			for (ClientInfo info : this.lobby.getAll()) {
+				if (info.getAddress().equals(address) && info.getOriginPort() == port) {
+					return info;
+				}
 			}
+		} catch (NullPointerException e) {
+			System.out.println("client disconnected and info no longer exists");
 		}
 		System.out.println("invalid client address to search for");
 		return null;
@@ -176,5 +181,25 @@ public class UDPServer extends Thread {
 	public void replyIP(InetAddress origin, int originPort) {
 		String msg = "IP:" + (origin.toString());
 		this.sender.sendClientMessage(origin, originPort, msg);
+	}
+
+	public void removePlayer(InetAddress origin, int originPort) {
+		if (this.status == Globals.IN_GAME) {
+			this.model.removePlayer(this.getClientInfo(origin, originPort).getID());
+		}
+	}
+
+	public void removeConnection(InetAddress origin, int originPort) {
+		for (int i = 0; i < this.clientList.size(); i++) {
+			if (this.clientList.get(i).getAddress().equals(origin)
+					&& this.clientList.get(i).getOriginPort() == originPort) {
+				this.clientList.remove(i);
+			}
+		}
+		// reset state if only connection
+		if (this.clientList.size() == 0) {
+			this.status = Globals.IN_LIMBO;
+		}
+
 	}
 }
