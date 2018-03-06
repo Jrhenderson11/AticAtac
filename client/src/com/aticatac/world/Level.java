@@ -1,5 +1,7 @@
 package com.aticatac.world;
 
+import com.aticatac.world.ai.utils.LevelGen;
+
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,6 +29,12 @@ public class Level implements Serializable {
 		this.height = newHeight;
 		this.grid = new int[width][height];
 		this.fillmap(0);
+	}
+
+	public Level(int[][] grid) {
+		this.grid = grid;
+		this.width = grid.length;
+		this.height = grid[0].length;
 	}
 
 	public int[][] getGrid() {
@@ -319,6 +327,11 @@ public class Level implements Serializable {
 	}
 
 	public void randomiseMap() {
+
+	    this.setGrid(LevelGen.get(this.width, this.height));
+
+
+		/* previous code
 		Random random = new Random();
 		// background
 		this.fillmap(0);
@@ -348,6 +361,7 @@ public class Level implements Serializable {
 
 		this.makeRect(1, 1, 30, 30, 0);
 		this.makeWalls();
+		*/
 	}
 
 	// random methods
