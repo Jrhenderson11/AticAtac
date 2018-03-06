@@ -39,6 +39,10 @@ public class Overlay {
 		drawRoundInfo(gc, world, id);
 	}
 	
+	/**
+	 * Draws the framing around the overlay display
+	 * @param gc
+	 */
 	private void drawFraming(GraphicsContext gc) {
 		double glowRadius = SystemSettings.getScaledX(3);
 		double glowArc = SystemSettings.getScaledX(6);
@@ -90,7 +94,7 @@ public class Overlay {
 						(SystemSettings.getScreenHeight() - getHeight()) + (i++ * (getHeight() / 5)));
 			} else {
 				double topPadding = 20;
-				double padding = 96;
+				double padding = 106;
 				gc.setTextAlign(TextAlignment.CENTER);
 				gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
 				gc.setFill(Renderer.getColourByVal(player.getColour()));
@@ -148,7 +152,7 @@ public class Overlay {
 	}
 	
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
-		double sidePadding = 10;
+		double sidePadding = 3;
 		double bottomPadding = SystemSettings.getScaledY(28);
 		String weapName = "None";
 		Gun w = world.getPlayerById(id).getGun();
