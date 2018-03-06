@@ -31,10 +31,9 @@ public class SinglePlayer extends Scene {
 
 	public SinglePlayer(Group root) {
 		super(root);
-		Renderer renderer = new Renderer(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight());
-		Canvas canvas = new Canvas(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight());
+		Renderer renderer = new Renderer();
+		Canvas canvas = new Canvas(SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
         root.getChildren().add(canvas);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         Overlay overlay = new Overlay();
         
         //world
@@ -83,8 +82,8 @@ public class SinglePlayer extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	Point p = player.getPosition();
-  	        	double dy = me.getY() - p.y; //y axis goes down
-  	        	double dx = me.getX() - p.x;
+  	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
+  	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
   	        	double r = 0.0;
   	        	
   	        	//upper right angles
@@ -117,13 +116,19 @@ public class SinglePlayer extends Scene {
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
   	        		//m.playShoot();
-  	        		player.getGun().fire(player.getLookDirection(), new Point((int) me.getX(), (int) me.getY()), world);
+  	        		player.getGun().fire(player.getLookDirection(), 
+  	        							new Point((int) SystemSettings.getDescaledX(me.getX()), 
+  	        									  (int) SystemSettings.getDescaledY(me.getY())), 
+  	        							world);
   	        	}
   	        }
   		});
   		
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	canvas.setWidth(SystemSettings.getScreenWidth());
+  	        	canvas.setHeight(SystemSettings.getScreenHeight());
+  	        	GraphicsContext gc = canvas.getGraphicsContext2D();
   	        	//update world
   	        	if (world.getGameState() == GameState.PLAYING) {
   	        		world.update();
@@ -135,9 +140,6 @@ public class SinglePlayer extends Scene {
   	        	
   	        	//draw overlay
   	        	overlay.drawOverlay(gc, world, player.getIdentifier());
-  	        	gc.setFill(Color.WHITE);
-  	        	gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-  	        	gc.fillText(""+world.getRoundTime(), 20, 20);
   	        	
   	        	//check for round over
   	        	if (world.getGameState() == GameState.OVER) {
@@ -147,7 +149,7 @@ public class SinglePlayer extends Scene {
   	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
   	        			gc.setFill(Color.WHITE);
   	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-  	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getNativeWidth()/2, SystemSettings.getNativeHeight()/2);
+  	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
   	        		}
   	        	}
   	        	
@@ -158,7 +160,7 @@ public class SinglePlayer extends Scene {
         			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
         			gc.setFill(Color.WHITE);
         			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-        			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getNativeWidth()/2, SystemSettings.getNativeHeight()/2);
+        			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
   	        	}
   	        }
   	    }.start();   

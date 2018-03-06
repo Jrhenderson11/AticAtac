@@ -52,7 +52,7 @@ public class ShootBullet extends Bullet {
 	@Override
 	public void hit(World world, Point location) {
 		//a single paint splat in the given location
-		world.getLevel().updateCoords(location.x, location.y, super.getShooter());
+		world.getLevel().makeShoot(location.x, location.y, super.getShooter());
 		super.kill(world); //removes this bullet from the world
 	}
 

@@ -22,12 +22,13 @@ public class Overlay {
 		drawPercents(gc, world, id);
 		drawWeapon(gc, world, id);
 		drawPaintLevel(gc, world, id);
+		drawTimer(gc, world);
 	}
 
 	private void drawPercents(GraphicsContext gc, World world, String id) {
 		
-		int width = SystemSettings.getNativeWidth();
-	    int height = SystemSettings.getNativeHeight();
+		int width = SystemSettings.getScreenWidth();
+	    int height = SystemSettings.getScreenHeight();
 		
 	    //TODO: make adaptable to screen size
 		int x = 200;
@@ -57,8 +58,8 @@ public class Overlay {
 	private void drawPaintLevel(GraphicsContext gc, World world, String id) {
 		String text = "paint";
 		
-		int width = SystemSettings.getNativeWidth();
-	    int height = SystemSettings.getNativeHeight();
+		int width = SystemSettings.getScreenWidth();
+	    int height = SystemSettings.getScreenHeight();
 		
 		//draw bar on right side
 		
@@ -99,8 +100,8 @@ public class Overlay {
 		} else if (w instanceof SprayGun) {
 			weapName = "Spray Gun";
 		}
-		int width = SystemSettings.getNativeWidth();
-	    int height = SystemSettings.getNativeHeight();
+		int width = SystemSettings.getScreenWidth();
+	    int height = SystemSettings.getScreenHeight();
 		int x = width - 150;
 		int y = height - 100;
 		//draw in lower corner
@@ -117,6 +118,8 @@ public class Overlay {
 	} 
 
 	private void drawTimer(GraphicsContext gc, World world) {
-		
+		gc.setFill(Color.WHITE);
+      	gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+      	gc.fillText(""+world.getRoundTime(), 20, 20);
 	}
 }

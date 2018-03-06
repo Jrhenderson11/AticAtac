@@ -107,10 +107,16 @@ public class ServerReciever extends Thread {
 
 		String[] parts = data.split(":");
 		// LOBBY STUFF
-		if (data.equals("init")) {
+		if (data.equals("whatismyip")) {
+			master.replyIP(origin, originPort);
+		} if (data.equals("init")) {
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.joinLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);
+		} else if(parts[0].equals("joinlobby")) {
+			int lobbyNum = Integer.parseInt(parts[1]);
+			
+			
 		} else if (data.equals("ready")) {
 			// SET LOBBY TO READY
 			this.master.setClientReady(origin, originPort);

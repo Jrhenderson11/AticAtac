@@ -33,7 +33,7 @@ public class World implements Serializable {
 	/**
 	 * Delay between paint regeneration ticks.
 	 */
-	private static final int REGEN_DELAY = 60;
+	private static final int REGEN_DELAY = 100;
 	/**
 	 * The Collection of Players in the world, should be up to 4.
 	 */
@@ -215,7 +215,7 @@ public class World implements Serializable {
 		
 		Player player = this.getPlayerById(id);
 		// left
-		if (input.contains(KeyCode.A)) {
+		if (input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)) {
 	
 			player.move(-2, 0);
 			Point p = this.displayPositionToCoords(player.getPosition());
@@ -225,7 +225,7 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// right
-		if (input.contains(KeyCode.D)) {
+		if (input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)) {
 		
 			player.move(2, 0);
 			Point p = this.displayPositionToCoords(player.getPosition());
@@ -235,7 +235,7 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// up
-		if (input.contains(KeyCode.W)) {
+		if (input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
 		
 			player.move(0, -2);
 			Point p = this.displayPositionToCoords(player.getPosition());
@@ -245,12 +245,68 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// down
-		if (input.contains(KeyCode.S)) {
+		if (input.contains(KeyCode.S) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
 		
 			player.move(0, 2);
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(0, -2);
+			}
+		}
+		// System.out.println(input.size());
+		// down & right
+		if (input.contains(KeyCode.S) && input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)){
+			player.move(0, 1);
+			Point pS = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pS.x][pS.y] == 1) {
+				player.move(0, -1);
+			}
+			player.move(1, 0);
+			Point pD = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pD.x][pD.y] == 1) {
+				player.move(-1, 0);
+			}
+		}
+		// System.out.println(input.size());
+		// down & left
+		if (input.contains(KeyCode.S) && input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.D)){
+			player.move(0, 1);
+			Point pS = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pS.x][pS.y] == 1) {
+				player.move(0, -1);
+			}
+			player.move(-1, 0);
+			Point pA = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pA.x][pA.y] == 1) {
+				player.move(1, 0);
+			}
+		}
+		// System.out.println(input.size());
+		// up & right
+		if (input.contains(KeyCode.W) && input.contains(KeyCode.D) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)){
+			player.move(0, -1);
+			Point pW = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pW.x][pW.y] == 1) {
+				player.move(0, 1);
+			}
+			player.move(1, 0);
+			Point pD = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pD.x][pD.y] == 1) {
+				player.move(-1, 0);
+			}
+		}
+		// System.out.println(input.size());
+		// up & left
+		if (input.contains(KeyCode.W) && input.contains(KeyCode.A) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)){
+			player.move(0, -1);
+			Point pW = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pW.x][pW.y] == 1) {
+				player.move(0, 1);
+			}
+			player.move(-1, 0);
+			Point pA = this.displayPositionToCoords(player.getPosition());
+			if (level.getGrid()[pA.x][pA.y] == 1) {
+				player.move(1, 0);
 			}
 		}
 		// System.out.println(input.size());

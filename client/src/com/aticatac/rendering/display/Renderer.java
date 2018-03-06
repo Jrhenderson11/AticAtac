@@ -1,9 +1,6 @@
 package com.aticatac.rendering.display;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.util.LinkedList;
-
+import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
@@ -18,22 +15,8 @@ import javafx.scene.paint.Color;
 
 public class Renderer {
 	
-	
-	// ------
-	// Fields
-	// ------
-	
-	
-	
-	
-	/**
-	 * A rectangle encapsulating the area of the coordinate space where renderable components in this space will be displayed.
-	 */
-	private Rectangle displayRect;
-	/**
-	 * A list of the layers to render
-	 */
-	private LinkedList<RenderLayer> layers;
+	private final static Color NORMAL_WALL_COLOR = Color.WHITE;
+	private Color wallColor;
 	/**
 	 * The world to render
 	 */
@@ -46,40 +29,12 @@ public class Renderer {
 	
 	
 	/**
-	 * Constructs a new DisplayPanel with the given rectangle as the display rectangle
+	 * Constructs a Renderer with the given rectangle as the display rectangle
 	 * @param displayRect The rectangle that describes the display's position and dimensions
 	 */
-	public Renderer(Rectangle displayRect) {
-		this.displayRect = displayRect;
-		this.layers = new LinkedList<RenderLayer>();
-	}
-		
-	/**
-	 * Constructs a new DisplayPanel with a display rectangle of given width and height at the given coordinate (left, top)
-	 * @param left The x coordinate of the left side of the display rectangle
-	 * @param top The y coordinate of the top side of the display rectangle
-	 * @param width The width of the display rectangle
-	 * @param height The height of the display rectangle
-	 */
-	public Renderer(int left, int top, int width, int height) {
-		this(new Rectangle(left, top, width, height));
-	}
-	
-	/**
-	 * Creates a DisplayPanel with the given dimensions
-	 * @param screenSize The dimensions of the panel
-	 */
-	public Renderer(Dimension screenSize) {
-		this(new Rectangle(screenSize));
-	}
-	
-	/**
-	 * Creates a DisplayPanel with the given dimensions
-	 * @param width The width of the panel
-	 * @param height The height of the panel
-	 */
-	public Renderer(int width, int height) {
-		this(0, 0, width, height);
+	public Renderer() {
+		this.world = null;
+		this.wallColor = NORMAL_WALL_COLOR;
 	}
 	
 	
@@ -87,28 +42,22 @@ public class Renderer {
 	// Methods
 	// -------
 
-	  
+
 	/**
 	 * Render map
-	 * Render each layer in the layer list in order
 	 * @param g The GraphicsContext, probably from Canvas.getGraphicsContext2D()
 	 */
 	public void render(GraphicsContext g) {
 		//fill the background with white
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, displayRect.width, displayRect.height);
+		g.fillRect(0, 0, SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
 		
 		//render the level
 		//renderMapBW(g);
 		renderTerritory(g);
-		renderMapNeon(g, Color.RED);
+		renderMapNeon(g, wallColor);
 		renderGunBoxes(g);
 		renderBullets(g);
-		
-		//render any other components in the layers
-		for (RenderLayer layer: layers) {
-			layer.render(g, displayRect);
-		}
 		
 		//render players
 		renderPlayers(g);
@@ -123,8 +72,8 @@ public class Renderer {
 		//render the level
 		g.setFill(Color.BLACK);
 		Level map = world.getLevel();
-		int tileWidth = displayRect.width / map.getWidth();
-		int tileHeight = displayRect.height / map.getHeight();
+		double tileWidth = SystemSettings.getNativeWidth() / map.getWidth();
+		double tileHeight = SystemSettings.getNativeHeight() / map.getHeight();
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y <map.getHeight(); y++) {
 				if (map.getCoords(x, y) == 1) {                //draw if tile is a wall
@@ -142,9 +91,9 @@ public class Renderer {
 	public void renderMapNeon(GraphicsContext g, Color color) {
 		//settings
 		double opacity = 0.5;
-		int glowRadius = 2;
-		int glowArc = 3;
-		int barWidth = 1;
+		double glowRadius = scaleX(2);
+		double glowArc = scaleX(3);
+		double barWidth = scaleX(1);
 		
 		//setup color
 		Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
@@ -153,8 +102,8 @@ public class Renderer {
 		//load map
 		Level map = world.getLevel();
 		int[][] grid = map.getGrid();
-		int tileWidth = displayRect.width / map.getWidth();
-		int tileHeight = displayRect.height / map.getHeight();
+		double tileWidth = scaleX(SystemSettings.getNativeWidth() / map.getWidth());
+		double tileHeight = scaleY(SystemSettings.getNativeHeight() / map.getHeight());
 		
 		// if (x, y) is the top left corner of a quad square
 		// 
@@ -168,8 +117,8 @@ public class Renderer {
 			for (int y = 0; y < grid[0].length - 1; y++) {
 				//north bar (a ^ b)
 				if ((grid[x][y] == 1) ^ (grid[x+1][y] == 1)) {
-					int drawX = ((x + 1) * tileWidth);
-					int drawY = (y * tileHeight);
+					double drawX = ((x + 1) * tileWidth);
+					double drawY = (y * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
 					g.fillRoundRect(drawX, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
@@ -179,8 +128,8 @@ public class Renderer {
 				}
 				//east bar (b ^ d)
 				if ((grid[x+1][y] == 1) ^ (grid[x+1][y+1] == 1)) {
-					int drawX = ((x + 1) * tileWidth);
-					int drawY = ((y + 1) * tileHeight);
+					double drawX = ((x + 1) * tileWidth);
+					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
@@ -190,8 +139,8 @@ public class Renderer {
 				}
 				//south bar (c ^ d)
 				if ((grid[x][y+1] == 1) ^ (grid[x+1][y+1] == 1)) {
-					int drawX = ((x + 1) * tileWidth);
-					int drawY = ((y + 1) * tileHeight);
+					double drawX = ((x + 1) * tileWidth);
+					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
@@ -201,8 +150,8 @@ public class Renderer {
 				}
 				//west bar (a ^ c)
 				if ((grid[x][y] == 1) ^ (grid[x][y+1] == 1)) {
-					int drawX = (x * tileWidth);
-					int drawY = ((y + 1) * tileHeight);
+					double drawX = (x * tileWidth);
+					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
 					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
@@ -219,15 +168,16 @@ public class Renderer {
 	 * @param gc The GraphicsContext to draw to.
 	 */
 	public void renderPlayers(GraphicsContext gc) {
-		int playerSize = 8;
+		double playerSize = scaleX(Player.PLAYER_SIZE);
 		double opacity = 0.5;
-		int l = 10; //length of direction pointer
+		double l = scaleX(10); //length of direction pointer
 				
 		for (Player player: world.getPlayers()) {
 			
-			Color color = this.getColourByVal(player.getColour());			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-			int px = player.getPosition().x; //player position
-			int py = player.getPosition().y;
+			Color color = getColourByVal(player.getColour());
+			Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+			double px = scaleX(player.getPosition().x); //player position
+			double py = scaleY(player.getPosition().y);
 			
 			gc.setStroke(color);
 			gc.setLineWidth(1.0);
@@ -235,7 +185,7 @@ public class Renderer {
 			gc.strokeLine(px, py, px + (l * Math.sin(player.getLookDirection())), py - (l * Math.cos(player.getLookDirection())));
 			gc.setStroke(opaqueColor);
 			gc.setLineWidth(3);
-			gc.strokeOval(player.getPosition().x - (playerSize/2), player.getPosition().y - (playerSize/2), playerSize, playerSize);
+			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
 		}
 	}
 	
@@ -245,8 +195,8 @@ public class Renderer {
 	 */
 	public void renderTerritory(GraphicsContext gc) {
 		int[][] grid = world.getLevel().getGrid();
-		int tileWidth = displayRect.width / world.getLevel().getWidth();
-		int tileHeight = displayRect.height / world.getLevel().getHeight();
+		double tileWidth = scaleX(SystemSettings.getNativeWidth() / world.getLevel().getWidth());
+		double tileHeight = scaleY(SystemSettings.getNativeHeight() / world.getLevel().getHeight());
 		double opacity = 0.5;
 		double brightness = 0.7;
 		
@@ -254,11 +204,17 @@ public class Renderer {
 			for (int y = 0; y < grid[0].length; y++) {
 				for (Player player: world.getPlayers()) {
 					if (grid[x][y] == player.getColour()) {
-						Color color = this.getColourByVal(player.getColour());
+						Color color = getColourByVal(player.getColour());
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
 						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 					}
+				}
+				if (grid[x][y] == 1) {
+					Color color = wallColor;
+					Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
+					gc.setFill(opaqueColor);
+					gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
 				}
 			}
 		}
@@ -272,7 +228,7 @@ public class Renderer {
 		for (Bullet bullet: world.getBullets()) {
 			//g.setFill(world.getPlayerColour(bullet.getShooter()));
 			g.setFill(getColourByVal(bullet.getShooter()));
-			g.fillOval(bullet.getRect().x, bullet.getRect().y, bullet.getRect().width, bullet.getRect().height);
+			g.fillOval(scaleX(bullet.getRect().x), scaleY(bullet.getRect().y), scaleX(bullet.getRect().width), scaleY(bullet.getRect().height));
 		}
 	}
 	
@@ -285,17 +241,17 @@ public class Renderer {
 		Color boxOutline = Color.RED;
 		Color boxDetail = Color.BLACK;
 		Color boxType = Color.WHITE;
-		int detailWidth = 2;
-		int detailMargin = 2;
-		int shootSize = 3;
-		int sprayLength = 14;
-		int splatSize = 10;
+		double detailWidth = scaleX(2);
+		double detailMargin = scaleX(2);
+		double shootSize = scaleX(3);
+		double sprayLength = scaleX(14);
+		double splatSize = scaleX(10);
 		//Render each gunbox
 		for (GunBox gunbox: world.getGunBoxes()) {
-			double xpos = gunbox.getRect().getX();
-			double ypos = gunbox.getRect().getY();
-			double width = gunbox.getRect().getWidth();
-			double height = gunbox.getRect().getHeight();
+			double xpos = scaleX(gunbox.getRect().getX());
+			double ypos = scaleY(gunbox.getRect().getY());
+			double width = scaleX(gunbox.getRect().getWidth());
+			double height = scaleY(gunbox.getRect().getHeight());
 			double tmpx;
 			double tmpy;
 			//draw generic box
@@ -324,68 +280,6 @@ public class Renderer {
 			}
 		}
 	}
-	
-	/**
-	 * Adds a layer to render
-	 * @param layer The RenderLayer to add
-	 * @return True if the layer was added
-	 */
-	public boolean addLayer(RenderLayer layer) {
-		return layers.add(layer);
-	}
-	
-	/**
-	 * Removes a layer from the rendering.
-	 * @param name The name of the layer to remove
-	 * @return Returns false if the name is not found
-	 */
-	public boolean removeLayer(String name) {
-		RenderLayer layer = getLayer(name);
-		if (layer != null) {
-			layer.hide();
-			return true;
-		} else return false;
-	}
-	
-	/**
-	 * Get a layer by its name
-	 * @param name The name of the layer
-	 * @return Returns the layer, or null if the name is not found/
-	 */
-	public RenderLayer getLayer(String name) {
-		for (RenderLayer layer: layers) {
-			if (layer.getName().equals(name)) {
-				return layer;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Hides the layer from being rendered
-	 * @param name
-	 * @return
-	 */
-	public boolean hideLayer(String name) {
-		RenderLayer layer = getLayer(name);
-		if (layer != null) {
-			layer.hide();
-			return true;
-		} else return false;
-	}
-	
-	/**
-	 * Set the layer to be drawn
-	 * @param name The name of the layer
-	 * @return Returns false if the name was not found
-	 */
-	public boolean showLayer(String name) {
-		RenderLayer layer = getLayer(name);
-		if (layer != null) {
-			layer.show();
-			return true;
-		} else return false;
-	}
 
 	/**
 	 * Returns the World instance this renderer draws
@@ -404,11 +298,27 @@ public class Renderer {
 	}
 	
 	/**
+	 * Scales the given 'x' value from its relative native position to screen width.
+	 * @param x The 'x' value to scale
+	 * @return A scaled 'x' value if scaling is on, or returns an unchanged 'x' if not
+	 */
+	private double scaleX(double x) {
+		return SystemSettings.getScaledX(x);
+	}
+	
+	/**
+	 * Scales the given 'y' value from its relative native position to screen height.
+	 * @param y The 'y' value to scale
+	 * @return A scaled 'y' value if scaling is on, or returns an unchanged 'y' if not
+	 */
+	private double scaleY(double y) {
+		return SystemSettings.getScaledY(y);
+	}
+	/**
 	 * Translates between integers and colours
 	 * @param val the val to translate
-	 * @return
+	 * @return The Color the value corresponds to.
 	 */
-	
 	public static Color getColourByVal(int val) {
 		switch (val) {
 		case 2:

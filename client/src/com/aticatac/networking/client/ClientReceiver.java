@@ -3,6 +3,7 @@ package com.aticatac.networking.client;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -61,6 +62,18 @@ public class ClientReceiver extends Thread {
 				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
 			}
+			
+			try {
+				String s = new String(packet.getData(), 0,packet.getLength());
+				if (s.contains("IP:")) {
+					//System.out.println(s);
+					master.setMyIP(InetAddress.getByName(s));
+				} else {
+				//	System.out.println(s);
+				}
+			} catch (Exception e) {
+				System.out.println("fail");
+			}
 			if (master.getStatus() == Globals.IN_LIMBO) {
 				// deserialise into lobby obj
 				try {
@@ -71,7 +84,7 @@ public class ClientReceiver extends Thread {
 					//System.out.println("cannot deserialise lobbyinfo (is it a model?)");
 					try {
 						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, name));
+						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, newLobby.NAME));
 					} catch (Exception e2) {}
 				}
 				//System.out.println("getting info");
@@ -133,5 +146,21 @@ public class ClientReceiver extends Thread {
 	 */
 	public World getModel() {
 		return this.model;
+	}
+
+	private static String byteArrayToHexString(byte[] data) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < data.length; i++) {
+			int halfbyte = (data[i] >>> 4) & 0x0F;
+			int two_halfs = 0;
+			do {
+				if ((0 <= halfbyte) && (halfbyte <= 9))
+					buf.append((char) ('0' + halfbyte));
+				else
+					buf.append((char) ('a' + (halfbyte - 10)));
+				halfbyte = data[i] & 0x0F;
+			} while (two_halfs++ < 1);
+		}
+		return buf.toString();
 	}
 }
