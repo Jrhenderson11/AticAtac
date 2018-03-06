@@ -189,10 +189,14 @@ public class Level implements Serializable {
 		// placeholder: make circle radius 5
 		this.makeCircle(posX, posY, 5, colour, 1);
 	}
+	
+	public void makeShoot(int posX, int posY, int colour) {
+		this.makeCircle(posX, posY, 1, colour, 1);
+	}
 
 	public void makeSpray(int posX, int posY, double direction, int colour) {
 		// placeholder: make spray of length 6, with the center at the given position
-		int length = 8;
+		int length = 10;
 		boolean posSpray = true; // when a wall is hit, these will go false to stop the spray going through walls
 		boolean negSpray = true;
 

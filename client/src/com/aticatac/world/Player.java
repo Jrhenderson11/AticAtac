@@ -1,6 +1,7 @@
 package com.aticatac.world;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
 
 import com.aticatac.utils.Controller;
@@ -16,7 +17,11 @@ public class Player implements Serializable{
 	/**
 	 * The rate at which paint regenerates proportional to the amount of territory control.
 	 */
-	public static final double PAINT_REGEN_RATE = 0.8d;
+	public static final double PAINT_REGEN_RATE = 0.4d;
+	/**
+	 * Default size (width and height) of the player
+	 */
+	public static final int PLAYER_SIZE = 8;
 	/**
 	 * The type of Controller of the player, AI or Real person
 	 */
@@ -142,6 +147,14 @@ public class Player implements Serializable{
 	public void setPosition(Point position) {
 		this.position = position;
 	}
+	
+	/**
+	 * Gets the rectangle that defines the collision boundary of the player
+	 * @return Returns a Rectangle defining the players collision boundaries
+	 */
+	public Rectangle getRect() {
+		return new Rectangle(position.x-(PLAYER_SIZE/2), position.y-(PLAYER_SIZE/2), PLAYER_SIZE, PLAYER_SIZE);
+	}
 
 	/**
 	 * Moves the player by the given dX, dY values
@@ -178,11 +191,22 @@ public class Player implements Serializable{
 	}
 
 	/**
-	 * Change the paint level by the given value
+	 * Change the paint level by the given value, will not change if the value goes out of bounds
 	 * @param levelChange The amount the change the paint by, can be negative
+	 * @return Returns False if the the paint level was not changed due to it being out of bounds
 	 */
-	public void changePaintLevel(double levelChange) {
-		setPaintLevel(paintLevel + levelChange);
+	public boolean changePaintLevel(double levelChange) {
+		return setPaintLevel(paintLevel + levelChange);
+	}
+	
+	/**
+	 * Decreases the paintLevel by the given amount, stopping at 0/ 
+	 * @param amount The amount of paint to decrease the level by.
+	 */
+	public void decreasePaintLevel(double amount) {
+		if (!changePaintLevel(-amount)) {
+			setPaintLevel(0);
+		}
 	}
 	
 	/**

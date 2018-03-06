@@ -1,7 +1,10 @@
 package com.aticatac.networking.client;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -28,6 +31,8 @@ public class UDPClient extends Task implements LobbyServer {
 	private ClientInfo myInfo;
 	private boolean ready;
 
+	private InetAddress myip = null;
+	
 	/**
 	 *  makes a new UDPClient object
 	 * @param newName this client's name
@@ -222,21 +227,40 @@ public class UDPClient extends Task implements LobbyServer {
 	
 	@Override
 	public ClientInfo myInfo() {
-		/*System.out.println("lobby players:" + this.lobby.getAll().size());
 		
-		for (ClientInfo i : this.lobby.getAll()) {
-			System.out.println(i.getAddress());
-			System.out.println(i.getOriginPort());
-			System.out.println("---------------");
-			System.out.println(this.address.toString().replaceAll("localhost", ""));
-			System.out.println(this.sender.getPort());
-			System.out.println("===================");
-		}*/
-		return this.lobby.getClientBySocket(this.address, this.sender.getPort());//lobby.getClientBySocket(this.address, this.sender.getPort());
+		if (myip==null) {
+			try {
+				for (NetworkInterface netint : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+				    for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
+				    	//System.out.println("InetAddress: " +  inetAddress);
+				        //System.out.println("Address:" + address.toString().replaceAll("localhost", ""));
+				        if (inetAddress.toString().substring(0, 3).equals(this.address.toString().replaceAll("localhost", "").substring(0, 3))) {
+				        	//System.out.println("I've decided my ip is " + inetAddress);
+				        	myip=inetAddress;
+				        }
+				    }
+				}
+				//System.out.println("cant find my ip");
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+		}
+    	return this.lobby.getClientBySocket(myip, this.sender.getPort());
+		
+		
 	}
 	
 	@Override
 	public void kickClient(String id) {
 		this.sendData("kick:" + id);
+	}
+	
+	public void whatismyip() {
+		this.sendData("whatismyip");
+	}
+	
+	public void setMyIP(InetAddress newIP) {
+		System.out.println("my ip set as " + newIP);
+		this.myip = newIP;
 	}
 }

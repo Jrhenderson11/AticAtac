@@ -52,9 +52,18 @@ public class MainMenu extends Scene {
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        MainMenuAnimation animation = new MainMenuAnimation(gc, menuItems, System.nanoTime());
+        
+        //Listeners for change of window size, resizing canvas to new size
+        primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
+        {
+            canvas.setHeight((int) ((double) newValue));
+        });
+        primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
+        {
+        	canvas.setWidth((int) ((double) newValue));
+        });
+        
+        MainMenuAnimation animation = new MainMenuAnimation(canvas, menuItems, System.nanoTime());
         animation.start();
 
         Set<KeyCode> pressedKeys = new HashSet<>();
@@ -63,22 +72,7 @@ public class MainMenu extends Scene {
         this.setOnMouseMoved(new MainMenuMouseMoved(menuItems));
         this.setOnMouseClicked(new MainMenuMouseClicked(menuItems, primaryStage, animation));
 
-        /*
-
-        Not going to deal with resizing just yet
-
-        this.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            SystemSettings.setScreenHeight((int) ceil((Double) newValue));
-            canvas.setHeight((Double) newValue);
-        });
-        this.widthProperty().addListener((observable, oldValue, newValue) ->
-        {
-            SystemSettings.setScreenWidth((int) ceil((Double) newValue));
-            canvas.setWidth((Double) newValue);
-        });
-
-        */
+        
 
     }
 
