@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.aticatac.sound.SoundManager;
 
 public class MenuItem {
+	
     private String name;
     private boolean selected;
     private Supplier<Scene> link;
@@ -57,9 +58,8 @@ public class MenuItem {
     public Scene choose() { 
     	SoundManager m = new SoundManager();
     	m.stopMenuBg();
-    	m.playClick();
+    	//m.playClick();
     	return link.get(); }
- 
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);

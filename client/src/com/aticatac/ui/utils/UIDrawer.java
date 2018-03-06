@@ -1,6 +1,5 @@
 package com.aticatac.ui.utils;
 
-import com.aticatac.utils.SystemSettings;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

@@ -20,13 +20,12 @@ public class Main extends Application{
 
         //SystemSettings.setScreenHeight(480);
         //SystemSettings.setScreenWidth(720);
-
         Main.launch(args);
     }
 
 	private UDPClient initialiseConnection(UDPClient client) {
 		InetAddress srvAddress = null;
-		try {
+		try {//172.22.204.79
 			srvAddress = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			System.out.println("server unreachable on this network");
