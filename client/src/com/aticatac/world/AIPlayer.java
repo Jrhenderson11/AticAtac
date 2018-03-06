@@ -4,19 +4,24 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
+
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
 import com.aticatac.world.ai.utils.Translations;
 import com.aticatac.world.items.GunBox;
+import com.aticatac.world.items.SplatBullet;
 import com.aticatac.world.items.SplatGun;
 import javafx.util.Pair;
 
 public class AIPlayer extends Player {
 
-	private final int PERCENTAGE_TO_MOVE = 85;
+	//private final int PERCENTAGE_TO_MOVE = 85;
 	private final int MAXIMUM_DIST_GUNBOXES = 10;
 	private final int RANGE_TO_SHOOT = 100;
 	private int i;
+
+	private Random r;
 
 	private Level level;
 	private World world;
@@ -35,6 +40,7 @@ public class AIPlayer extends Player {
 		this.intermediatePath = new LinkedList<>();
 		this.i = 0;
 		this.hasGun = false;
+		this.r = new Random();
 	}
 
 	@Override
@@ -58,10 +64,10 @@ public class AIPlayer extends Player {
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
 		if (currentPath.isEmpty()) {
-			if (hasGun) {
+			if (hasGun && gun.enoughPaint(paintLevel)) {
+				// shouldn't throw a null pointer exception
 				for (Player player : otherPlayers) {
-					// Fix hasLOS to work a bit better
-					if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
+					if (!player.equals(this) && level.hasLOS(position, player.getPosition())
 							&& inRange(player.getPosition())) {
 						foundTarget = true;
 						Point target = world.displayPositionToCoords(player.getPosition());
@@ -69,14 +75,12 @@ public class AIPlayer extends Player {
 						setLookDirection(angle);
 						// Decide between spray and spit weapon depending on paint levels of each??
 						foundTarget = true;
-						// For now this is random which one it chooses but in the future
-						// we can have a way to decide which one will do more damage
 						getGun().fire(lookDirection, target, world);
 						break;
 					}
 				}
 				if (!foundTarget && getGun() instanceof SplatGun) {
-					Point target = getQuadrant();
+					Point target = getQuadrant(SplatBullet.RANGE);
 					setLookDirection(calculateLookDirection(target));
 					getGun().fire(lookDirection, target, world);
 				}
@@ -125,20 +129,16 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			// System.out.println("Quad 2");
 			// If in quadrant IV
 			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			// System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			// System.out.println("Quad 4");
 			// If in quadrant II
 			return (Math.PI / 2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		// System.out.println("Quad 1");
 		return Math.PI / 2 - angle;
 	}
 
@@ -169,38 +169,44 @@ public class AIPlayer extends Player {
 	 * 
 	 * @return The point to represent the direction with the greatest gain of tiles
 	 */
-	public Point getQuadrant() {
+	public Point getQuadrant(double rng) {
+		int range = (int) rng;
+		Point[] points = new Point[] { new Point(position.x, position.y + range),
+				new Point(position.x + range, position.y), new Point(position.x, position.y - range),
+				new Point(position.x - range, position.y) };
 		ArrayList<Point> options = new ArrayList<>();
-		// Hard coded for now, need to get from the gun
-		int range = 20; // gun.getRange();
-		if (gridPosition.y + range < level.getHeight()) {
-			options.add(new Point(gridPosition.x, gridPosition.y + range));
+		Point edges = world.coordsToDisplayPosition(new Point(level.getWidth(), level.getHeight()));
+
+		if (position.y + range < edges.y && level.hasLOS(position, new Point(position.x, edges.y))) {
+			options.add(points[0]);
 		}
-		if (gridPosition.x + range < level.getWidth()) {
-			options.add(new Point(gridPosition.x + range, gridPosition.y));
+		if (position.x + range < edges.getX() && level.hasLOS(position, new Point(position.x, edges.y))) {
+			options.add(points[1]);
 		}
-		if (gridPosition.y - range > 0) {
-			options.add(new Point(gridPosition.x, gridPosition.y - range));
+		if (position.y - range > 0 && level.hasLOS(position, new Point(position.x, 0))) {
+			options.add(points[2]);
 		}
-		if (gridPosition.x - range > 0) {
-			options.add(new Point(gridPosition.x - range, gridPosition.y));
+		if (position.x - range > 0 && level.hasLOS(position, new Point(0, position.y))) {
+			options.add(points[3]);
 		}
 
-		int bestCover = -1;
 		Point bestPoint = null;
-		int currentCover;
-		int t = 0;
-		for (Point p : options) {
-			currentCover = getCoverage(p);
-			System.out.println(currentCover);
-			// ok this is nonsense for the moment, need to change for the future
-			if (currentCover >= bestCover /* && (t==0 || r.nextInt()%2 == 1) */) {
-				bestCover = currentCover;
-				bestPoint = p;
+		if (!options.isEmpty()) {
+			int bestCover = -1;
+			int currentCover;
+			for (Point p : options) {
+				currentCover = getCoverage(p);
+				if (currentCover >= bestCover) {
+					bestCover = currentCover;
+					bestPoint = p;
+				}
 			}
-			t++;
+		} else {
+			// If options is empty, all of the directions are blocked, so for now just
+			// choose a direction at random
+			return points[r.nextInt(4)];
 		}
-		return bestPoint;
+		return world.displayPositionToCoords(bestPoint);
 	}
 
 	/**

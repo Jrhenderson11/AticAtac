@@ -53,7 +53,7 @@ public class Player implements Serializable{
     /**
      * The number of points this player has
      */
-    private int points;
+    protected int points;
 
     
     // -----------
