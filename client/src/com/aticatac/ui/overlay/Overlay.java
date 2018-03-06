@@ -115,40 +115,26 @@ public class Overlay {
 		gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
 		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
 		gc.setStroke(Color.WHITE);
+		//text
 		gc.fillText("Paint: ", (2*SystemSettings.getScreenWidth()/3) + (2*sidePadding), (SystemSettings.getScreenHeight() - (getHeight()/1.9)));
+		//bar
 		gc.fillRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), barLength, barHeight);
-		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), barLength, barHeight);
-//		String text = "paint";
-//		
-//		int width = SystemSettings.getScreenWidth();
-//	    int height = SystemSettings.getScreenHeight();
-//		
-//		//draw bar on right side
-//		
-//		int paintPercent = (int) ((world.getPlayerById(id).getPaintLevel()*100) / Player.MAX_PAINTLEVEL);
-//		
-//		int rwidth = 50;
-//		int rheight = 300;
-//		
-//		int acHeight = (paintPercent * rheight) / 100;
-//		
-//		int x = width - 100;
-//		int y = height - 150;
-//		
-//		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
-//		gc.setStroke(Color.WHITE);
-//        gc.setLineWidth(2);
-//
-//		gc.fillRect(x, y-acHeight-25, rwidth, acHeight);
-//		gc.strokeRect(x, y-acHeight-25, rwidth, acHeight);
-//		
-//		gc.setTextAlign(TextAlignment.CENTER);
-//        gc.setFill(Color.WHITE);
-//
-//        gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-//        
-//        //draw word paint as well
-//        gc.fillText(text, x, y);
+		//bar outline
+		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth), barHeight);
+		//draw indication for paint needed for current gun
+		Gun gun = world.getPlayerById(id).getGun();
+		int level = 0;
+		if (gun instanceof ShootGun) {
+			level = ShootGun.PAINTCOST;
+		} else if (gun instanceof SplatGun) {
+			level = SplatGun.PAINTCOST;
+		} else if (gun instanceof SprayGun) {
+			level = SprayGun.PAINTCOST;
+		} else {
+			
+		}
+		
+		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth + ((level / Player.MAX_PAINTLEVEL) * ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth)), (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), 0, barHeight);
 	}
 	
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
