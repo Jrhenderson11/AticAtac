@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class Settings extends Scene{
@@ -26,6 +27,9 @@ public class Settings extends Scene{
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
 
+        Label title = new Label("Settings");
+        title.setTextAlignment(TextAlignment.CENTER);
+        title.setLayoutX(width/2);
        Slider sMenu, sBattle, sShoot;
        
        sMenu = makeSlider(400, 100, "menu");
@@ -103,6 +107,7 @@ public class Settings extends Scene{
     	    });
        
        root.getChildren().add(canvas); 
+       root.getChildren().add(title);
        root.getChildren().add(sMenu);
        root.getChildren().add(sBattle);
        root.getChildren().add(sShoot);
