@@ -24,6 +24,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 public class SinglePlayer extends Scene {
 	
@@ -147,6 +148,7 @@ public class SinglePlayer extends Scene {
   	        			Color color = new Color(0, 0, 0, 0.7f);
   	        			gc.setFill(color);
   	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+  	        			gc.setTextAlign(TextAlignment.CENTER);
   	        			gc.setFill(Color.WHITE);
   	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
   	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
@@ -158,6 +160,7 @@ public class SinglePlayer extends Scene {
         			Color color = new Color(0, 0, 0, 0.7f);
         			gc.setFill(color);
         			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        			gc.setTextAlign(TextAlignment.CENTER);
         			gc.setFill(Color.WHITE);
         			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
         			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);

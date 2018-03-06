@@ -18,8 +18,8 @@ public class Main extends Application{
 
     public static void main(String[] args) {
 
-        SystemSettings.setScreenHeight(SystemSettings.getNativeHeight());
-        SystemSettings.setScreenWidth(SystemSettings.getNativeWidth());
+        //SystemSettings.setScreenHeight(480);
+        //SystemSettings.setScreenWidth(720);
 
         Main.launch(args);
     }
@@ -56,12 +56,14 @@ public class Main extends Application{
             public void handle(WindowEvent we) {
                 System.exit(0);
             }
-        });   
-        m.playBgMenu2();
+
+        });  
+        //m.playBgMenu();
+        //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
-            SystemSettings.setScreenHeight(((int) ((double) newValue)));
+            SystemSettings.setScreenHeight((int) ((double) newValue) - 15);
         });
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
         {

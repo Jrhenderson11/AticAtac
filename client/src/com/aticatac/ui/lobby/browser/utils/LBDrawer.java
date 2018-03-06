@@ -42,8 +42,8 @@ public class LBDrawer {
 
     private static void drawLobbyInfo(GraphicsContext gc, int i, LobbyInfo lob, long now) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         boolean selected = i == Browser.getSelected();
 
         // Name, ID, Current players
@@ -107,8 +107,8 @@ public class LBDrawer {
 
     public static void borders(GraphicsContext gc) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         gc.setStroke(Color.BLACK);
         gc.strokeRect(width / 9, 0, 7 * width / 9, height);

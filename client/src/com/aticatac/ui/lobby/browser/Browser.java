@@ -28,8 +28,8 @@ public class Browser extends Scene {
 
         mainMenu = back;
         
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
         Browser.stage = primaryStage;

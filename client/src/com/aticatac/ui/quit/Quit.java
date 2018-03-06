@@ -25,8 +25,8 @@ public class Quit extends Scene {
 
     public Quit(Group root, Scene mainMenu, Stage primaryStage) {
         super(root);
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);

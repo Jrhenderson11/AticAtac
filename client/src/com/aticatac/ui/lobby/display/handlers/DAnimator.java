@@ -54,8 +54,8 @@ public class DAnimator extends AnimationTimer {
         this.parent = newParent;
         this.stage = newStage;
 
-        this.width = SystemSettings.getNativeWidth();
-        this.height = SystemSettings.getNativeHeight();
+        this.width = SystemSettings.getScreenWidth();
+        this.height = SystemSettings.getScreenHeight();
 
         // TODO: might have to move this to handle V if its not updating
 
