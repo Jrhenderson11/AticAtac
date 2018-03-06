@@ -57,8 +57,9 @@ public class MenuItem {
     public Scene choose() { 
     	SoundManager m = new SoundManager();
     	m.stopMenuBg();
-    	m.playClick();
-    	return link.get(); }
+    	//m.playClick();
+    	return link.get();
+    }
  
 
     public void setHitbox(double x, double y, double w, double h) {
