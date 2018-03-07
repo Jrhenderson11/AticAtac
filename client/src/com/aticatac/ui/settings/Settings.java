@@ -1,77 +1,73 @@
 package com.aticatac.ui.settings;
 
+import java.util.ArrayList;
+
 import com.aticatac.sound.SoundManager;
+import com.aticatac.ui.quit.handlers.QuitAnimation;
+import com.aticatac.ui.quit.utils.Option;
 import com.aticatac.utils.SystemSettings;
 
+import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class Settings extends Scene{
 	private static int menuVol = 50, shootVol = 50, battleVol = 50;
 	private static int bgChoice = 1;
+	private static ArrayList<Label> labels = new ArrayList<Label>();
+	private static ArrayList<RadioButton> radBtn = new ArrayList<RadioButton>();
 	
 	public Settings(Group root, Scene mainMenu, Stage primaryStage){
 		super(root);
         int width = SystemSettings.getNativeWidth();
         int height = SystemSettings.getNativeHeight();
         Canvas canvas = new Canvas(width, height);
-
-        Label title = new Label("Settings");
-        title.setTextAlignment(TextAlignment.CENTER);
-        title.setLayoutX(width/2);
-       Slider sMenu, sBattle, sShoot;
        
-       sMenu = makeSlider(400, 100, "menu");
-       sBattle = makeSlider(400, 150, "battle");
-       sShoot = makeSlider(400, 200, "shoot");
         
        Label lblMenu = new Label("Menu Volume:");
-       lblMenu.setTranslateX(100);
-       lblMenu.setTranslateY(100);
+       labels.add(lblMenu);
        
        Label lblBattle = new Label("Battle Volume:");
-       lblBattle.setTranslateX(100);
-       lblBattle.setTranslateY(150);
+       labels.add(lblBattle);
        
        Label lblShoot = new Label("Shoot Volume:");
-       lblShoot.setTranslateX(100);
-       lblShoot.setTranslateY(200);
+       labels.add(lblShoot);
        
        Label lblBg = new Label("Change battle song:");
-       lblBg.setTranslateX(100);
-       lblBg.setTranslateY(275);
+       lblBg.setTextFill(Color.WHITE);
+
        ToggleGroup group = new ToggleGroup();
 
        RadioButton btn1 = new RadioButton("Hesitation");
-       btn1.setLayoutX(100);
-       btn1.setLayoutY(300);
+       radBtn.add(btn1);
        btn1.setToggleGroup(group);
 
        RadioButton btn2 = new RadioButton("Fighting is not an option.");
        btn2.setToggleGroup(group);
-       btn2.setLayoutX(100);
-       btn2.setLayoutY(325);
+       radBtn.add(btn2);
         
        RadioButton btn3 = new RadioButton("Chiptune Techno");
        btn3.setToggleGroup(group);
-       btn3.setLayoutX(100);
-       btn3.setLayoutY(350);
+       radBtn.add(btn3);
        
        RadioButton btn4 = new RadioButton("8 bit battle theme");
        btn4.setToggleGroup(group);
-       btn4.setLayoutX(100);
-       btn4.setLayoutY(375);
+       radBtn.add(btn4);
        
        if (bgChoice == 1)
     	   btn1.setSelected(true);
@@ -106,8 +102,38 @@ public class Settings extends Scene{
     	      }
     	    });
        
+       GraphicsContext gc = canvas.getGraphicsContext2D();
+       SettingsDrawer animation = new SettingsDrawer(gc,System.nanoTime());
+       animation.start();
+       
+       int xLine = (int) (width*0.15);
+       int yLine = (int) (height*0.20);
+       animation.drawLabel(labels, xLine, yLine, 50);
+       animation.drawRadBtn(radBtn, xLine, yLine*3, 25);
+       
+       lblBg.setTranslateX(xLine);
+       lblBg.setTranslateY(yLine*3 - 25);
+       
+       Slider sMenu, sBattle, sShoot;
+       
+       int xLine2 = (int) xLine*4;
+       sMenu = makeSlider(xLine2, yLine, "menu");
+       sBattle = makeSlider(xLine2, yLine + 50, "battle");
+       sShoot = makeSlider(xLine2, yLine + 100, "shoot");
+       
+
+       Button resize = new Button();
+       resize.setText("Resize Screen");
+       resize.setLayoutX(xLine*4);
+       resize.setLayoutY(yLine*3 - 25);
+       
+       resize.setOnAction(new EventHandler<ActionEvent>() {
+    	    @Override public void handle(ActionEvent e) {
+    	        resize.setText("Clicked");
+    	    }
+    	});
+       
        root.getChildren().add(canvas); 
-       root.getChildren().add(title);
        root.getChildren().add(sMenu);
        root.getChildren().add(sBattle);
        root.getChildren().add(sShoot);
@@ -119,6 +145,7 @@ public class Settings extends Scene{
        root.getChildren().add(btn3);
        root.getChildren().add(btn4); 
        root.getChildren().add(lblBg);
+       root.getChildren().add(resize);
         
 	}
 	
