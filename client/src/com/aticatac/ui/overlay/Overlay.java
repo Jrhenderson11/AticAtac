@@ -93,14 +93,12 @@ public class Overlay {
 						sidePadding, 
 						(SystemSettings.getScreenHeight() - getHeight()) + (i++ * (getHeight() / 5)));
 			} else {
-				double topPadding = 20;
-				double padding = 106;
-				gc.setTextAlign(TextAlignment.CENTER);
+				gc.setTextAlign(TextAlignment.LEFT);
 				gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
 				gc.setFill(Renderer.getColourByVal(player.getColour()));
 				gc.fillText(player.getIdentifier() + " control: " + world.getLevel().getPercentTiles(player.getColour()) + "%",  //e.g. player1: 45%
-						(2*SystemSettings.getScreenWidth()/3) + padding, 
-						(SystemSettings.getScreenHeight() - getHeight()) + topPadding);
+						(2*SystemSettings.getScreenWidth()/3) + sidePadding, 
+						(SystemSettings.getScreenHeight() - getHeight()) + (getHeight() / 5));
 				
 			}
 		}
@@ -111,16 +109,17 @@ public class Overlay {
 		double sidePadding = 20;
 		double barHeight = getHeight() / 6;
 		double barLength = (world.getPlayerById(id).getPaintLevel() / Player.MAX_PAINTLEVEL) * ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth);
-		gc.setTextAlign(TextAlignment.CENTER);
+		gc.setTextAlign(TextAlignment.LEFT);
 		gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
 		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
 		gc.setStroke(Color.WHITE);
+		gc.setLineWidth(2);
 		//text
-		gc.fillText("Paint: ", (2*SystemSettings.getScreenWidth()/3) + (2*sidePadding), (SystemSettings.getScreenHeight() - (getHeight()/1.9)));
+		gc.fillText("Paint: ", (2*SystemSettings.getScreenWidth()/3) + sidePadding, (SystemSettings.getScreenHeight() - getHeight()) + (2 * (getHeight() / 5)));
 		//bar
-		gc.fillRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), barLength, barHeight);
+		gc.fillRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - getHeight()) + (2 * (getHeight() / 5) - barHeight), barLength, barHeight);
 		//bar outline
-		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth), barHeight);
+		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth, (SystemSettings.getScreenHeight() - getHeight()) + (2 * (getHeight() / 5) - barHeight), ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth), barHeight);
 		//draw indication for paint needed for current gun
 		Gun gun = world.getPlayerById(id).getGun();
 		int level = 0;
@@ -130,15 +129,14 @@ public class Overlay {
 			level = SplatGun.PAINTCOST;
 		} else if (gun instanceof SprayGun) {
 			level = SprayGun.PAINTCOST;
-		} else {
-			
 		}
-		
-		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth + ((level / Player.MAX_PAINTLEVEL) * ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth)), (SystemSettings.getScreenHeight() - (getHeight()/1.9) - (barHeight)), 0, barHeight);
+		gc.strokeRect((2*(SystemSettings.getScreenWidth()/3)) + sidePadding + textWidth + ((level / Player.MAX_PAINTLEVEL) * ((SystemSettings.getScreenWidth()/3) - (2 * sidePadding) - textWidth)), 
+				(SystemSettings.getScreenHeight() - getHeight()) + (2 * (getHeight() / 5) - barHeight),
+				0, barHeight);
 	}
 	
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
-		double sidePadding = 3;
+		double sidePadding = 20;
 		double bottomPadding = SystemSettings.getScaledY(28);
 		String weapName = "None";
 		Gun w = world.getPlayerById(id).getGun();
@@ -152,7 +150,9 @@ public class Overlay {
 		gc.setTextAlign(TextAlignment.LEFT);
 		gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
 		gc.setFill(Renderer.getColourByVal(world.getPlayerById(id).getColour()));
-        gc.fillText("Weapon: " + weapName, (2*(SystemSettings.getScreenWidth()/3)) + sidePadding, (SystemSettings.getScreenHeight() - (bottomPadding)));
+        gc.fillText("Weapon: " + weapName, 
+        		(2*(SystemSettings.getScreenWidth()/3)) + sidePadding, 
+        		(SystemSettings.getScreenHeight() - getHeight()) + (3 * (getHeight() / 5)));
         //gc.strokeText(weapName, x, y);
        
 	} 
