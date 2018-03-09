@@ -39,8 +39,8 @@ public class MultiPlayer extends Scene {
 		System.out.println("finished waiting for world");
 		
 		// init display stuff
-		this.displayWidth = SystemSettings.getNativeWidth();
-		this.displayHeight = SystemSettings.getNativeHeight();
+		this.displayWidth = SystemSettings.getScreenWidth();
+		this.displayHeight = SystemSettings.getScreenHeight();
 		this.renderer = new Renderer();
 		Overlay overlay = new Overlay();
 		System.out.println("added renderer");

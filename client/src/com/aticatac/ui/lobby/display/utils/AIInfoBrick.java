@@ -35,8 +35,8 @@ public class AIInfoBrick implements Drawable {
             Displayer.getDrawables().add(kick);
             kbutton1 = Optional.of(kick);
 
-            int width = SystemSettings.getNativeWidth();
-            int height = SystemSettings.getNativeHeight();
+            int width = SystemSettings.getScreenWidth();
+            int height = SystemSettings.getScreenHeight();
 
             int x = -(width /10);//(width / 20);
             int y = (1 + offset) * height / 6;
@@ -50,8 +50,8 @@ public class AIInfoBrick implements Drawable {
     @Override
     public void draw(GraphicsContext gc, long now) {
         if (mine==null) return; 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         double animation = (double) now / 500000000;
 
         // Container

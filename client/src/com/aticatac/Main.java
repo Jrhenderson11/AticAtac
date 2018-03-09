@@ -58,12 +58,12 @@ public class Main extends Application{
             }
 
         });  
-        m.playBgMenu();
+        //m.playBgMenu();
         //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
-            SystemSettings.setScreenHeight((int) ((double) newValue));
+            SystemSettings.setScreenHeight((int) ((double) newValue) - 15);
         });
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
         {

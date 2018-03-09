@@ -37,8 +37,8 @@ public class BackButton extends Button {
 
     @Override
     public void draw(GraphicsContext gc, long now) {
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         Color fill = Color.RED;
         if (this.isSelected()) {

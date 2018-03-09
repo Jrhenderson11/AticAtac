@@ -254,6 +254,14 @@ public class Player implements Serializable{
 	}
 	
 	/**
+	 * Get the amount of points this player has
+	 * @return The amount of points
+	 */
+	public int getPoints() {
+		return points;
+	}
+	
+	/**
 	 * Awards the player 1 point
 	 */
 	public void awardPoint() {

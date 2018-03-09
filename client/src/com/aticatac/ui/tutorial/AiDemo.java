@@ -41,8 +41,8 @@ public class AiDemo extends Scene {
         this.setCursor(new ImageCursor(image));
         
         //init display stuff
-        this.displayWidth = SystemSettings.getNativeWidth();
-        this.displayHeight = SystemSettings.getNativeHeight();
+        this.displayWidth = SystemSettings.getScreenWidth();
+        this.displayHeight = SystemSettings.getScreenHeight();
         this.renderer = new Renderer();
         this.tips = true;
         

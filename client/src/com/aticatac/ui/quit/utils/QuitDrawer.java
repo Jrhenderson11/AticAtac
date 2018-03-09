@@ -16,8 +16,8 @@ public class QuitDrawer {
 
     public static void options(GraphicsContext gc, ArrayList<Option> options, double animation) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         for (int i = 0; i < options.size(); i++) {
 
@@ -48,8 +48,8 @@ public class QuitDrawer {
 
     public static void title(GraphicsContext gc, double animation) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         gc.save();
 

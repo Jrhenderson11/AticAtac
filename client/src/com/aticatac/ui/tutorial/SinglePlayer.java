@@ -4,7 +4,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
+import com.aticatac.ui.overlay.PauseMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.GameState;
@@ -24,12 +26,20 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 public class SinglePlayer extends Scene {
 	
 	public World world;
 
-	public SinglePlayer(Group root) {
+	/**
+	 * Creates a single player game
+	 * @param root something
+	 * @param primaryStage The Stage this is a child of
+	 * @param mainMenu The MainMenu this was launched from, used for returning in pause menu
+	 */
+	public SinglePlayer(Group root, Stage primaryStage, MainMenu mainMenu) {
 		super(root);
 		Renderer renderer = new Renderer();
 		Canvas canvas = new Canvas(SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
@@ -51,6 +61,8 @@ public class SinglePlayer extends Scene {
         world.addPlayer(ai2);
         world.addPlayer(ai3);
         
+        PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
+        
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
@@ -65,6 +77,13 @@ public class SinglePlayer extends Scene {
   					for (Player player: world.getPlayers()) {
   						System.out.println(player.getIdentifier() + " controls: " + world.getLevel().getPercentTiles(player.getColour()) + "%");
   					}
+  				}
+  				if (code == KeyCode.ESCAPE) {
+  					if (pauseMenu.isPaused()) {
+  						world.getGameTimer().resume();
+  					} else world.getGameTimer().pause();
+  					pauseMenu.togglePaused();
+  					input.remove(code);
   				}
   			}
   	    });
@@ -81,6 +100,8 @@ public class SinglePlayer extends Scene {
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
+  	        	pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
+  	        	
   	        	Point p = player.getPosition();
   	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
   	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
@@ -121,19 +142,23 @@ public class SinglePlayer extends Scene {
   	        									  (int) SystemSettings.getDescaledY(me.getY())), 
   	        							world);
   	        	}
+  	        	int result = pauseMenu.handleClick();
+  	        	if (result == PauseMenu.RESUME) {
+  	        		world.getGameTimer().resume();
+  	        	} else if (result == PauseMenu.QUIT_TO_MENU) {
+  	        		world.getGameTimer().stop();
+  	        	}
   	        }
   		});
   		
+  		
+  		
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	//handle canvas resizing
   	        	canvas.setWidth(SystemSettings.getScreenWidth());
   	        	canvas.setHeight(SystemSettings.getScreenHeight());
   	        	GraphicsContext gc = canvas.getGraphicsContext2D();
-  	        	//update world
-  	        	if (world.getGameState() == GameState.PLAYING) {
-  	        		world.update();
-  	        		world.handleInput(input, player.getLookDirection(), player.getIdentifier());
-  	        	}
   	        	
   	        	//draw scene
   	        	renderer.render(gc);
@@ -141,12 +166,23 @@ public class SinglePlayer extends Scene {
   	        	//draw overlay
   	        	overlay.drawOverlay(gc, world, player.getIdentifier());
   	        	
+
+  	        	//handle pausing
+  	        	pauseMenu.draw(gc);
+  	        	if (pauseMenu.isPaused()) return; //dont update if paused
+  	        	
+  	        	//update world
+  	        	if (world.getGameState() == GameState.PLAYING) {
+  	        		world.update();
+  	        		world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+  	        	}
   	        	//check for round over
   	        	if (world.getGameState() == GameState.OVER) {
   	        		if (world.getWinner() != null) {
   	        			Color color = new Color(0, 0, 0, 0.7f);
   	        			gc.setFill(color);
   	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+  	        			gc.setTextAlign(TextAlignment.CENTER);
   	        			gc.setFill(Color.WHITE);
   	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
   	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
@@ -158,10 +194,12 @@ public class SinglePlayer extends Scene {
         			Color color = new Color(0, 0, 0, 0.7f);
         			gc.setFill(color);
         			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        			gc.setTextAlign(TextAlignment.CENTER);
         			gc.setFill(Color.WHITE);
         			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
         			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
   	        	}
+  	        	
   	        }
   	    }.start();   
 	}

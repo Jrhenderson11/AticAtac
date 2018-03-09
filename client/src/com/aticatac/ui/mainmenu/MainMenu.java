@@ -38,29 +38,19 @@ public class MainMenu extends Scene {
         menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("AI Demo", () -> new AiDemo(new Group())));
-        menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group())));
-        menuItems.add(new MenuItem("SinglePlayer Demo", () -> new SinglePlayer(new Group())));
+        menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group(), primaryStage, this)));
+        menuItems.add(new MenuItem("SinglePlayer Demo", () -> new SinglePlayer(new Group(), primaryStage, this)));
         menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));
         menuItems.add(new MenuItem("Settings", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Credits", () -> new Placeholder(new Group())));
         menuItems.add(new MenuItem("Quit", () -> new Quit(new Group(), this, primaryStage)));
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);
-        
-        //Listeners for change of window size, resizing canvas to new size
-        primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            canvas.setHeight((int) ((double) newValue));
-        });
-        primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
-        {
-        	canvas.setWidth((int) ((double) newValue));
-        });
         
         MainMenuAnimation animation = new MainMenuAnimation(canvas, menuItems, System.nanoTime());
         animation.start();
