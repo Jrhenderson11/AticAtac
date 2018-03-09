@@ -84,7 +84,7 @@ public class Tutorial extends Scene {
         PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
         
         SoundManager m = new SoundManager();
-        m.playBgGame();
+        m.playBgBattle();
         
         /* ================ */
         //add key event listeners
@@ -152,7 +152,7 @@ public class Tutorial extends Scene {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
-  	        		m.playShoot();
+  	        		m.playShoot(player);
   	        		player.getGun().fire(player.getLookDirection(), 
   							new Point((int) SystemSettings.getDescaledX(me.getX()), 
   									  (int) SystemSettings.getDescaledY(me.getY())), 
