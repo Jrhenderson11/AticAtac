@@ -4,7 +4,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
+import com.aticatac.ui.overlay.PauseMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.GameState;
@@ -25,12 +27,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 public class SinglePlayer extends Scene {
 	
 	public World world;
 
-	public SinglePlayer(Group root) {
+	/**
+	 * Creates a single player game
+	 * @param root something
+	 * @param primaryStage The Stage this is a child of
+	 * @param mainMenu The MainMenu this was launched from, used for returning in pause menu
+	 */
+	public SinglePlayer(Group root, Stage primaryStage, MainMenu mainMenu) {
 		super(root);
 		Renderer renderer = new Renderer();
 		Canvas canvas = new Canvas(SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
@@ -52,6 +61,8 @@ public class SinglePlayer extends Scene {
         world.addPlayer(ai2);
         world.addPlayer(ai3);
         
+        PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
+        
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
   		
@@ -66,6 +77,10 @@ public class SinglePlayer extends Scene {
   					for (Player player: world.getPlayers()) {
   						System.out.println(player.getIdentifier() + " controls: " + world.getLevel().getPercentTiles(player.getColour()) + "%");
   					}
+  				}
+  				if (code == KeyCode.ESCAPE) {
+  					pauseMenu.togglePaused();
+  					input.remove(code);
   				}
   			}
   	    });
@@ -82,6 +97,8 @@ public class SinglePlayer extends Scene {
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
+  	        	pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
+  	        	
   	        	Point p = player.getPosition();
   	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
   	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
@@ -122,8 +139,11 @@ public class SinglePlayer extends Scene {
   	        									  (int) SystemSettings.getDescaledY(me.getY())), 
   	        							world);
   	        	}
+  	        	pauseMenu.handleClick();
   	        }
   		});
+  		
+  		
   		
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
@@ -165,6 +185,7 @@ public class SinglePlayer extends Scene {
         			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
         			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
   	        	}
+  	        	pauseMenu.draw(gc);
   	        }
   	    }.start();   
 	}

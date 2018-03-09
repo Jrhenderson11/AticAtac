@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.sound.SoundManager;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
+import com.aticatac.ui.overlay.PauseMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
@@ -28,6 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class Tutorial extends Scene {
 	
@@ -39,7 +42,7 @@ public class Tutorial extends Scene {
 	private	ArrayList<Point> visited = new ArrayList<Point>();
 	private Overlay overlay;
 	
-	public Tutorial (Group root) {
+	public Tutorial (Group root, Stage primaryStage, MainMenu mainMenu) {
         super(root);
         
         //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
@@ -78,6 +81,8 @@ public class Tutorial extends Scene {
         world.spawnSplatGunBox(points[1]);
         world.spawnSprayGunBox(points[2]);
         
+        PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
+        
         SoundManager m = new SoundManager();
         m.playBgGame();
         
@@ -91,6 +96,10 @@ public class Tutorial extends Scene {
   				KeyCode code = e.getCode();
   				if (!input.contains(code)) {
   					input.add(code);
+  				}
+  				if (code == KeyCode.ESCAPE) {
+  					pauseMenu.togglePaused();
+  					input.remove(code);
   				}
   			}
   	    });
@@ -107,6 +116,8 @@ public class Tutorial extends Scene {
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
+  	        	pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
+  	        	
   	        	Point p = player.getPosition();
   	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
   	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
@@ -147,6 +158,7 @@ public class Tutorial extends Scene {
   									  (int) SystemSettings.getDescaledY(me.getY())), 
   							world);
   	        	}
+  	        	pauseMenu.handleClick();
   	        }
   		});
   		
@@ -276,6 +288,8 @@ public class Tutorial extends Scene {
   	        		
 
   	        	}
+  	        	
+  	        	pauseMenu.draw(gc);
   	        	
   	        }
   	    }.start();   
