@@ -592,6 +592,10 @@ public class World implements Serializable {
 		return true;
 	}
 
+	public GameTimer getGameTimer() {
+		return gameTimer;
+	}
+	
 	/**
 	 * Returns the current second of the round time
 	 * @return The current second as an integer.

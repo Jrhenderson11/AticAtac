@@ -180,11 +180,12 @@ public class Renderer {
 			double py = scaleY(player.getPosition().y);
 			
 			gc.setStroke(color);
-			gc.setLineWidth(1.0);
-			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
+			gc.setFill(color);
+			gc.setLineWidth(scaleX(1.0));
+			gc.fillOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
 			gc.strokeLine(px, py, px + (l * Math.sin(player.getLookDirection())), py - (l * Math.cos(player.getLookDirection())));
 			gc.setStroke(opaqueColor);
-			gc.setLineWidth(3);
+			gc.setLineWidth(scaleX(3));
 			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
 		}
 	}

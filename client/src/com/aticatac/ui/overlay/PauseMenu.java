@@ -18,15 +18,15 @@ public class PauseMenu {
 	/**
 	 * Constant for RESUME
 	 */
-	private final int RESUME = 1;
+	public static final int RESUME = 1;
 	/**
 	 * Constant for QUIT_TO_MENU
 	 */
-	private final int QUIT_TO_MENU = 2;
+	public static final int QUIT_TO_MENU = 2;
 	/**
 	 * Constant for QUIT_GAME
 	 */
-	private final int QUIT_GAME = 3;
+	public static final int QUIT_GAME = 3;
 	/**
 	 * The stage this PauseMenu is part of, used for changing the scene
 	 */
@@ -60,17 +60,21 @@ public class PauseMenu {
 	 * Handles clicks to the screen
 	 * @param mousePosition The position of the mouse
 	 */
-	public void handleClick() {
+	public int handleClick() {
 		if (paused) {
 			if (selection == RESUME) {
 				setPaused(false);
+				return RESUME;
 			} else if (selection == QUIT_TO_MENU) {
 				stage.setScene(mainmenu);
+				return QUIT_TO_MENU;
 			} else if (selection == QUIT_GAME) {
 				Platform.exit();
 				System.exit(0);
+				return QUIT_GAME;
 			}
 		}
+		return 0;
 	}
 	
 	/**

@@ -79,6 +79,9 @@ public class SinglePlayer extends Scene {
   					}
   				}
   				if (code == KeyCode.ESCAPE) {
+  					if (pauseMenu.isPaused()) {
+  						world.getGameTimer().resume();
+  					} else world.getGameTimer().pause();
   					pauseMenu.togglePaused();
   					input.remove(code);
   				}
@@ -139,7 +142,12 @@ public class SinglePlayer extends Scene {
   	        									  (int) SystemSettings.getDescaledY(me.getY())), 
   	        							world);
   	        	}
-  	        	pauseMenu.handleClick();
+  	        	int result = pauseMenu.handleClick();
+  	        	if (result == PauseMenu.RESUME) {
+  	        		world.getGameTimer().resume();
+  	        	} else if (result == PauseMenu.QUIT_TO_MENU) {
+  	        		world.getGameTimer().stop();
+  	        	}
   	        }
   		});
   		
@@ -147,14 +155,10 @@ public class SinglePlayer extends Scene {
   		
   		new AnimationTimer() {
   	        public void handle(long currentNanoTime) {
+  	        	//handle canvas resizing
   	        	canvas.setWidth(SystemSettings.getScreenWidth());
   	        	canvas.setHeight(SystemSettings.getScreenHeight());
   	        	GraphicsContext gc = canvas.getGraphicsContext2D();
-  	        	//update world
-  	        	if (world.getGameState() == GameState.PLAYING) {
-  	        		world.update();
-  	        		world.handleInput(input, player.getLookDirection(), player.getIdentifier());
-  	        	}
   	        	
   	        	//draw scene
   	        	renderer.render(gc);
@@ -162,6 +166,16 @@ public class SinglePlayer extends Scene {
   	        	//draw overlay
   	        	overlay.drawOverlay(gc, world, player.getIdentifier());
   	        	
+
+  	        	//handle pausing
+  	        	pauseMenu.draw(gc);
+  	        	if (pauseMenu.isPaused()) return; //dont update if paused
+  	        	
+  	        	//update world
+  	        	if (world.getGameState() == GameState.PLAYING) {
+  	        		world.update();
+  	        		world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+  	        	}
   	        	//check for round over
   	        	if (world.getGameState() == GameState.OVER) {
   	        		if (world.getWinner() != null) {
@@ -185,7 +199,7 @@ public class SinglePlayer extends Scene {
         			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
         			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
   	        	}
-  	        	pauseMenu.draw(gc);
+  	        	
   	        }
   	    }.start();   
 	}
