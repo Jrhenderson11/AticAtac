@@ -1,24 +1,23 @@
 package com.aticatac.ui.settings;
 
-import javafx.animation.AnimationTimer;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
-
-import com.aticatac.ui.quit.utils.QuitDrawer;
-import com.aticatac.ui.utils.UIDrawer;
-import com.aticatac.utils.SystemSettings;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-
 import static java.lang.Math.abs;
 import static java.lang.StrictMath.sin;
 
 import java.util.ArrayList;
 
+import com.aticatac.ui.utils.UIDrawer;
+import com.aticatac.utils.SystemSettings;
+
+import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+
 public class SettingsDrawer extends AnimationTimer{
 	private final long then;
-    private final GraphicsContext gc;
+    private GraphicsContext gc;
 	
 	public SettingsDrawer(GraphicsContext gc, long then){
 		this.then = then;
@@ -31,8 +30,8 @@ public class SettingsDrawer extends AnimationTimer{
         animation = animation / 1000000000;
 
         UIDrawer.background(gc, Color.BLACK);
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         gc.save();
 
@@ -63,5 +62,11 @@ public class SettingsDrawer extends AnimationTimer{
 		}
 	}
 	
-	
+	public GraphicsContext getGc() {
+		return gc;
+	}
+
+	public void setGc(GraphicsContext gc) {
+		this.gc = gc;
+	}
 }

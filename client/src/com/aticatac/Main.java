@@ -45,6 +45,12 @@ public class Main extends Application{
     
     @Override
     public void start(Stage primaryStage) {
+    	
+    	primaryStage.setResizable(false);
+    	SystemSettings.setScreenHeight(480);
+        SystemSettings.setScreenWidth(720);
+        primaryStage.setWidth(SystemSettings.getScreenWidth());
+        primaryStage.setHeight(SystemSettings.getScreenHeight());
     	UDPClient server = null;
     	server = this.initialiseConnection(server);
    	    primaryStage.setTitle("AticAtac");

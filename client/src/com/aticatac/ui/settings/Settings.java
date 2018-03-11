@@ -3,11 +3,8 @@ package com.aticatac.ui.settings;
 import java.util.ArrayList;
 
 import com.aticatac.sound.SoundManager;
-import com.aticatac.ui.quit.handlers.QuitAnimation;
-import com.aticatac.ui.quit.utils.Option;
 import com.aticatac.utils.SystemSettings;
 
-import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,8 +19,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class Settings extends Scene{
@@ -31,13 +29,17 @@ public class Settings extends Scene{
 	private static int bgChoice = 1;
 	private static ArrayList<Label> labels = new ArrayList<Label>();
 	private static ArrayList<RadioButton> radBtn = new ArrayList<RadioButton>();
+	private boolean resizing;
 	
 	public Settings(Group root, Scene mainMenu, Stage primaryStage){
 		super(root);
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
-       
+        
+        resizing = false;
+        labels.clear();
+        radBtn.clear();
         
        Label lblMenu = new Label("Menu Volume:");
        labels.add(lblMenu);
@@ -111,8 +113,8 @@ public class Settings extends Scene{
        animation.drawLabel(labels, xLine, yLine, 50);
        animation.drawRadBtn(radBtn, xLine, yLine*3, 25);
        
-       lblBg.setTranslateX(xLine);
-       lblBg.setTranslateY(yLine*3 - 25);
+       lblBg.setLayoutX(xLine);
+       lblBg.setLayoutY(yLine*3 - 25);
        
        Slider sMenu, sBattle, sShoot;
        
@@ -123,15 +125,49 @@ public class Settings extends Scene{
        
 
        Button resize = new Button();
-       resize.setText("Resize Screen");
+       resize.setText("Click to resize");
        resize.setLayoutX(xLine*4);
        resize.setLayoutY(yLine*3 - 25);
        
+       Button back = new Button();
+       back.setText("Back");
+       back.setLayoutX(xLine*4);
+       back.setLayoutY(yLine*3 + 25);
+       
        resize.setOnAction(new EventHandler<ActionEvent>() {
-    	    @Override public void handle(ActionEvent e) {
-    	        resize.setText("Clicked");
+    	    @Override 
+    	    public void handle(ActionEvent e) {
+    	        if (resizing) {
+    	        	resizing = false;
+    	        	resize.setText("Click to resize");
+    	        	primaryStage.setResizable(false);
+    	        	canvas.setWidth(SystemSettings.getScreenWidth());
+    	            canvas.setHeight(SystemSettings.getScreenHeight());
+    	            animation.setGc(canvas.getGraphicsContext2D());
+    	            reposition(animation, lblBg, sMenu, sBattle, sShoot, resize, back);
+    	        } else {
+    	        	resizing = true;
+    	        	primaryStage.setResizable(true);
+    	        	resize.setText("Drag window to resize, click when done");
+    	        }
     	    }
     	});
+       back.setOnAction(new EventHandler<ActionEvent>() {
+   	    	@Override 
+   	    	public void handle(ActionEvent e) {
+   	    		primaryStage.setResizable(false);
+   	    		primaryStage.setScene(mainMenu);
+   	    	}
+   		});
+       
+       setOnKeyPressed(new EventHandler<KeyEvent>() {
+ 			public void handle(KeyEvent e) {
+ 				KeyCode code = e.getCode();
+ 				if (code == KeyCode.ESCAPE) {
+ 					
+ 				}
+ 			}
+ 	    });
        
        root.getChildren().add(canvas); 
        root.getChildren().add(sMenu);
@@ -146,7 +182,32 @@ public class Settings extends Scene{
        root.getChildren().add(btn4); 
        root.getChildren().add(lblBg);
        root.getChildren().add(resize);
+       root.getChildren().add(back);
         
+	}
+	
+	public void reposition(SettingsDrawer animation, Label lblBg, Slider sMenu, Slider sBattle, Slider sShoot, Button resize, Button back) {
+	   int xLine = (int) (SystemSettings.getScreenWidth()*0.15);
+       int yLine = (int) (SystemSettings.getScreenHeight()*0.20);
+       
+       
+       lblBg.setLayoutX(xLine);
+       lblBg.setLayoutY(yLine*3 - 25);
+       
+       int xLine2 = (int) xLine*4;
+       sMenu.setLayoutX(xLine2);
+       sMenu.setLayoutY(yLine);
+       sBattle.setLayoutX(xLine2);
+       sBattle.setLayoutY(yLine + 50);
+       sShoot.setLayoutX(xLine2);
+       sShoot.setLayoutY(yLine + 100);
+
+       resize.setLayoutX(xLine*4);
+       resize.setLayoutY(yLine*3 - 25);
+       back.setLayoutX(xLine*4);
+       back.setLayoutY(yLine*3 + 25);
+       animation.drawLabel(labels, xLine, yLine, 50);
+       animation.drawRadBtn(radBtn, xLine, yLine*3, 25);
 	}
 	
 	public Slider makeSlider(int x, int y, String type){
