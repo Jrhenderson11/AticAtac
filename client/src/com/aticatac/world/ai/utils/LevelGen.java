@@ -1,14 +1,10 @@
 package com.aticatac.world.ai.utils;
 
-import com.aticatac.world.Level;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Random;
 
-import static java.lang.Double.min;
-
 public class LevelGen {
-
 
     public static int[][] get(int width, int height) {
         int[][] map = new int[width][height];
@@ -19,12 +15,11 @@ public class LevelGen {
 
         for (int i = 0; i < elements; i++) {
 
-            // TODO filled for the moment, but need to make escape from rooms
             if (random.nextBoolean()) {
 
                 int x = random.nextInt((int) (width * 0.6));
                 int y = random.nextInt((int) (height * 0.6));
-                int radius = width / 16 + random.nextInt( width / 8);
+                int radius = width / 16 + random.nextInt(width / 8);
 
                 map = circle(map, x, y, radius, true);
 
@@ -42,7 +37,18 @@ public class LevelGen {
 
         map = quadMirror(map);
         map = boarder(map);
-        return map;
+
+        // If the map isn't connected, try again
+        boolean connected = connected(map);
+
+        System.err.println("Generated map is connected : " + connected);
+
+        if (connected) {
+            return map;
+        } else {
+            return get(width, height);
+        }
+
     }
 
     // Takes the top left slice of map and mirrors it 4 times
@@ -127,6 +133,63 @@ public class LevelGen {
             map[map[0].length - 1][h] = 1;
         }
         return map;
+    }
+
+    private static boolean connected(int[][] map) {
+        int startx = 0;
+        int starty = 0;
+
+        // Might have to copy individual bits here
+        int[][] test = new int[map.length][map[0].length];
+
+        for (int i = 0; i < map.length; i++) {
+            test[i] = ArrayUtils.clone(map[i]);
+        }
+
+        for (int x = 0; x < test.length; x++) {
+            for (int y = 0; y < test[0].length; y++) {
+                if (test[x][y] == 0) {
+                    startx = x;
+                    starty = y;
+                    break;
+                }
+            }
+            if (test[startx][starty] == 0) {
+                break;
+            }
+        }
+
+        // Found starting test x, y
+        test = recConnect(test, startx, starty);
+
+        for (int i = 0; i < test.length; i++) {
+            for (int j = 0; j < test[0].length; j++) {
+
+                if (test[i][j] == 0) {
+                    // Not connected
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // 0 untested, 1 wall, -1 tested
+    private static int[][] recConnect(int[][] test, int x, int y) {
+
+        if (x == -1 || y == -1 || x >= test.length || y >= test[0].length) return test;
+
+        if (test[x][y] == 0) {
+            test[x][y] = -1;
+            test = recConnect(test, x + 1, y);
+            test = recConnect(test, x - 1, y);
+            test = recConnect(test, x, y + 1);
+            test = recConnect(test, x, y - 1);
+        }
+
+        return test;
+
     }
 
 }
