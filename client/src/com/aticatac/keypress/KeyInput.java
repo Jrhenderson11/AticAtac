@@ -42,6 +42,7 @@ public class KeyInput extends Application {
 	private boolean[] bulletActivity = new boolean[MAX_BULLET];
 	private int currentBullet;
 	private int direction = 3;
+	private int horizontalMomentum = 0, verticalMomentum = 0, maxSpeed = 4;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -74,7 +75,6 @@ public class KeyInput extends Application {
 			root.getChildren().add(bullets[i]);
 		}
 		currentBullet = 0;
-		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
@@ -116,12 +116,16 @@ public class KeyInput extends Application {
 
 				if (input == KeyCode.W) {
 					moveUp = false;
+					verticalMomentum  = 0;
 				} else if (input == KeyCode.A) {
 					moveLeft = false;
+					horizontalMomentum = 0;
 				} else if (input == KeyCode.S) {
 					moveDown = false;
+					verticalMomentum = 0;
 				} else if (input == KeyCode.D) {
 					moveRight = false;
+					horizontalMomentum = 0;
 				} else if (input == KeyCode.SHIFT) {
 					run = false;
 					speed = 1;
@@ -189,6 +193,9 @@ public class KeyInput extends Application {
 				
 				if (moveUp /*&& checkPos(1)*/) {
 					y -= speed;
+					if (run){
+						verticalMomentum--;
+					}
 					if(map[x][y]==1) {
 						y = y-2;
 					}
@@ -196,6 +203,9 @@ public class KeyInput extends Application {
 				}
 				if (moveDown /*&& checkPos(2)*/) {
 					y += speed;
+					if (run){
+						verticalMomentum++;
+					}
 					
 					if(map[x][y]==1) {
 						y = y+2;
@@ -203,19 +213,28 @@ public class KeyInput extends Application {
 				}
 				if (moveLeft /*&& checkPos(3)*/) {
 					x -= speed;
+					if (run){
+						horizontalMomentum--;
+					}
 					if(map[x][y]==1) {
 						x = x+2;
 					}
 				}
 
 				if (moveRight /*&& checkPos(4)*/) {
+					if (run){
+						horizontalMomentum++;
+					}
 					x += speed;
 					if(map[x][y]==1) {
 						x = x-2;
 					}
 				}
 
-				if (run) {
+				int plusMomentum = speed + horizontalMomentum + verticalMomentum;
+				if (run && plusMomentum < maxSpeed) {
+					speed += horizontalMomentum;
+					speed += verticalMomentum;
 					speed = 3;
 				}
 				

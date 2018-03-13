@@ -59,7 +59,8 @@ public class MenuItem {
     	SoundManager m = new SoundManager();
     	m.stopMenuBg();
     	//m.playClick();
-    	return link.get(); }
+    	return link.get(); 
+    }
 
     public void setHitbox(double x, double y, double w, double h) {
         this.hitbox = new Rectangle(x, y, w, h);

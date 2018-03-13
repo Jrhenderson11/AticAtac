@@ -46,6 +46,12 @@ public class Main extends Application{
     
     @Override
     public void start(Stage primaryStage) {
+    	
+    	primaryStage.setResizable(false);
+    	SystemSettings.setScreenHeight(480);
+        SystemSettings.setScreenWidth(720);
+        primaryStage.setWidth(SystemSettings.getScreenWidth());
+        primaryStage.setHeight(SystemSettings.getScreenHeight());
     	server = this.initialiseConnection(server);
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
@@ -59,12 +65,14 @@ public class Main extends Application{
             }
 
         });  
+        //m.setMenuVolume(2);
         m.playBgMenu();
+
         //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
-            SystemSettings.setScreenHeight((int) ((double) newValue));
+            SystemSettings.setScreenHeight((int) ((double) newValue) - 15);
         });
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
         {

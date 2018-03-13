@@ -32,18 +32,17 @@ public class ClientInfoBrick implements Drawable {
         this.offset = i;
         kbutton1 = Optional.empty();
         //TODO: replace placeholder 0 in lobby
-        this.lead = false;
-        if (isLead && mine!=null && !info.getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
-            this.lead = isLead;
+        this.lead = isLead;
+        if (isLead && mine != null && !info.getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
             KickButton kick = new KickButton(offset, server, info.getID());
             Displayer.getButtons().add(kick);
             Displayer.getDrawables().add(kick);
             kbutton1 = Optional.of(kick);
 
-            int width = SystemSettings.getNativeWidth();
-            int height = SystemSettings.getNativeHeight();
+            int width = SystemSettings.getScreenWidth();
+            int height = SystemSettings.getScreenHeight();
 
-            int x = -(width /10);//(width / 20);
+            int x = -(width / 10);//(width / 20);
             int y = (1 + offset) * height / 6;
             int w = 8 * width / 10;
             int h = height / 6;
@@ -55,8 +54,8 @@ public class ClientInfoBrick implements Drawable {
     @Override
     public void draw(GraphicsContext gc, long now) {
         if (mine==null) return; 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         double animation = (double) now / 500000000;
 
         // Container
@@ -114,9 +113,10 @@ public class ClientInfoBrick implements Drawable {
         });
 
         // Crown :3
-
-        File crown = new File("assets/ui/crown.png");
-        gc.drawImage(new Image(crown.toURI().toString()), x + w * 0.9, y + h * 0.2, w * 0.1, h * 0.6);
+        if(lead) {
+            File crown = new File("assets/ui/crown.png");
+            gc.drawImage(new Image(crown.toURI().toString()), x + w * 0.9, y + h * 0.2, w * 0.1, h * 0.6);
+        }
 
     }
 }

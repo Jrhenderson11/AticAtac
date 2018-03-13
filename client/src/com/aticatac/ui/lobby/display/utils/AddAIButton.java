@@ -35,8 +35,8 @@ public class AddAIButton extends Button {
 	@Override
 	public void draw(GraphicsContext gc, long now) {
 
-		int width = SystemSettings.getNativeWidth();
-		int height = SystemSettings.getNativeHeight();
+		int width = SystemSettings.getScreenWidth();
+		int height = SystemSettings.getScreenHeight();
 
 		//TODO: replace placeholder 0
 		Color fill = Color.GREEN;

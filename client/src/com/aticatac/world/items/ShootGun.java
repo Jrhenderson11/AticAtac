@@ -52,5 +52,9 @@ public class ShootGun extends Gun {
 			return world.addBullet(bullet);
 		} else return false;
 	}
+	
+	public int getType(){
+		return 1;
+	}
 
 }
