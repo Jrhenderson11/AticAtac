@@ -150,6 +150,7 @@ public class Settings extends Scene{
     	        	primaryStage.setResizable(true);
     	        	resize.setText("Drag window to resize, click when done");
     	        }
+    	        m.muteAll();
     	    }
     	});
        back.setOnAction(new EventHandler<ActionEvent>() {
@@ -157,6 +158,8 @@ public class Settings extends Scene{
    	    	public void handle(ActionEvent e) {
    	    		primaryStage.setResizable(false);
    	    		primaryStage.setScene(mainMenu);
+   	    		m.muteAll();
+    	        m.playBgMenu();
    	    	}
    		});
        

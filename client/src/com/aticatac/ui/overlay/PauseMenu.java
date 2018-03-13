@@ -3,6 +3,7 @@ package com.aticatac.ui.overlay;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
@@ -66,6 +67,9 @@ public class PauseMenu {
 				setPaused(false);
 				return RESUME;
 			} else if (selection == QUIT_TO_MENU) {
+				SoundManager m = new SoundManager();
+				m.muteAll();
+				m.playBgMenu();
 				stage.setScene(mainmenu);
 				return QUIT_TO_MENU;
 			} else if (selection == QUIT_GAME) {

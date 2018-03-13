@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.ui.overlay.PauseMenu;
@@ -132,11 +133,13 @@ public class SinglePlayer extends Scene {
   	    });
   		
   		//handle shooting with mouse
+  		SoundManager m = new SoundManager();
+  		m.playBgBattle();
   		setOnMouseClicked(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
   	        	if (player.getGun() != null) {
-  	        		//m.playShoot();
+  	        		m.playShoot(player);
   	        		player.getGun().fire(player.getLookDirection(), 
   	        							new Point((int) SystemSettings.getDescaledX(me.getX()), 
   	        									  (int) SystemSettings.getDescaledY(me.getY())), 

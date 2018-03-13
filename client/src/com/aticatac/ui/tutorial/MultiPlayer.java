@@ -108,6 +108,7 @@ public class MultiPlayer extends Scene {
 			}
 		});
 
+		m.playBgBattle();
 		// handle shooting with mouse
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
