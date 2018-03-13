@@ -17,12 +17,21 @@ public class QuitMouseClicked implements EventHandler<MouseEvent> {
     private final Stage stage;
     private final AnimationTimer animation;
 
+    /**
+     * Creates a handler for mouse click events in the Quit menu
+     * @param options The options that can be clicked
+     * @param primaryStage The Stage (window)
+     * @param animation The animation
+     */
     public QuitMouseClicked(ArrayList<Option> options, Stage primaryStage, AnimationTimer animation) {
         this.options = options;
         this.stage = primaryStage;
         this.animation = animation;
     }
 
+    /**
+     * Handles mouse events
+     */
     @Override
     public void handle(MouseEvent event) {
 

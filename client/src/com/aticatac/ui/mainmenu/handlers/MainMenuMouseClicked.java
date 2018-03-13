@@ -10,11 +10,26 @@ import java.util.ArrayList;
 import static com.aticatac.ui.mainmenu.utils.MenuItem.whichSelected;
 
 public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
-
+	
+	/**
+	 * The list of MenuItems that can be clicked
+	 */
     private final ArrayList<MenuItem> menuItems;
+    /**
+     * The Stage (window)
+     */
     private final Stage stage;
+    /**
+     * The MainMenu animation
+     */
     private final MainMenuAnimation animation;
 
+    /**
+     * Creates a handler for mouse clicks
+     * @param menuItems
+     * @param primaryStage
+     * @param animation
+     */
     public MainMenuMouseClicked(ArrayList<MenuItem> menuItems, Stage primaryStage, MainMenuAnimation animation) {
         this.menuItems = menuItems;
         this.stage = primaryStage;
@@ -22,6 +37,9 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
     }
 
     
+    /**
+     * Handles the mouse event
+     */
     @Override
     public void handle(MouseEvent event) {
 

@@ -15,12 +15,22 @@ public class QuitAnimation extends AnimationTimer {
     private final GraphicsContext gc;
     private final ArrayList<Option> options;
 
+    /**
+     * Creates a new QuitAnimation for exiting the game
+     * @param gc The GraphicsContext to draw to
+     * @param options The list of options in the quit menu
+     * @param then The current animation time
+     */
     public QuitAnimation(GraphicsContext gc, ArrayList<Option> options, long then) {
         this.then = then;
         this.gc = gc;
         this.options = options;
     }
 
+    /**
+     * Handles the animation each tick
+     * @param now The current animation time
+     */
     @Override
     public void handle(long now) {
 
