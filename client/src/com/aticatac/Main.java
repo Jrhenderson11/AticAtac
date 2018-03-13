@@ -27,7 +27,7 @@ public class Main extends Application{
 	private UDPClient initialiseConnection(UDPClient client) {
 		InetAddress srvAddress = null;
 		try {
-			srvAddress = InetAddress.getByName("localhost");
+			srvAddress = InetAddress.getByName("172.22.204.79");
 		} catch (UnknownHostException e) {
 			System.out.println("server unreachable on this network");
 			System.exit(-1);
@@ -45,6 +45,12 @@ public class Main extends Application{
     
     @Override
     public void start(Stage primaryStage) {
+    	
+    	primaryStage.setResizable(false);
+    	SystemSettings.setScreenHeight(480);
+        SystemSettings.setScreenWidth(720);
+        primaryStage.setWidth(SystemSettings.getScreenWidth());
+        primaryStage.setHeight(SystemSettings.getScreenHeight());
     	UDPClient server = null;
     	server = this.initialiseConnection(server);
    	    primaryStage.setTitle("AticAtac");
@@ -58,12 +64,14 @@ public class Main extends Application{
             }
 
         });  
+        //m.setMenuVolume(2);
         m.playBgMenu();
+
         //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
         {
-            SystemSettings.setScreenHeight((int) ((double) newValue));
+            SystemSettings.setScreenHeight((int) ((double) newValue) - 15);
         });
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
         {

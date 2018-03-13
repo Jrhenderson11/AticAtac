@@ -18,8 +18,8 @@ public class LobbyHeader implements Drawable{
     @Override
     public void draw(GraphicsContext gc, long now) {
 
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
 
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setFont(UIDrawer.LOBBY_DISPLAY_TEXT);

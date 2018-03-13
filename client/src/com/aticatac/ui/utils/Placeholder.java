@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 public class Placeholder extends Scene {
     public Placeholder(Group root) {
         super(root);
-        int width = SystemSettings.getNativeWidth();
-        int height = SystemSettings.getNativeHeight();
+        int width = SystemSettings.getScreenWidth();
+        int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);

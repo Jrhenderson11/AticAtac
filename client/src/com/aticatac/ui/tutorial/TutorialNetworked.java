@@ -56,8 +56,8 @@ public class TutorialNetworked extends Scene {
 		// init display stuff
 		this.skipLobby();
 		System.out.println("skip lobby");
-		this.displayWidth = SystemSettings.getNativeWidth();
-		this.displayHeight = SystemSettings.getNativeHeight();
+		this.displayWidth = SystemSettings.getScreenWidth();
+		this.displayHeight = SystemSettings.getScreenHeight();
 		this.renderer = new Renderer();
 		Overlay overlay = new Overlay();
 		System.out.println("added renderer");
