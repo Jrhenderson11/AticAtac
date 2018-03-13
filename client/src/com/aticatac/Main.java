@@ -65,7 +65,7 @@ public class Main extends Application{
 
         });  
         //m.setMenuVolume(2);
-        m.playBgMenu();
+        //m.playBgMenu();
 
         //m.playBgMenu2();
         

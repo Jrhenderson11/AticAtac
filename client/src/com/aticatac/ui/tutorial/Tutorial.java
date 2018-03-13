@@ -84,7 +84,7 @@ public class Tutorial extends Scene {
         PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
         
         SoundManager m = new SoundManager();
-        m.playBgBattle();
+        //m.playBgBattle();
         
         /* ================ */
         //add key event listeners
