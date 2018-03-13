@@ -112,4 +112,8 @@ public abstract class Gun implements Serializable{
 		this.user = user;
 	}
 	
+	public int getType() {
+		return 0;
+	}
+	
 }

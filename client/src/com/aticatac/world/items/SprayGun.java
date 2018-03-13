@@ -11,11 +11,11 @@ public class SprayGun extends Gun {
 	/**
 	 * Cost to the users paint level when fired.
 	 */
-	public static final int PAINTCOST = 18;
+	public static final int PAINTCOST = 10;
 	/**
 	 * The delay between shots
 	 */
-	public static final int COOLDOWNTIME = 5;
+	public static final int COOLDOWNTIME = 1;
 	
 	
 	// ------------
@@ -51,6 +51,9 @@ public class SprayGun extends Gun {
 			getUser().changePaintLevel(-PAINTCOST);
 			return world.addBullet(bullet);
 		} else return false;
+	}
+	public int getType(){
+		return 3;
 	}
 
 }
