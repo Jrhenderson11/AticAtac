@@ -1,4 +1,4 @@
-package com.aticatac.world.ai.utils;
+package com.aticatac.world.utils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -6,6 +6,13 @@ import java.util.Random;
 
 public class LevelGen {
 
+    /**
+     * Generates random level
+     *
+     * @param width  Width of level
+     * @param height Height of level
+     * @return Randomly generated level
+     */
     public static int[][] get(int width, int height) {
         int[][] map = new int[width][height];
 
@@ -51,7 +58,9 @@ public class LevelGen {
 
     }
 
-    // Takes the top left slice of map and mirrors it 4 times
+    /**
+     * Takes the top left slice of map and mirrors it 4 times
+     */
     private static int[][] quadMirror(int[][] map) {
 
         int[][] mirror = map;
@@ -73,6 +82,16 @@ public class LevelGen {
 
     }
 
+    /**
+     * Creates a circle
+     *
+     * @param map    map to write to
+     * @param x      center x
+     * @param y      center y
+     * @param radius circle radius
+     * @param filled Filled with 1's or 0's
+     * @return map with written circle
+     */
     private static int[][] circle(int[][] map, int x, int y, int radius, boolean filled) {
 
         for (int w = 0; w < map.length; w++) {
@@ -101,6 +120,17 @@ public class LevelGen {
         return map;
     }
 
+    /**
+     * Draws a rectangle onto a map, and returns the map
+     *
+     * @param map    map to write to
+     * @param x      top x
+     * @param y      top y
+     * @param rw     rect width
+     * @param rh     rect height
+     * @param filled Filled with 1's or 0's
+     * @return map with written rectangle
+     */
     private static int[][] rectangle(int[][] map, int x, int y, int rw, int rh, boolean filled) {
         for (int w = 0; w < map.length; w++) {
             for (int h = 0; h < map[0].length; h++) {
@@ -123,6 +153,12 @@ public class LevelGen {
 
     }
 
+    /**
+     * Creates boarder of 1's around map
+     *
+     * @param map map to write
+     * @return map with boarder
+     */
     private static int[][] boarder(int[][] map) {
         for (int w = 0; w < map.length; w++) {
             map[w][0] = 1;
@@ -135,7 +171,13 @@ public class LevelGen {
         return map;
     }
 
-    private static boolean connected(int[][] map) {
+    /**
+     * Depth first searches a map and determines if map is fully connected
+     *
+     * @param map map to test
+     * @return if map is connected
+     */
+    public static boolean connected(int[][] map) {
         int startx = 0;
         int starty = 0;
 
@@ -175,7 +217,16 @@ public class LevelGen {
         return true;
     }
 
-    // 0 untested, 1 wall, -1 tested
+
+    /**
+     * Helper function for connected
+     * 0 untested, 1 wall, -1 tested
+     *
+     * @param test
+     * @param x
+     * @param y
+     * @return
+     */
     private static int[][] recConnect(int[][] test, int x, int y) {
 
         if (x == -1 || y == -1 || x >= test.length || y >= test[0].length) return test;
