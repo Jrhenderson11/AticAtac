@@ -25,19 +25,19 @@ public class GameTimer implements Serializable {
 	/**
 	 * The timer used for the countdown during the READY phase
 	 */
-	private Timeline countdownTimer;
+	private transient Timeline countdownTimer;
 	/**
 	 * The timer used to start the round after the countdownTimer during READY phase
 	 */
-	private Timeline readyTimer;
+	private transient Timeline readyTimer;
 	/**
 	 * The timer for the round during PLAYING phase
 	 */
-	private Timeline roundTimer;
+	private transient Timeline roundTimer;
 	/**
 	 * The timer for the end round period during the OVER phase
 	 */
-	private Timeline endRoundTimer;
+	private transient Timeline endRoundTimer;
 	/**
 	 * The world object to manipulate the time of
 	 */

@@ -3,11 +3,14 @@ package com.aticatac.ui.tutorial;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.aticatac.Main;
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.networking.client.UDPClient;
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.sound.SoundManager;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
+import com.aticatac.ui.overlay.PauseMenu;
 import com.aticatac.utils.Controller;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Player;
@@ -22,6 +25,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class MultiPlayer extends Scene {
 
@@ -29,16 +33,20 @@ public class MultiPlayer extends Scene {
 	private int displayHeight;
 	private Renderer renderer;
 	private UDPClient client;
+	private Stage stage;
 
-	public MultiPlayer(Group root, UDPClient newClient) {
+	public MultiPlayer(Group root, UDPClient newClient, Stage newStage, MainMenu mainMenu) {
 		super(root);
 		this.client = newClient;
+		this.stage = newStage;
 
-		//network
+		// network
 		System.out.println("starting waiting");
-		while (client.getModel() == null) System.out.println("wait");;
+		while (client.getModel() == null)
+			System.out.println("wait");
+		;
 		System.out.println("finished waiting for world");
-		
+
 		// init display stuff
 		this.displayWidth = SystemSettings.getScreenWidth();
 		this.displayHeight = SystemSettings.getScreenHeight();
@@ -54,14 +62,22 @@ public class MultiPlayer extends Scene {
 		System.out.println("added player");
 		// add key event listeners
 		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
-		SoundManager m = new SoundManager();
-        m.playBgBattle();
+		SoundManager m = new SoundManager(Main.soundEnabled);
+		m.playBgBattle();
+
+		PauseMenu pauseMenu = new PauseMenu(stage, mainMenu);
+
 		// on key down, keycode is added to input array
 		setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
 				KeyCode code = e.getCode();
-				if (!input.contains(code)) {
-					input.add(code);
+				if (code == (KeyCode.ESCAPE)) {
+					System.out.println("ESCAPE PRESSED");
+					pauseMenu.togglePaused();
+  				} else {
+					if (!input.contains(code)) {
+						input.add(code);
+					}
 				}
 			}
 		});
@@ -78,6 +94,7 @@ public class MultiPlayer extends Scene {
 		setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
 				Point p = player.getPosition();
 				double dy = me.getY() - p.y; // y axis goes down
 				double dx = me.getX() - p.x;
@@ -112,6 +129,7 @@ public class MultiPlayer extends Scene {
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+  	        	int result = pauseMenu.handleClick();
 				m.playShoot(player);
 				client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
 			}
@@ -121,7 +139,7 @@ public class MultiPlayer extends Scene {
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
-				
+
 				World world = client.getModel();
 				renderer.setWorld(world);
 
@@ -135,6 +153,7 @@ public class MultiPlayer extends Scene {
 				}
 
 				renderer.render(gc);
+				pauseMenu.draw(gc);
 				overlay.drawOverlay(gc, world, myInfo.getID());
 			}
 		}.start();

@@ -250,6 +250,16 @@ public class UDPClient extends Task implements LobbyServer {
 		
 	}
 	
+
+	public boolean leaveGame() {
+		if (this.status == Globals.IN_GAME) {
+			this.sendData("leavegame");
+			this.status = Globals.IN_LIMBO;
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void kickClient(String id) {
 		this.sendData("kick:" + id);

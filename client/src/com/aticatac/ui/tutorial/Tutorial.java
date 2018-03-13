@@ -3,6 +3,7 @@ package com.aticatac.ui.tutorial;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.aticatac.Main;
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
@@ -83,7 +84,7 @@ public class Tutorial extends Scene {
         
         PauseMenu pauseMenu = new PauseMenu(primaryStage, mainMenu);
         
-        SoundManager m = new SoundManager();
+        SoundManager m = new SoundManager(Main.soundEnabled);
         m.playBgBattle();
         
         /* ================ */

@@ -6,6 +6,7 @@ import com.aticatac.ui.lobby.browser.handlers.LBKeyPressed;
 import com.aticatac.ui.lobby.browser.handlers.LBMouseClicked;
 import com.aticatac.ui.lobby.browser.handlers.LBMouseMoved;
 import com.aticatac.ui.lobby.display.Displayer;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.animation.AnimationTimer;
@@ -21,9 +22,9 @@ public class Browser extends Scene {
     private static Stage stage = null;
     private static int selected;
     private static int offset;
-    private static Scene mainMenu;
+    private static MainMenu mainMenu;
     
-    public Browser(Group root, LobbyServer server, Scene back, Stage primaryStage) {
+    public Browser(Group root, LobbyServer server, MainMenu back, Stage primaryStage) {
         super(root);
 
         mainMenu = back;
@@ -71,7 +72,7 @@ public class Browser extends Scene {
         if (selected == -1) return;
         if (server.joinLobby(selected, "")) {
         	Browser b = new Browser(new Group(), server, this.mainMenu, stage);
-        	stage.setScene(new Displayer(new Group(), selected, server, b, stage));
+        	stage.setScene(new Displayer(new Group(), selected, server, b, stage, mainMenu));
         } else {
             System.err.println("Server rejected join");
         }

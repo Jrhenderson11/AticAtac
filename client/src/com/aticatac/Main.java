@@ -17,9 +17,13 @@ import javafx.stage.WindowEvent;
 public class Main extends Application{
 
 	UDPClient server;
+	public static boolean soundEnabled;
 	
     public static void main(String[] args) {
-
+    	soundEnabled = true;
+    	if (args.length>0 && args[0].equals("soundoff")) {
+    		soundEnabled = false;
+    	}
         //SystemSettings.setScreenHeight(480);
         //SystemSettings.setScreenWidth(720);
         Main.launch(args);
@@ -56,7 +60,7 @@ public class Main extends Application{
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
         primaryStage.show();
-        SoundManager m = new SoundManager();
+        SoundManager m = new SoundManager(soundEnabled);
         
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {

@@ -2,6 +2,7 @@ package com.aticatac.ui.settings;
 
 import java.util.ArrayList;
 
+import com.aticatac.Main;
 import com.aticatac.sound.SoundManager;
 import com.aticatac.utils.SystemSettings;
 
@@ -81,7 +82,7 @@ public class Settings extends Scene{
     	   btn4.setSelected(true);   
            
        
-       SoundManager m = new SoundManager();
+       SoundManager m = new SoundManager(Main.soundEnabled);
        
        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
     	      public void changed(ObservableValue<? extends Toggle> ov,
@@ -211,7 +212,7 @@ public class Settings extends Scene{
 	}
 	
 	public Slider makeSlider(int x, int y, String type){
-        SoundManager m = new SoundManager();
+        SoundManager m = new SoundManager(Main.soundEnabled);
 
 		 Slider slider = new Slider();
 	        slider.setMin(-10);

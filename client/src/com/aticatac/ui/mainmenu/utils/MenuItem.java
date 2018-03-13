@@ -1,12 +1,13 @@
 package com.aticatac.ui.mainmenu.utils;
 
-import javafx.scene.Scene;
-import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import com.aticatac.Main;
 import com.aticatac.sound.SoundManager;
+
+import javafx.scene.Scene;
+import javafx.scene.shape.Rectangle;
 
 public class MenuItem {
 	
@@ -56,9 +57,9 @@ public class MenuItem {
     }
 
     public Scene choose() { 
-    	SoundManager m = new SoundManager();
+    	SoundManager m = new SoundManager(Main.soundEnabled);
     	m.stopMenuBg();
-    	//m.playClick();
+    	m.playClick();
     	return link.get(); 
     }
 

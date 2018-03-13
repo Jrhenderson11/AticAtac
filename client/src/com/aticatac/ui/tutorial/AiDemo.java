@@ -3,6 +3,7 @@ package com.aticatac.ui.tutorial;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.aticatac.Main;
 import com.aticatac.rendering.display.Renderer;
 import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.overlay.Overlay;
@@ -65,7 +66,7 @@ public class AiDemo extends Scene {
         /* ================ */
         //add key event listeners
   		ArrayList<KeyCode> input = new ArrayList<KeyCode>();
-  		SoundManager m = new SoundManager();
+  		SoundManager m = new SoundManager(Main.soundEnabled);
         m.playBgBattle();
   		//on key down, keycode is added to input array
   		setOnKeyPressed(new EventHandler<KeyEvent>() {

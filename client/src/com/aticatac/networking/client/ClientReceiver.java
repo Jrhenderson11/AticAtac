@@ -147,7 +147,10 @@ public class ClientReceiver extends Thread {
 	public World getModel() {
 		return this.model;
 	}
-
+	
+	/** used for debugging stuff over network 
+	 * 
+	 */
 	private static String byteArrayToHexString(byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {

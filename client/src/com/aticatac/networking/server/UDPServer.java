@@ -122,7 +122,7 @@ public class UDPServer extends Thread {
 		}
 		System.out.println("Client left lobby");
 	}
-
+	
 	public Lobby getLobby() {
 		return this.lobby;
 	}
