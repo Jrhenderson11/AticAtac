@@ -16,8 +16,8 @@ import javafx.util.Pair;
 
 public class AIPlayer extends Player {
 
-	//private final int PERCENTAGE_TO_MOVE = 85;
-	private final int MAXIMUM_DIST_GUNBOXES = 10;
+	// private final int PERCENTAGE_TO_MOVE = 85;
+	private final int MAXIMUM_DIST_GUNBOXES = 100;
 	private final int RANGE_TO_SHOOT = 100;
 	private int i;
 
@@ -30,6 +30,7 @@ public class AIPlayer extends Player {
 	private LinkedList<Point> currentPath;
 	private LinkedList<Point> intermediatePath;
 	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS_GRID;
+	private ArrayList<GunBox> gunBoxes;
 	private boolean hasGun;
 
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
@@ -41,6 +42,7 @@ public class AIPlayer extends Player {
 		this.i = 0;
 		this.hasGun = false;
 		this.r = new Random();
+		this.gunBoxes = new ArrayList<>();
 	}
 
 	@Override
@@ -62,13 +64,14 @@ public class AIPlayer extends Player {
 		// int[][] reducedMap = level.getReducedMap(colour);
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
-
 		if (currentPath.isEmpty()) {
 			if (hasGun && gun.enoughPaint(paintLevel)) {
+				System.out.println("I should shoot, shouldn't I?");
 				// shouldn't throw a null pointer exception
 				for (Player player : otherPlayers) {
 					if (!player.equals(this) && level.hasLOS(position, player.getPosition())
 							&& inRange(player.getPosition())) {
+						System.out.println("Found you");
 						foundTarget = true;
 						Point target = world.displayPositionToCoords(player.getPosition());
 						double angle = calculateLookDirection(target);
@@ -85,19 +88,23 @@ public class AIPlayer extends Player {
 					getGun().fire(lookDirection, target, world);
 				}
 			} else if (!intermediatePath.isEmpty()) {
+				System.out.println("intermediate path");
 				makeNextMove();
 			} else {
 				boolean gbInRange = false;
-				ArrayList<GunBox> gunBoxes = new ArrayList<>(world.getGunBoxes());
+				gunBoxes = new ArrayList<>(world.getGunBoxes());
 				for (GunBox gb : gunBoxes) {
-					if (!gbInRange && gb.getState() == 0
+					if (gb.getState() == 0
 							&& calculateDistance(position, gb.getRect().getLocation()) <= MAXIMUM_DIST_GUNBOXES) {
 						pathToFreePoint(gb.getRect().getLocation());
 						makeNextMove();
 						gbInRange = true;
+						break;
 					}
 				}
+				System.out.println(gbInRange);
 				if (!gbInRange) {
+					System.out.println("no gb in range");
 					Point point = closestFreePoint();
 					if (point != null) {
 						pathToFreePoint(point);
@@ -252,6 +259,7 @@ public class AIPlayer extends Player {
 	 *         range
 	 */
 	public boolean inRange(Point target) {
+		// Should use an enum to be able to access the bullets for the gun without knowing explicitly the type of gun
 		if (calculateDistance(target, position) <= RANGE_TO_SHOOT) {
 			// If the point lies inside the circle created by the range
 			return true;
@@ -269,13 +277,22 @@ public class AIPlayer extends Player {
 	public void makeNextMove() {
 		// Need to make this go more smoothly
 		if (intermediatePath.isEmpty()) {
-			gridPosition.setLocation(world.displayPositionToCoords(position));
-			Point next = currentPath.poll();
-			intermediatePath = gridToDisplay(position, next);
-			if (!intermediatePath.isEmpty()) {
-				Point intermediate = intermediatePath.poll();
-				move(intermediate.x - position.x, intermediate.y - position.y);
+			gunBoxes = new ArrayList<>(world.getGunBoxes());
+			for (GunBox gb : gunBoxes) {
+				if (gb.getRect().getLocation().equals(position)) {
+					hasGun = true;
+					break;
+				}
+			}
+			if (!hasGun) {
 				gridPosition.setLocation(world.displayPositionToCoords(position));
+				Point next = currentPath.poll();
+				intermediatePath = gridToDisplay(position, next);
+				if (!intermediatePath.isEmpty()) {
+					Point intermediate = intermediatePath.poll();
+					move(intermediate.x - position.x, intermediate.y - position.y);
+					gridPosition.setLocation(world.displayPositionToCoords(position));
+				}
 			}
 		} else {
 			Point intermediate = intermediatePath.poll();
@@ -340,6 +357,7 @@ public class AIPlayer extends Player {
 	 *         out of bounds
 	 */
 	public Point closestFreePoint() {
+		// Need to fix for when all possible tiles are covered or the player cannot escape
 		LinkedList<Point> toOpen = new LinkedList<>();
 		ArrayList<Point> visited = new ArrayList<>();
 		Collections.shuffle(translations);
@@ -356,6 +374,7 @@ public class AIPlayer extends Player {
 				translation = translations.get(i);
 				// Key is x translation, Value is y translation
 				translated = new Point(current.x + translation.getKey(), current.y + (int) translation.getValue());
+				// Condition here to check whether the point is accessible
 				if (level.getCoords(translated.x, translated.y) == 0) {
 					foundClosest = true;
 					return translated;
