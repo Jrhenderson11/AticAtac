@@ -14,6 +14,7 @@ import com.aticatac.world.items.SplatGun;
 
 import javafx.util.Pair;
 
+@SuppressWarnings("serial")
 public class AIPlayer extends Player {
 
 	/**
