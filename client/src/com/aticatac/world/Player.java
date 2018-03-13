@@ -55,6 +55,9 @@ public class Player implements Serializable{
      */
     protected int points;
     
+    /**
+     * Whether the player currently has a gun that it can use
+     */
     protected boolean hasGun;
 
     

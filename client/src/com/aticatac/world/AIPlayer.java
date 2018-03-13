@@ -16,37 +16,104 @@ import javafx.util.Pair;
 
 public class AIPlayer extends Player {
 
-	private static final double MAX_DIST_GUNBOXES = 100;
-	private final int PERCENTAGE_TO_MOVE = 85;
-	private final int RANGE_TO_SHOOT = 100;
-	private int i;
+	/**
+	 * The maximum distance that an AI player should move to get to the nearest gun
+	 * box
+	 */
+	private final double MAX_DIST_GUNBOXES = 100;
 
+	// Change this and the inRange function so we can actually get the accurate
+	// ranges
+	private final int RANGE_TO_SHOOT = 100;
+
+	/**
+	 * The upper bound of the delay, that the delay variable should reach before
+	 * resetting itself
+	 */
+	private final int DELAY = 5;
+
+	/**
+	 * The possible translations that can be applied to a point to move it in any
+	 * directions adjacent to it
+	 */
+	private final ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS_GRID;
+
+	/**
+	 * A variable used to delay the updates of the AI player so that it is not
+	 * updated too frequently when the world updates and emulates the speed of the
+	 * regular player(s)
+	 */
+	private int delay;
+
+	/**
+	 * The current level that is being played, which contains the map of the world
+	 */
 	private Level level;
+
+	/**
+	 * The current world that the game is played in, which contains details of all
+	 * other real and AI players in the game
+	 */
 	private World world;
+
+	/**
+	 * The position on the map of the level that the player is currently at,
+	 * differing from the display position
+	 */
 	private Point gridPosition;
 
+	/**
+	 * The current path that is in process of being followed by the player
+	 */
 	private LinkedList<Point> currentPath;
-	private LinkedList<Point> intermediatePath;
-	private ArrayList<GunBox> gunBoxes;
-	private ArrayList<Pair<Integer, Integer>> translations = Translations.TRANSLATIONS_GRID;
 
+	/**
+	 * The current intermediate path between two points in the current path
+	 */
+	private LinkedList<Point> intermediatePath;
+
+	/**
+	 * The current gun boxes in the level
+	 */
+	private ArrayList<GunBox> gunBoxes;
+
+	// -----------
+	// Constructor
+	// -----------
+
+	/**
+	 * Constructor for an AI player
+	 * 
+	 * @param controller
+	 *            The type of Controller of the Player, AI or Real person
+	 * @param world
+	 *            The current world which the game is being played in
+	 * @param identifier
+	 *            The unique identifier of the player
+	 * @param colour
+	 *            The number that identifies the colour of this players paint
+	 */
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
 		super(controller, identifier, colour);
 		this.world = world;
 		this.level = world.getLevel();
 		this.currentPath = new LinkedList<>();
 		this.intermediatePath = new LinkedList<>();
-		this.i = 0;
+		this.delay = 0;
 	}
+
+	// -------
+	// Methods
+	// -------
 
 	@Override
 	public void update() {
 		// Different update speeds for movement and shooting?
-		if (i++ == 5) {
+		if (delay++ == DELAY) {
 			// Updates too fast
 			// This speed is good for moving perhaps but not for shooting
 			makeDecision();
-			i = 0;
+			delay = 0;
 		}
 	}
 
@@ -70,10 +137,10 @@ public class AIPlayer extends Player {
 						Point target = world.displayPositionToCoords(player.getPosition());
 						double angle = calculateLookDirection(target);
 						setLookDirection(angle);
-						int j = 0;
-						while (j++ < 10)
-							;
-						getGun().fire(lookDirection, target, world);
+						while (getGun().ready()) {
+							getGun().fire(lookDirection, target, world);
+						}
+						// Won't repeatedly shoot at target but follows it around
 						break;
 					}
 				}
@@ -91,9 +158,7 @@ public class AIPlayer extends Player {
 				boolean gbInRange = false;
 				gunBoxes = new ArrayList<>(world.getGunBoxes());
 				for (GunBox gb : gunBoxes) {
-					System.out.println(position + "\t" + gb.getRect().getLocation());
 					if (calculateDistance(gb.getRect().getLocation(), position) < MAX_DIST_GUNBOXES) {
-						System.out.println("In range");
 						pathToFreePoint(world.displayPositionToCoords(gb.getRect().getLocation()));
 						gbInRange = true;
 						makeNextMove();
@@ -102,18 +167,14 @@ public class AIPlayer extends Player {
 				}
 				if (!gbInRange) {
 					// Need to get the reduced Map method to do what we want it to
-					// System.out.println("calculate path");
 					Point point = closestFreePoint();
 					if (point != null) {
 						pathToFreePoint(point);
 						makeNextMove();
-					} else {
-						System.out.println("I'M STUCK");
 					}
 				}
 			}
 		} else {
-			// System.out.println("move");
 			makeNextMove();
 		}
 	}
@@ -268,6 +329,14 @@ public class AIPlayer extends Player {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param p1
+	 *            A point
+	 * @param p2
+	 *            A point
+	 * @return The distance between the two points entered
+	 */
 	public double calculateDistance(Point p1, Point p2) {
 		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2)) + Math.pow(p1.getY() - p2.getY(), 2));
 	}
@@ -297,6 +366,15 @@ public class AIPlayer extends Player {
 		// gridPosition.setLocation(next);
 	}
 
+	/**
+	 * 
+	 * @param currentGrid
+	 *            The current grid point on the map that the user is currently at
+	 * @param nextGrid
+	 *            The next grid point on the map that the user wants to move to
+	 * @return An "intermediate" path of display points that join the current grid
+	 *         point and the next one
+	 */
 	public LinkedList<Point> gridToDisplay(Point currentGrid, Point nextGrid) {
 		LinkedList<Point> newPath = new LinkedList<>();
 		Point current = currentGrid;
