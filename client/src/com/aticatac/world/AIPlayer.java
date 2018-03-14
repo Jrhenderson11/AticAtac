@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 import com.aticatac.utils.Controller;
 import com.aticatac.world.ai.AStar;
@@ -45,6 +46,13 @@ public class AIPlayer extends Player {
 	 * regular player(s)
 	 */
 	private int delay;
+
+	private int cooldown;
+
+	/**
+	 * To generate random numbers
+	 */
+	private Random r;
 
 	/**
 	 * The current level that is being played, which contains the map of the world
@@ -101,6 +109,7 @@ public class AIPlayer extends Player {
 		this.currentPath = new LinkedList<>();
 		this.intermediatePath = new LinkedList<>();
 		this.delay = 0;
+		this.cooldown = 0;
 	}
 
 	// -------
@@ -118,23 +127,33 @@ public class AIPlayer extends Player {
 		}
 	}
 
+	/*
+	 * Sets the Players position to the given display position
+	 * 
+	 * @param position The display position of the player
+	 */
+	@Override
+	public void setPosition(Point position) {
+		this.position = position;
+		this.gridPosition = world.displayPositionToCoords(position);
+	}
+
 	/**
 	 * A method to get the next action from the AI player, chooses between moving to
 	 * find an uncovered square or shooting a gun at a player or in a general
 	 * direction
 	 */
 	public void makeDecision() {
-		// int[][] reducedMap = level.getReducedMap(colour);
 		boolean foundTarget = false;
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
 		if (currentPath.isEmpty()) {
-			if (hasGun && getGun().enoughPaint(getPaintLevel())) {
+			if (hasGun && cooldown-- >= 0 && getGun().enoughPaint(getPaintLevel())) {
 				for (Player player : otherPlayers) {
-					// Fix hasLOS to work a bit better
 					if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
 							&& inRange(player.getPosition())) {
 						foundTarget = true;
+						System.out.println(foundTarget);
 						Point target = world.displayPositionToCoords(player.getPosition());
 						double angle = calculateLookDirection(target);
 						setLookDirection(angle);
@@ -154,16 +173,23 @@ public class AIPlayer extends Player {
 					makeNextMove();
 				}
 			} else if (!intermediatePath.isEmpty()) {
+				if (cooldown == -5)
+					cooldown = 0;
 				makeNextMove();
 			} else {
+				if (cooldown == -5)
+					cooldown = 0;
 				boolean gbInRange = false;
-				gunBoxes = new ArrayList<>(world.getGunBoxes());
-				for (GunBox gb : gunBoxes) {
-					if (calculateDistance(gb.getRect().getLocation(), position) < MAX_DIST_GUNBOXES) {
-						pathToFreePoint(world.displayPositionToCoords(gb.getRect().getLocation()));
-						gbInRange = true;
-						makeNextMove();
-						break;
+				if (!hasGun) {
+					gunBoxes = new ArrayList<>(world.getGunBoxes());
+					for (GunBox gb : gunBoxes) {
+						if (calculateDistance(gb.getRect().getLocation(), position) < MAX_DIST_GUNBOXES) {
+							pathToFreePoint(world.displayPositionToCoords(
+									new Point((int) gb.getRect().getCenterX(), (int) gb.getRect().getCenterY())));
+							gbInRange = true;
+							makeNextMove();
+							break;
+						}
 					}
 				}
 				if (!gbInRange) {
@@ -199,20 +225,16 @@ public class AIPlayer extends Player {
 		}
 
 		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
-			// System.out.println("Quad 2");
 			// If in quadrant IV
 			return (3 * Math.PI) / 2 + angle;
 		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
-			// System.out.println("Quad 3");
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI) / 2 - angle;
 		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
-			// System.out.println("Quad 4");
 			// If in quadrant II
 			return (Math.PI / 2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
-		// System.out.println("Quad 1");
 		return Math.PI / 2 - angle;
 	}
 
@@ -250,32 +272,34 @@ public class AIPlayer extends Player {
 				new Point(position.x - range, position.y) };
 		Point edges = world.coordsToDisplayPosition(new Point(level.getWidth(), level.getHeight()));
 		ArrayList<Point> options = new ArrayList<>();
-		if (gridPosition.y + range < level.getHeight()) {
-			options.add(new Point(gridPosition.x, gridPosition.y + range));
+		if (gridPosition.y + range < edges.y) {
+			options.add(points[0]);
 		}
-		if (gridPosition.x + range < level.getWidth()) {
-			options.add(new Point(gridPosition.x + range, gridPosition.y));
+		if (gridPosition.x + range < edges.x) {
+			options.add(points[1]);
 		}
 		if (gridPosition.y - range > 0) {
-			options.add(new Point(gridPosition.x, gridPosition.y - range));
+			options.add(points[2]);
 		}
 		if (gridPosition.x - range > 0) {
-			options.add(new Point(gridPosition.x - range, gridPosition.y));
+			options.add(points[3]);
 		}
 
 		int bestCover = -1;
 		Point bestPoint = null;
 		int currentCover;
-		int t = 0;
-		for (Point p : options) {
-			currentCover = getCoverage(p);
-			System.out.println(currentCover);
-			// ok this is nonsense for the moment, need to change for the future
-			if (currentCover >= bestCover /* && (t==0 || r.nextInt()%2 == 1) */) {
-				bestCover = currentCover;
-				bestPoint = p;
+		if (!options.isEmpty()) {
+			for (Point p : options) {
+				currentCover = getCoverage(p);
+				if (currentCover >= bestCover) {
+					bestCover = currentCover;
+					bestPoint = p;
+				}
 			}
-			t++;
+		} else {
+			// If options is empty, all of the directions are blocked, so we choose a
+			// direction at random
+			return points[r.nextInt(4)];
 		}
 		return bestPoint;
 	}
@@ -292,7 +316,6 @@ public class AIPlayer extends Player {
 	public int getCoverage(Point p) {
 		int splatCoverage = 8; /* gun.getSplatCoverage(); */
 		// Hard coded in, need to get from gun
-		// Radius = 5
 		int x = 0;
 		int coord;
 
@@ -310,7 +333,6 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		// System.out.println(x);
 		return x;
 	}
 
@@ -470,17 +492,6 @@ public class AIPlayer extends Player {
 	 */
 	public void pathToFreePoint(Point endPoint) {
 		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
-	}
-
-	/*
-	 * Sets the Players position to the given display position
-	 * 
-	 * @param position The display position of the player
-	 */
-	@Override
-	public void setPosition(Point position) {
-		this.position = position;
-		this.gridPosition = world.displayPositionToCoords(position);
 	}
 
 }
