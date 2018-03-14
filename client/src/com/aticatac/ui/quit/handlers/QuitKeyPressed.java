@@ -16,12 +16,22 @@ import static com.aticatac.ui.quit.utils.Option.whichSelected;
 
 public class QuitKeyPressed implements EventHandler<KeyEvent> {
 
+	/**
+	 * The list of options that can be selected
+	 */
     private final ArrayList<Option> options;
 
+    /**
+     * Creates a handler for when a key is pressed in the quit menu
+     * @param options The list of options that can be selected
+     */
     public QuitKeyPressed(ArrayList<Option> options) {
         this.options = options;
     }
 
+    /**
+     * Handles the key eventss
+     */
     @Override
     public void handle(KeyEvent event) {
         KeyCode pressed = event.getCode();

@@ -16,6 +16,10 @@ import javafx.stage.WindowEvent;
 
 public class Main extends Application{
 
+	/**
+	 * Main method for launching the program with the given args
+	 * @param args
+	 */
     public static void main(String[] args) {
 
         //SystemSettings.setScreenHeight(480);
@@ -24,6 +28,11 @@ public class Main extends Application{
         Main.launch(args);
     }
 
+    /**
+     * Initialises the connection to the lobby server
+     * @param client The Client object to connect with
+     * @return The connected UDP client
+     */
 	private UDPClient initialiseConnection(UDPClient client) {
 		InetAddress srvAddress = null;
 		try {
@@ -43,6 +52,9 @@ public class Main extends Application{
 		return client;
 	}
     
+	/**
+	 * Starts the game to the main menu with the given Stage
+	 */
     @Override
     public void start(Stage primaryStage) {
     	
@@ -65,7 +77,7 @@ public class Main extends Application{
 
         });  
         //m.setMenuVolume(2);
-        m.playBgMenu();
+        //m.playBgMenu();
 
         //m.playBgMenu2();
         

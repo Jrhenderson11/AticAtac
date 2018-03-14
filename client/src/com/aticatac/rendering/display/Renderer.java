@@ -245,8 +245,9 @@ public class Renderer {
 		double detailWidth = scaleX(2);
 		double detailMargin = scaleX(2);
 		double shootSize = scaleX(3);
-		double sprayLength = scaleX(14);
-		double splatSize = scaleX(10);
+		double sprayLength = scaleX(10);
+		double splatSize = scaleX(7);
+		double boxArc = scaleX(3);
 		//Render each gunbox
 		for (GunBox gunbox: world.getGunBoxes()) {
 			double xpos = scaleX(gunbox.getRect().getX());
@@ -257,7 +258,7 @@ public class Renderer {
 			double tmpy;
 			//draw generic box
 			g.setFill(boxOutline);
-			g.fillRect(xpos, ypos, width, height); //rectangle box
+			g.fillRoundRect(xpos, ypos, width, height, boxArc, boxArc); //rectangle box
 			//draw detail
 			g.setFill(boxDetail);
 			tmpx = xpos + detailMargin; //get xpos for left side bar

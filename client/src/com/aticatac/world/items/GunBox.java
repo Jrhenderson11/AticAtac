@@ -12,7 +12,7 @@ public abstract class GunBox {
 	/**
 	 * Default dimensions of the gun box rectangle
 	 */
-	public static final Dimension DEFAULT_DIMENSION = new Dimension(20, 20);
+	public static final Dimension DEFAULT_DIMENSION = new Dimension(15, 15);
 	/**
 	 * The constant for the CLOSED state
 	 */

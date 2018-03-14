@@ -14,6 +14,12 @@ import static java.lang.StrictMath.sin;
 
 public class QuitDrawer {
 
+	/**
+	 * Draws the options
+	 * @param gc The GraphicsContext to draw to
+	 * @param options The options to draw
+	 * @param animation The current time in the animation
+	 */
     public static void options(GraphicsContext gc, ArrayList<Option> options, double animation) {
 
         int width = SystemSettings.getScreenWidth();
@@ -46,6 +52,11 @@ public class QuitDrawer {
 
     }
 
+    /**
+     * Draws the title
+     * @param gc The Graphicscontext to draw to
+     * @param animation The current time in the animation
+     */
     public static void title(GraphicsContext gc, double animation) {
 
         int width = SystemSettings.getScreenWidth();

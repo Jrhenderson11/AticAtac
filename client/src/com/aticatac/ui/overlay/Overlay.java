@@ -21,6 +21,10 @@ public class Overlay {
 	 */
 	private static int overlayHeight = 80;
 	
+	/**
+	 * Returns the height, scaled to the system settings screen height
+	 * @return The scaled height of the overlay
+	 */
 	private double getHeight() {
 		return SystemSettings.getScaledY(overlayHeight);
 	}
@@ -104,6 +108,12 @@ public class Overlay {
 		}
 	}
 
+	/**
+	 * Draws the level of paint the player has
+	 * @param gc The GraphicsContext to draw to
+	 * @param world The World of the current game
+	 * @param id The id of the player to draw for
+	 */
 	private void drawPaintLevel(GraphicsContext gc, World world, String id) {
 		double textWidth = 60;
 		double sidePadding = 20;
@@ -135,6 +145,12 @@ public class Overlay {
 				0, barHeight);
 	}
 	
+	/**
+	 * Draws the weapon the player has
+	 * @param gc The GraphicsContext to draw to
+	 * @param world The World of the current game
+	 * @param id The id of the player to draw for
+	 */
 	private void drawWeapon(GraphicsContext gc, World world, String id) {
 		double sidePadding = 20;
 		double bottomPadding = SystemSettings.getScaledY(28);
@@ -157,6 +173,12 @@ public class Overlay {
        
 	} 
 
+	/**
+	 * Draws the info of the current game session
+	 * @param gc The GraphicsContext to draw to
+	 * @param world The World of the current game
+	 * @param id The id of the player to draw for
+	 */
 	private void drawRoundInfo(GraphicsContext gc, World world, String id) {
 		double padding = 20;
 		//draw timer
