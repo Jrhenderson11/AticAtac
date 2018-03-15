@@ -47,6 +47,10 @@ public class AIPlayer extends Player {
 	 */
 	private int delay;
 
+	/**
+	 * Variable used to cooldown the player in between shooting so they also make
+	 * other decisions
+	 */
 	private int cooldown;
 
 	/**
@@ -118,11 +122,11 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void update() {
-		// Different update speeds for movement and shooting?
 		if (delay++ == DELAY) {
-			// Updates too fast
-			// This speed is good for moving perhaps but not for shooting
 			makeDecision();
+			if (hasGun) {
+				gun.update();
+			}
 			delay = 0;
 		}
 	}
@@ -153,23 +157,19 @@ public class AIPlayer extends Player {
 					if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
 							&& inRange(player.getPosition())) {
 						foundTarget = true;
-						System.out.println(foundTarget);
 						Point target = world.displayPositionToCoords(player.getPosition());
 						double angle = calculateLookDirection(target);
 						setLookDirection(angle);
-						while (getGun().ready()) {
-							getGun().fire(lookDirection, target, world);
-						}
+						gun.fire(lookDirection, target, world);
 						// Won't repeatedly shoot at target but follows it around
 						break;
 					}
 				}
-				if (!foundTarget && getGun() instanceof SplatGun) {
+				if (!foundTarget && gun instanceof SplatGun) {
 					Point target = getQuadrant(SplatBullet.RANGE);
 					setLookDirection(calculateLookDirection(target));
-					getGun().fire(lookDirection, target, world);
+					gun.fire(lookDirection, target, world);
 				} else if (!foundTarget && !currentPath.isEmpty()) {
-					// This shouldn't have an effect on it but it does??
 					makeNextMove();
 				}
 			} else if (!intermediatePath.isEmpty()) {
@@ -193,7 +193,6 @@ public class AIPlayer extends Player {
 					}
 				}
 				if (!gbInRange) {
-					// Need to get the reduced Map method to do what we want it to
 					Point point = closestFreePoint();
 					if (point != null) {
 						pathToFreePoint(point);
@@ -314,20 +313,16 @@ public class AIPlayer extends Player {
 	 *         owned by the player
 	 */
 	public int getCoverage(Point p) {
-		int splatCoverage = 8; /* gun.getSplatCoverage(); */
-		// Hard coded in, need to get from gun
+		int splatCoverage = (int) SplatBullet.RANGE;
 		int x = 0;
+		Point gridPoint;
 		int coord;
 
-		// if this is odd then it is easy, even not so much
 		for (int i = -splatCoverage; i < splatCoverage + 1; i++) {
 			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
-				/*
-				 * System.out.println((p.x + i) + "\t" + (p.y + j)); Point t =
-				 * world.displayPositionToCoords(new Point(p.x + i, p.y + j));
-				 * System.out.println(t.x + "\t" + t.y);
-				 */
-				coord = level.getCoords(p.x + i, p.y + j);
+				gridPoint = world.displayPositionToCoords(new Point(p.x + i, p.y + j));
+				coord = level.getCoords(gridPoint.x, gridPoint.y);
+				// If the coordinate is not the player's colour, a wall or out of bounds
 				if (coord != colour && coord != 1 && coord != -1) {
 					x++;
 				}
