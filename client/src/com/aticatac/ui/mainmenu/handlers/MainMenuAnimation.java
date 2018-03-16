@@ -18,6 +18,12 @@ public class MainMenuAnimation extends AnimationTimer {
     private final long then;
     private final ArrayList<MenuItem> menuItems;
 
+    /**
+     * Creates a new MainMenuAnimation for the given MenuItems
+     * @param canvas The Canvas to draw to
+     * @param menuItems The list of MenuItems to animate
+     * @param then The time as a long of the animation when initialised
+     */
     public MainMenuAnimation(Canvas canvas, ArrayList<MenuItem> menuItems, long then) {
         super();
         this.canvas = canvas;
@@ -25,6 +31,10 @@ public class MainMenuAnimation extends AnimationTimer {
         this.menuItems = menuItems;
     }
 
+    /**
+     * The method called repeatedly by the super AnimationTimer
+     * @param now The current time
+     */
     @Override
     public void handle(long now) {
     	canvas.setWidth(SystemSettings.getScreenWidth());

@@ -16,7 +16,12 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class MainMenuDrawer {
-
+	
+	/**
+	 * Draws the title to the given graphics context
+	 * @param gc The GraphicsContext to draw to
+	 * @param time The current animation time
+	 */
     public static void title(GraphicsContext gc, long time) {
         gc.save();
 
@@ -40,6 +45,12 @@ public class MainMenuDrawer {
         gc.restore();
     }
 
+    /**
+     * Draws each MenuItem given to the given GraphicsContext
+     * @param gc The GraphicsContext to draw to
+     * @param items The list of MenuItems to draw
+     * @param time The time of the animation
+     */
     public static void menuItems(GraphicsContext gc, ArrayList<MenuItem> items, double time) {
 
         double animation = time / 500000000;

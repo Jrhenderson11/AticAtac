@@ -15,21 +15,26 @@ import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.settings.Settings;
 import com.aticatac.ui.tutorial.AiDemo;
+import com.aticatac.ui.tutorial.SinglePlayer;
 import com.aticatac.ui.tutorial.Tutorial;
 import com.aticatac.ui.tutorial.TutorialNetworked;
-import com.aticatac.ui.tutorial.SinglePlayer;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class MainMenu extends Scene {
 
+	/**
+	 * Creates a MainMenu
+	 * @param root The root group
+	 * @param primaryStage The stage (window) this object uses
+	 * @param server The server object this Menu uses for network operations
+	 */
 	public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
         

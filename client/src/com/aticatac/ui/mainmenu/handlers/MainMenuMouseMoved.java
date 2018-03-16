@@ -11,12 +11,22 @@ import static com.aticatac.ui.mainmenu.utils.MenuItem.unselectAll;
 
 public class MainMenuMouseMoved implements EventHandler<MouseEvent> {
 
+	/**
+	 * The MenuItems that can be 'selected' by hovering over it
+	 */
     private final ArrayList<MenuItem> menuItems;
 
+    /**
+     * Creates a handler for mouse moves
+     * @param menuItems The list of MenuItems that can be selected
+     */
     public MainMenuMouseMoved(ArrayList<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
-
+    
+    /**
+     * Handles mouse events
+     */
     @Override
     public void handle(MouseEvent event) {
 
@@ -30,6 +40,12 @@ public class MainMenuMouseMoved implements EventHandler<MouseEvent> {
         }
     }
 
+    /**
+     * Returns the index of the hitbox of the MenuItem the mouse if in
+     * @param x The mouse X position
+     * @param y The mouse Y position
+     * @return The index of the hitbox of the selected MenuItem
+     */
     private int mouseInHitbox(double x, double y) {
 
         for (int i = 0; i < menuItems.size(); i++) {
