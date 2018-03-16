@@ -23,6 +23,12 @@ import javafx.stage.Stage;
 
 public class Quit extends Scene {
 
+    /**
+     * Creates Quit scene
+     * @param root Root group object
+     * @param mainMenu Previous scene
+     * @param primaryStage JavaFX stage
+     */
     public Quit(Group root, Scene mainMenu, Stage primaryStage) {
         super(root);
         int width = SystemSettings.getScreenWidth();

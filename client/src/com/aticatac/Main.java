@@ -16,6 +16,10 @@ import javafx.stage.WindowEvent;
 
 public class Main extends Application{
 
+    /**
+     * Main method - calls the javafx execution method
+     * @param args controls if sound is disabled for testing
+     */
     public static void main(String[] args) {
 
         //SystemSettings.setScreenHeight(480);
@@ -24,7 +28,11 @@ public class Main extends Application{
         Main.launch(args);
     }
 
-	private UDPClient initialiseConnection(UDPClient client) {
+    /**
+     * Creates a connection between server and client
+     * @return Client object
+     */
+	private UDPClient initialiseConnection() {
 		InetAddress srvAddress = null;
 		try {
 			srvAddress = InetAddress.getByName("172.22.204.79");
@@ -32,7 +40,7 @@ public class Main extends Application{
 			System.out.println("server unreachable on this network");
 			System.exit(-1);
 		}
-		client = new UDPClient("C1", srvAddress);
+        UDPClient client = new UDPClient("C1", srvAddress);
 		Thread th = new Thread(client);
 		th.setDaemon(true);
 		th.start();
@@ -42,7 +50,11 @@ public class Main extends Application{
 		System.out.println("Client started and connected");
 		return client;
 	}
-    
+
+    /**
+     * Starts Main javafx thread. This method is not called directly.
+     * @param primaryStage stage for javafx window interaction
+     */
     @Override
     public void start(Stage primaryStage) {
     	
@@ -51,32 +63,23 @@ public class Main extends Application{
         SystemSettings.setScreenWidth(720);
         primaryStage.setWidth(SystemSettings.getScreenWidth());
         primaryStage.setHeight(SystemSettings.getScreenHeight());
-    	UDPClient server = null;
-    	server = this.initialiseConnection(server);
+    	UDPClient server;
+    	server = this.initialiseConnection();
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
         primaryStage.show();
         SoundManager m = new SoundManager();
         
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                System.exit(0);
-            }
-
-        });  
+        primaryStage.setOnCloseRequest(we -> System.exit(0));
         //m.setMenuVolume(2);
         m.playBgMenu();
 
         //m.playBgMenu2();
         
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            SystemSettings.setScreenHeight((int) ((double) newValue) - 15);
-        });
+                SystemSettings.setScreenHeight((int) ((double) newValue) - 15));
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
-        {
-            SystemSettings.setScreenWidth((int) ((double) newValue));
-        });
+                SystemSettings.setScreenWidth((int) ((double) newValue)));
       
     }
 }
