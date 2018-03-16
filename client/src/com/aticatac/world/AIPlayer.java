@@ -120,6 +120,9 @@ public class AIPlayer extends Player {
 	// Methods
 	// -------
 
+	/**
+	 * Updates the player, using a delay so that it is not overloaded with updates
+	 */
 	@Override
 	public void update() {
 		if (delay++ == DELAY) {
@@ -132,7 +135,8 @@ public class AIPlayer extends Player {
 	}
 
 	/*
-	 * Sets the Players position to the given display position
+	 * Sets the Players display position and position on the map given the current
+	 * display position
 	 * 
 	 * @param position The display position of the player
 	 */
@@ -363,7 +367,6 @@ public class AIPlayer extends Player {
 	 * Method to get the next movement from a path that has been generated
 	 */
 	public void makeNextMove() {
-		// Need to make this go more smoothly
 		if (intermediatePath.isEmpty()) {
 			gridPosition.setLocation(world.displayPositionToCoords(position));
 			Point next = currentPath.poll();
@@ -378,10 +381,6 @@ public class AIPlayer extends Player {
 			move(intermediate.x - position.x, intermediate.y - position.y);
 			gridPosition.setLocation(world.displayPositionToCoords(position));
 		}
-
-		// move(world.coordsToDisplayPosition(next).x - position.x,
-		// world.coordsToDisplayPosition(next).y - position.y);
-		// gridPosition.setLocation(next);
 	}
 
 	/**
