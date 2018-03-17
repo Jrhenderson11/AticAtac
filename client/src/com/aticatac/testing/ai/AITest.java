@@ -1,4 +1,4 @@
-package com.aticatac.testing;
+package com.aticatac.testing.ai;
 
 import java.awt.Point;
 
@@ -21,10 +21,10 @@ public abstract class AITest {
 		level.makeWalls();
 
 		// Make a few walls in the middle of the grid
-		for (int i = 2; i < 6; i++) {
+		for (int i = 2; i <= 6; i++) {
 			level.updateCoords(5, i, 1);
 		}
-		for (int j = 16; j < 24; j++) {
+		for (int j = 16; j <= 24; j++) {
 			level.updateCoords(j, 9, 1);
 		}
 		// Populate the grid with some points occupied by different colours

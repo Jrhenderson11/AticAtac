@@ -1,4 +1,4 @@
-package com.aticatac.testing;
+package com.aticatac.testing.ai;
 
 import static org.junit.Assert.*;
 
