@@ -34,9 +34,9 @@ public class QuitDrawer {
                 gc.setFill(Color.WHITE);
             }
 
-            int x = 2 *( i + 1) * width / 6;
+            int x = 2 *( i + 1) * width / 5;
             int y = 2 * height / 3;
-            options.get(i).setHitbox(new Rectangle(x - width / 6, y - height / 6, width / 7, height / 6));
+            options.get(i).setHitbox(new Rectangle(x - width / 10, y - height / 10, width / 8, height / 8));
             gc.fillText(options.get(i).getText(), x, y);
             gc.strokeText(options.get(i).getText(), x, y);
             gc.restore();
