@@ -1,6 +1,6 @@
 package com.aticatac.world;
 
-import com.aticatac.world.ai.utils.LevelGen;
+import com.aticatac.world.utils.LevelGen;
 
 import java.awt.Point;
 import java.io.BufferedReader;

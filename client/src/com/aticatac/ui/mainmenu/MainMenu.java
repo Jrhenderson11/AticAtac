@@ -29,12 +29,12 @@ import javafx.stage.Stage;
 
 public class MainMenu extends Scene {
 
-	/**
-	 * Creates a MainMenu
-	 * @param root The root group
-	 * @param primaryStage The stage (window) this object uses
-	 * @param server The server object this Menu uses for network operations
-	 */
+  /**
+   * Creates main menu scene
+   * @param root Root group node
+   * @param primaryStage JavaFX stage
+   * @param server Server object
+   */
 	public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
         
