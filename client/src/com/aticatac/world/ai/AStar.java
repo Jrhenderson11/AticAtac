@@ -55,9 +55,9 @@ public class AStar {
 	private Map<Point, Point> parent;
 
 	/**
-	 * The unique identifier of the player
+	 * The integer that corresponds to the colour that represents the player
 	 */
-	private int identifier;
+	private int colour;
 
 	// -----------
 	// Constructor
@@ -74,14 +74,15 @@ public class AStar {
 	 * @param level
 	 *            The level that is currently being played in the game, which
 	 *            contains the map
-	 * @param identifier
-	 *            The unique identifier of the player
+	 * @param colour
+	 *            The integer that corresponds to the colour that represents the
+	 *            player
 	 */
-	public AStar(Point startPoint, Point finishPoint, Level level, int identifier) {
+	public AStar(Point startPoint, Point finishPoint, Level level, int colour) {
 		this.startPoint = startPoint;
 		this.finishPoint = finishPoint;
 		this.level = level;
-		this.identifier = identifier;
+		this.colour = colour;
 		this.cost = new HashMap<>();
 		this.parent = new HashMap<>();
 	}
@@ -90,6 +91,7 @@ public class AStar {
 	// Methods
 	// -------
 
+	
 	/**
 	 * A method to calculate the heuristic which determines how close the current
 	 * point being considered is to the finishing point
@@ -99,7 +101,7 @@ public class AStar {
 	 * @return The distance between the two points as the addition of the absolute
 	 *         difference between the x and y co-ordinates
 	 */
-	public int getH(Point point) {
+	private int getH(Point point) {
 		return Math.abs(point.x - finishPoint.x) + Math.abs(point.y - finishPoint.y);
 	}
 
@@ -138,7 +140,7 @@ public class AStar {
 
 			for (Point t : removeInvalid(getNeighbours(current))) {
 				if (!visited.contains(t)) {
-					if (level.getCoords(t.x, t.y) == identifier) {
+					if (level.getCoords(t.x, t.y) == colour) {
 						cost.put(t, cost.get(current) + 1);
 					} else {
 						// If the tile is covered in another player's colour, they will run over it

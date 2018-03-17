@@ -217,49 +217,27 @@ public class AIPlayer extends Player {
 	 * @return The angle in radians between the player and the target
 	 */
 	public double calculateLookDirection(Point target) {
-		Point p = world.displayPositionToCoords(position);
 		double angle;
-		if (target.getX() == p.getX()) {
+		if (target.getX() == gridPosition.getX()) {
 			// To avoid division by 0 when finding tan^-1
 			angle = Math.PI / 2;
 		} else {
 			// tan^-1(opp/adj)
-			angle = Math.atan(Math.abs(target.getY() - p.getY()) / Math.abs(target.getX() - p.getX()));
+			angle = Math.atan(Math.abs(target.getY() - gridPosition.getY()) / Math.abs(target.getX() - gridPosition.getX()));
 		}
 
-		if (target.getY() <= p.getY() && target.getX() < p.getX()) {
+		if (target.getY() <= gridPosition.getY() && target.getX() < gridPosition.getX()) {
 			// If in quadrant IV
 			return (3 * Math.PI) / 2 + angle;
-		} else if (target.getY() > p.getY() && target.getX() <= p.getX()) {
+		} else if (target.getY() > gridPosition.getY() && target.getX() <= gridPosition.getX()) {
 			// If in quadrant III or if pi/2 in pos y direction
 			return (3 * Math.PI) / 2 - angle;
-		} else if (target.getY() > p.getY() && target.getX() > p.getX()) {
+		} else if (target.getY() > gridPosition.getY() && target.getX() > gridPosition.getX()) {
 			// If in quadrant II
 			return (Math.PI / 2 + angle);
 		}
 		// Otherwise it is in quadrant I or pi/2 in neg y direction
 		return Math.PI / 2 - angle;
-	}
-
-	/**
-	 * Method to get the number of tiles in the reduced map currently covered by the
-	 * player
-	 * 
-	 * @param reducedMap
-	 *            A reduced map where 1 indicates a tile is owned by the player and
-	 *            0 means it is not
-	 * @return The percentage owned by the player
-	 */
-	public int getCurrentPercentage(int[][] reducedMap) {
-		int count = 0;
-		for (int x = 0; x < reducedMap.length; x++) {
-			for (int y = 0; y < reducedMap[x].length; y++) {
-				if (reducedMap[x][y] == 1) {
-					count++;
-				}
-			}
-		}
-		return count;
 	}
 
 	/**
@@ -316,7 +294,7 @@ public class AIPlayer extends Player {
 	 * @return The number of tiles which are not walls, out of bounds or already
 	 *         owned by the player
 	 */
-	public int getCoverage(Point p) {
+	private int getCoverage(Point p) {
 		int splatCoverage = (int) SplatBullet.RANGE;
 		int x = 0;
 		Point gridPoint;
@@ -392,9 +370,9 @@ public class AIPlayer extends Player {
 	 * @return An "intermediate" path of display points that join the current grid
 	 *         point and the next one
 	 */
-	public LinkedList<Point> gridToDisplay(Point currentGrid, Point nextGrid) {
+	public LinkedList<Point> gridToDisplay(Point currentPos, Point nextGrid) {
 		LinkedList<Point> newPath = new LinkedList<>();
-		Point current = currentGrid;
+		Point current = currentPos;
 		Point next = world.coordsToDisplayPosition(nextGrid);
 		while (!world.displayPositionToCoords(current).equals(world.displayPositionToCoords(next))
 				&& calculateDistance(current, next) > 1.5) {
@@ -484,7 +462,7 @@ public class AIPlayer extends Player {
 	 * @param endPoint
 	 *            The point to find a path to
 	 */
-	public void pathToFreePoint(Point endPoint) {
+	private void pathToFreePoint(Point endPoint) {
 		currentPath = (new AStar(gridPosition, endPoint, level, colour)).getPath();
 	}
 

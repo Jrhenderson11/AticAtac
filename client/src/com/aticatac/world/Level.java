@@ -181,7 +181,7 @@ public class Level implements Serializable {
 		}
 	}
 
-	private void makeWalls() {
+	public void makeWalls() {
 
 		for (int x = 0; x < width; x++) {
 			grid[x][0] = 1;
