@@ -145,6 +145,17 @@ public class AIPlayer extends Player {
 		this.position = position;
 		this.gridPosition = world.displayPositionToCoords(position);
 	}
+	
+	/**
+	 * Moves the player by the given dX, dY values and sets the grid position
+	 * @param dX The change in x coordinate, can be negative
+	 * @param dY The change in y coordinate, can be negative
+	 */
+	@Override
+	public void move(int dX, int dY) {
+		super.move(dX, dY);
+		this.gridPosition = world.displayPositionToCoords(position);
+	}
 
 	/**
 	 * A method to get the next action from the AI player, chooses between moving to
@@ -181,8 +192,12 @@ public class AIPlayer extends Player {
 					cooldown = 0;
 				makeNextMove();
 			} else {
-				if (cooldown == -5)
+				if (cooldown == -5) {
+					if(hasGun && !gun.enoughPaint(getPaintLevel())) {
+						hasGun = false;
+					}
 					cooldown = 0;
+				}
 				boolean gbInRange = false;
 				if (!hasGun) {
 					gunBoxes = new ArrayList<>(world.getGunBoxes());
@@ -253,16 +268,16 @@ public class AIPlayer extends Player {
 				new Point(position.x - range, position.y) };
 		Point edges = world.coordsToDisplayPosition(new Point(level.getWidth(), level.getHeight()));
 		ArrayList<Point> options = new ArrayList<>();
-		if (gridPosition.y + range < edges.y) {
+		if (position.y + range < edges.y) {
 			options.add(points[0]);
 		}
-		if (gridPosition.x + range < edges.x) {
+		if (position.x + range < edges.x) {
 			options.add(points[1]);
 		}
-		if (gridPosition.y - range > 0) {
+		if (position.y - range > 0) {
 			options.add(points[2]);
 		}
-		if (gridPosition.x - range > 0) {
+		if (position.x - range > 0) {
 			options.add(points[3]);
 		}
 
@@ -295,18 +310,23 @@ public class AIPlayer extends Player {
 	 *         owned by the player
 	 */
 	private int getCoverage(Point p) {
-		int splatCoverage = (int) SplatBullet.RANGE;
+		int splatCoverage = 5;
+		// The radius of circle created by the splat bullet
 		int x = 0;
-		Point gridPoint;
 		int coord;
+		Point current = world.displayPositionToCoords(p);
+		Point point;
 
 		for (int i = -splatCoverage; i < splatCoverage + 1; i++) {
 			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
-				gridPoint = world.displayPositionToCoords(new Point(p.x + i, p.y + j));
-				coord = level.getCoords(gridPoint.x, gridPoint.y);
-				// If the coordinate is not the player's colour, a wall or out of bounds
-				if (coord != colour && coord != 1 && coord != -1) {
-					x++;
+				point = new Point(current.x + i, current.y + j);
+				// If the point is in the circle that would be created by the splat bullet
+				if(calculateDistance(current, point) <= splatCoverage) {
+					coord = level.getCoords(point.x , point.y);
+					// If the coordinate is not the player's colour, a wall or out of bounds
+					if (coord != -1 && coord != 1 && coord != colour) {
+						x++;
+					}
 				}
 			}
 		}
@@ -346,18 +366,16 @@ public class AIPlayer extends Player {
 	 */
 	public void makeNextMove() {
 		if (intermediatePath.isEmpty()) {
-			gridPosition.setLocation(world.displayPositionToCoords(position));
+			setPosition(position);
 			Point next = currentPath.poll();
 			intermediatePath = gridToDisplay(position, next);
 			if (!intermediatePath.isEmpty()) {
 				Point intermediate = intermediatePath.poll();
 				move(intermediate.x - position.x, intermediate.y - position.y);
-				gridPosition.setLocation(world.displayPositionToCoords(position));
 			}
 		} else {
 			Point intermediate = intermediatePath.poll();
 			move(intermediate.x - position.x, intermediate.y - position.y);
-			gridPosition.setLocation(world.displayPositionToCoords(position));
 		}
 	}
 

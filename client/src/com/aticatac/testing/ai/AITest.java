@@ -27,6 +27,9 @@ public abstract class AITest {
 		for (int j = 16; j <= 24; j++) {
 			level.updateCoords(j, 9, 1);
 		}
+		for(int k = 17; k < 24; k++) {
+			level.updateCoords(14, k, 1);
+		}
 		// Populate the grid with some points occupied by different colours
 		level.updateCoords(1, 2, 3);
 		level.updateCoords(1, 3, 3);
@@ -46,6 +49,14 @@ public abstract class AITest {
 		level.updateCoords(22, 10, 5);
 		level.updateCoords(22, 11, 5);
 		level.updateCoords(22, 12,  5);
+
+		for(int l=10; l<=14; l++) {
+			for(int m = 21; m<=23; m++) {
+				level.updateCoords(l, m, 2);
+			}
+		}
+		
+		
 
 		colour = 2;
 	}
