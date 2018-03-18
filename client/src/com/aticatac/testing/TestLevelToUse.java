@@ -1,22 +1,11 @@
-package com.aticatac.testing.ai;
-
-import java.awt.Point;
-
-import org.junit.Before;
+package com.aticatac.testing;
 
 import com.aticatac.world.Level;
 
-public abstract class AITest {
-	protected static Level level;
-	protected static Point start;
-	protected static Point end;
-	protected static int colour;
-
-	/**
-	 * Create the environment in which the tests will be run
-	 */
-	@Before
-	public void setUp() {
+public class TestLevelToUse {
+	private static Level level;
+	
+	public static Level getTestLevel() {
 		level = new Level(25, 25);
 		level.makeWalls();
 
@@ -27,7 +16,7 @@ public abstract class AITest {
 		for (int j = 16; j <= 24; j++) {
 			level.updateCoords(j, 9, 1);
 		}
-		for(int k = 17; k < 24; k++) {
+		for (int k = 17; k < 24; k++) {
 			level.updateCoords(14, k, 1);
 		}
 		// Populate the grid with some points occupied by different colours
@@ -48,17 +37,15 @@ public abstract class AITest {
 		level.updateCoords(21, 11, 5);
 		level.updateCoords(22, 10, 5);
 		level.updateCoords(22, 11, 5);
-		level.updateCoords(22, 12,  5);
+		level.updateCoords(22, 12, 5);
 
-		for(int l=10; l<=14; l++) {
-			for(int m = 21; m<=23; m++) {
+		for (int l = 10; l <= 14; l++) {
+			for (int m = 21; m <= 23; m++) {
 				level.updateCoords(l, m, 2);
 			}
 		}
-		
-		
+		return level;
 
-		colour = 2;
 	}
-
+	
 }
