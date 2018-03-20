@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.aticatac.networking.client.UDPClient;
+import com.aticatac.ui.credits.CreditsMenu;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.mainmenu.handlers.MainMenuAnimation;
 import com.aticatac.ui.mainmenu.handlers.MainMenuKeyPressed;
@@ -49,7 +50,7 @@ public class MainMenu extends Scene {
         //menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));
         menuItems.add(new MenuItem("Settings", () -> new Settings(new Group(), this, primaryStage)));
         //menuItems.add(new MenuItem("Statistics", () -> new Placeholder(new Group())));
-        menuItems.add(new MenuItem("Credits", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Credits", () -> new CreditsMenu(new Group(), this, primaryStage)));
         menuItems.add(new MenuItem("Quit", () -> new Quit(new Group(), this, primaryStage)));
 
         int width = SystemSettings.getScreenWidth();
