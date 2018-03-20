@@ -1,7 +1,5 @@
 package com.aticatac.ui.credits;
 
-import com.aticatac.ui.mainmenu.utils.MainMenuDrawer;
-import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 import javafx.animation.AnimationTimer;
@@ -28,7 +26,6 @@ public class CreditsAnimation extends AnimationTimer {
         canvas.setHeight(SystemSettings.getScreenHeight());
         UIDrawer.background(canvas.getGraphicsContext2D(), Color.gray(0.3));
         CreditsDrawer.title(canvas.getGraphicsContext2D(), now - then);
-        CreditsDrawer.menuItems(canvas.getGraphicsContext2D(), names, now - then);
-
+        CreditsDrawer.creditsItems(canvas.getGraphicsContext2D(), names, now - then);
     }
 }

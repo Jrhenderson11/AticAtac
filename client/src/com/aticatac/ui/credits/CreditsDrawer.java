@@ -1,19 +1,15 @@
 package com.aticatac.ui.credits;
 
-import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.utils.UIDrawer;
-import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-
 import java.util.ArrayList;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class CreditsDrawer  {
+public class CreditsDrawer {
 
     public static void title(GraphicsContext gc, long time) {
         gc.save();
@@ -22,8 +18,6 @@ public class CreditsDrawer  {
         double height = gc.getCanvas().getHeight();
         double animation = (double) time / 1000000000;
 
-        gc.rotate(Math.sin(animation));
-
         Color col = Color.color(abs(sin(animation)), abs(cos(0.5 * animation)), abs(cos(0.3 * animation)));
 
         gc.setTextAlign(TextAlignment.CENTER);
@@ -31,13 +25,12 @@ public class CreditsDrawer  {
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
         gc.setFont(UIDrawer.TITLE_FONT);
-        gc.translate(2 * sin(animation),sin(animation));
         gc.fillText("Credits", width / 2, height / 7);
         gc.strokeText("Credits", width / 2, height / 7);
 
         gc.restore();
     }
-    public static void menuItems(GraphicsContext gc, ArrayList<CreditsItems> items, double time) {
+    public static void creditsItems(GraphicsContext gc, ArrayList<CreditsItems> items, double time) {
 
         double animation = time / 500000000;
         double width = gc.getCanvas().getWidth();
@@ -72,15 +65,14 @@ public class CreditsDrawer  {
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setFill(col);
             gc.setStroke(Color.BLACK);
-
             gc.setFont(UIDrawer.TITLE_FONT);
-            gc.translate(2 * sin(animation),sin(animation));
+
             double x = width / 2;
             double y = (i + 3) * height / (items.size() + 3);
             gc.strokeText(item.getName(), x, y);
             gc.fillText(item.getName(), x, y);
 
-            item.setHitbox(x - 140, y - 35,  280, 47);
+            item.setHitbox(x - 100, y - 15,  250, 40);
 
             gc.restore();
 

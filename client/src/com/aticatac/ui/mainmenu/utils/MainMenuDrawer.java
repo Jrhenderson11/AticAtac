@@ -90,6 +90,8 @@ public class MainMenuDrawer {
 
             item.setHitbox(x - 140, y - 35,  280, 47);
 
+
+
             gc.restore();
 
         }
