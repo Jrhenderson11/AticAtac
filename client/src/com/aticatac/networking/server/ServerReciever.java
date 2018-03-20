@@ -118,6 +118,9 @@ public class ServerReciever extends Thread {
 			int lobbyNum = Integer.parseInt(parts[1]);
 			
 			
+		} else if(parts[0].equals("makelobby")) {			
+			master.makeLobby();
+			System.out.println("lobby created");
 		} else if (data.equals("ready")) {
 			// SET LOBBY TO READY
 			this.master.setClientReady(origin, originPort);

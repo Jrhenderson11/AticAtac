@@ -27,7 +27,7 @@ public class UDPClient extends Task implements LobbyServer {
 	private ClientSender sender;
 	private int status;
 	private Lobby lobby;
-	private LobbyInfo lobbyInfo;
+	private LobbyInfo lobbyInfo = null;
 	private ClientInfo myInfo;
 	private boolean ready;
 
@@ -43,7 +43,7 @@ public class UDPClient extends Task implements LobbyServer {
 		this.address = newAddress;
 		this.messageQueue = new LinkedBlockingQueue<String>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(0, 0, 0, "LOBBY NOT INITIALISED");
+		//this.lobbyInfo = new LobbyInfo(0, 0, 0, "LOBBY NOT INITIALISED");
 		this.ready = false;
 	}
 
@@ -154,6 +154,14 @@ public class UDPClient extends Task implements LobbyServer {
 		sendData("join");
 	}
 
+	public boolean makeLobby() {
+		if (this.status == Globals.IN_LIMBO) {
+			sendData("makelobby");
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean joinLobby(int id, String password) {
 		if (this.status == Globals.IN_LIMBO) {
@@ -162,7 +170,6 @@ public class UDPClient extends Task implements LobbyServer {
 			return true;
 		}
 		return false;
-
 	}
 
 	public void addAIPlayer() {
@@ -209,8 +216,9 @@ public class UDPClient extends Task implements LobbyServer {
 	@Override
 	public ArrayList<LobbyInfo> getPublicLobbies() {
 		ArrayList<LobbyInfo> lobbies = new ArrayList<LobbyInfo>();
-
-		lobbies.add(this.lobbyInfo);
+		if (this.lobbyInfo != null) {
+			lobbies.add(this.lobbyInfo);		
+		}	
 		return lobbies;
 	}
 
@@ -249,7 +257,6 @@ public class UDPClient extends Task implements LobbyServer {
 		
 		
 	}
-	
 
 	public boolean leaveGame() {
 		if (this.status == Globals.IN_GAME) {

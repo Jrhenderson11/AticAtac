@@ -24,9 +24,12 @@ public class Browser extends Scene {
     private static int offset;
     private static MainMenu mainMenu;
     
-    public Browser(Group root, LobbyServer server, MainMenu back, Stage primaryStage) {
+    public Browser(Group root, LobbyServer server, MainMenu back, Stage primaryStage, Boolean makeNew) {
         super(root);
-
+        
+        if (makeNew) {
+        	server.makeLobby();
+        }
         mainMenu = back;
         
         int width = SystemSettings.getScreenWidth();
@@ -49,7 +52,7 @@ public class Browser extends Scene {
         // TODO: add click listeners and key movement
         AnimationTimer animation = new LBAnimation(gc, server);
         animation.start();
-
+        System.out.println("started");
     }
 
     public static void select(int i) {
@@ -71,7 +74,7 @@ public class Browser extends Scene {
     public void join() {
         if (selected == -1) return;
         if (server.joinLobby(selected, "")) {
-        	Browser b = new Browser(new Group(), server, this.mainMenu, stage);
+        	Browser b = new Browser(new Group(), server, this.mainMenu, stage, false);
         	stage.setScene(new Displayer(new Group(), selected, server, b, stage, mainMenu));
         } else {
             System.err.println("Server rejected join");

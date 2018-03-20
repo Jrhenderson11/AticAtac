@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.aticatac.networking.client.UDPClient;
 import com.aticatac.ui.lobby.browser.Browser;
+import com.aticatac.ui.lobby.creater.Creator;
 import com.aticatac.ui.mainmenu.handlers.MainMenuAnimation;
 import com.aticatac.ui.mainmenu.handlers.MainMenuKeyPressed;
 import com.aticatac.ui.mainmenu.handlers.MainMenuKeyReleased;
@@ -36,8 +37,8 @@ public class MainMenu extends Scene {
      //   Supplier something = (() -> new Placeholder(new Group()));
     
         ArrayList<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
-        menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage, false)));
+        menuItems.add(new MenuItem("Create a Lobby", () -> new Browser(new Group(), server, this, primaryStage, true)));
         menuItems.add(new MenuItem("AI Demo", () -> new AiDemo(new Group())));
         menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group(), primaryStage, this)));
         menuItems.add(new MenuItem("SinglePlayer Demo", () -> new SinglePlayer(new Group(), primaryStage, this)));

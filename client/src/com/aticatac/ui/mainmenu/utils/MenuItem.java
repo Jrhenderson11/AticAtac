@@ -22,8 +22,9 @@ public class MenuItem {
        this.selected = false;
        this.hitbox = new Rectangle( 0, 0, 0, 0);
     }
-
-    public static int whichSelected(ArrayList<MenuItem> menuItems) {
+    
+  
+	public static int whichSelected(ArrayList<MenuItem> menuItems) {
 
         for (int i = 0; i < menuItems.size(); i++) {
 

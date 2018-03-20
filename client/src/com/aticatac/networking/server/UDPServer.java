@@ -28,7 +28,7 @@ public class UDPServer extends Thread {
 	public UDPServer() {
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(4, 0, 1, "lobby1");
+		this.lobbyInfo = null;
 	}
 
 	@Override
@@ -68,6 +68,12 @@ public class UDPServer extends Thread {
 
 	public void sendAllLobby() {
 		this.sender.sendAllLobby();
+	}
+
+	public void makeLobby() {
+		if (this.lobbyInfo == null) {
+			this.lobbyInfo = new LobbyInfo(4, 0, 1, "Lobby");
+		}
 	}
 
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
@@ -122,7 +128,7 @@ public class UDPServer extends Thread {
 		}
 		System.out.println("Client left lobby");
 	}
-	
+
 	public Lobby getLobby() {
 		return this.lobby;
 	}
