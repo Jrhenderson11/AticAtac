@@ -22,7 +22,14 @@ public class Browser extends Scene {
     private static int selected;
     private static int offset;
     private static Scene mainMenu;
-    
+
+    /**
+     * Creates Browser scene object
+     * @param root Group object
+     * @param server Server object
+     * @param back Main menu object to return back
+     * @param primaryStage Stage obj
+     */
     public Browser(Group root, LobbyServer server, Scene back, Stage primaryStage) {
         super(root);
 
@@ -51,22 +58,33 @@ public class Browser extends Scene {
 
     }
 
+    /**
+     * Select browser option
+     * @param i numb
+     */
     public static void select(int i) {
         selected = i;
     }
 
+    /**
+     * get selected object
+     * @return selected object
+     */
     public static int getSelected() {
         return selected;
     }
 
-    public static void setOffset(int offset) {
-        Browser.offset = offset;
-    }
-
+    /**
+     * get object offset
+     * @return object offset
+     */
     public static int getOffset() {
         return offset;
     }
 
+    /**
+     * Join selected lobby
+     */
     public void join() {
         if (selected == -1) return;
         if (server.joinLobby(selected, "")) {

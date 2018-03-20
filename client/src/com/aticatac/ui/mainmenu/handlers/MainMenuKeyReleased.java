@@ -8,12 +8,22 @@ import java.util.Set;
 
 public class MainMenuKeyReleased implements EventHandler<KeyEvent> {
 
+	/**
+	 * Set of pressed keys
+	 */
     private final Set<KeyCode> pressedKeys;
 
+    /**
+     * Creates a handler for keys on release.
+     * @param pressedKeys
+     */
     public MainMenuKeyReleased(Set<KeyCode> pressedKeys) {
         this.pressedKeys = pressedKeys;
     }
 
+    /**
+     * Handles the release of keys
+     */
     @Override
     public void handle(KeyEvent event) {
         pressedKeys.remove(event.getCode());

@@ -53,7 +53,12 @@ public class Player implements Serializable{
     /**
      * The number of points this player has
      */
-    private int points;
+    protected int points;
+    
+    /**
+     * Whether the player currently has a gun that it can use
+     */
+    protected boolean hasGun;
 
     
     // -----------
@@ -75,6 +80,7 @@ public class Player implements Serializable{
     	this.lookDirection = 0.0;
     	this.paintLevel = Player.MAX_PAINTLEVEL;
     	this.points = 0;
+    	this.hasGun = false;
     }
     
     
@@ -251,6 +257,7 @@ public class Player implements Serializable{
 	 */
 	public void setGun(Gun gun) {
 		this.gun = gun;
+		this.hasGun = true;
 	}
 	
 	/**
