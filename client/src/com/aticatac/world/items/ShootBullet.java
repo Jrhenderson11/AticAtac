@@ -31,6 +31,7 @@ public class ShootBullet extends Bullet {
 	/**
 	 * Creates a bullet of the 'Shoot' type
 	 * @param direction The direction in which the bullet is fired
+	 * @param target The coordinate at which the bullet was fired
 	 * @param startPosition The position from which it was fired
 	 * @param shooter The indentifier of the shooter, used for determining the color
 	 */

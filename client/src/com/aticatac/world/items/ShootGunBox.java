@@ -6,7 +6,7 @@ import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
 public class ShootGunBox extends GunBox {
-
+	
 	/**
 	 * Creates a box that drops a ShootGun to the Player when opened
 	 * @param position The top left position of the collision Rectangle
@@ -14,7 +14,7 @@ public class ShootGunBox extends GunBox {
 	public ShootGunBox(Point position) {
 		super(position);
 	}
-
+	
 	/**
 	 * Opens the box and gives a ShootGun to the given Player
 	 * @param player The Player who opened the box
@@ -25,5 +25,5 @@ public class ShootGunBox extends GunBox {
 		player.setGun(gun);
 		super.setState(OPENED);
 	}
-
+	
 }

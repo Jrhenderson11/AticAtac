@@ -45,7 +45,7 @@ public class SprayGun extends Gun {
 	 */
 	@Override
 	public boolean fire(double direction, Point target, World world) {
-		if (ready() && enoughPaint(getUser().getPaintLevel())) {
+		if (ready() && enoughPaint()) {
 			resetCooldown();
 			SprayBullet bullet = new SprayBullet(direction, target, getUser().getPosition(), getUser().getColour());
 			getUser().changePaintLevel(-PAINTCOST);

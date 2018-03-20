@@ -179,12 +179,12 @@ public class World implements Serializable {
 	 */
 	public void newRound() {
 		System.out.println("world new round");
+		// generate new map
+		level.randomiseMap();
 		setGameState(GameState.READY);
 		// clear items
 		bullets.clear();
 		gunboxes.clear();
-		// generate new map
-		level.randomiseMap();
 		// generate player spawns
 		this.startLocs = generatePlayerSpawnPoints();
 		int i = 0;

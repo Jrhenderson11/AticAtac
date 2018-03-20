@@ -221,7 +221,7 @@ public class Player implements Serializable{
 	 * @return Returns True if the paint level was changed, False is negative or < MAX_PAINTLEVEL 
 	 */
 	public boolean setPaintLevel(double paintLevel) {
-		if (paintLevel > 0 && paintLevel < MAX_PAINTLEVEL) {
+		if (paintLevel >= 0 && paintLevel <= MAX_PAINTLEVEL) {
 			this.paintLevel = paintLevel;
 			return true;
 		} else return false;

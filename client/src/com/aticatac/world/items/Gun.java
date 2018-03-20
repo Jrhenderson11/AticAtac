@@ -72,8 +72,8 @@ public abstract class Gun implements Serializable{
 		return currentCooldown <= 0;
 	}
 	
-	public boolean enoughPaint(double usersPaintLevel) {
-		return paintCost < usersPaintLevel;
+	public boolean enoughPaint() {
+		return paintCost < user.getPaintLevel();
 	}
 	
 	/**

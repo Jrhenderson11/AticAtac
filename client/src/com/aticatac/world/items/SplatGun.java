@@ -45,7 +45,7 @@ public class SplatGun extends Gun {
 	 */
 	@Override
 	public boolean fire(double direction, Point target, World world) {
-		if (ready() && enoughPaint(getUser().getPaintLevel())) {
+		if (ready() && enoughPaint()) {
 			resetCooldown();
 			SplatBullet bullet = new SplatBullet(direction, target, getUser().getPosition(), getUser().getColour());
 			getUser().changePaintLevel(-PAINTCOST);

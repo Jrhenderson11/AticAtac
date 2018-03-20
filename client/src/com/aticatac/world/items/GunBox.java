@@ -75,7 +75,7 @@ public abstract class GunBox {
 	 * Removes this box from the given world
 	 * @param world The World to remove this box from.
 	 */
-	private void kill(World world) {
+	public void kill(World world) {
 		world.removeGunBox(this);
 	}
 	
