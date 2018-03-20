@@ -169,14 +169,13 @@ public class AIPlayer extends Player {
 		if (currentPath.isEmpty()) {
 			if (hasGun && cooldown-- >= 0 && getGun().enoughPaint(getPaintLevel())) {
 				for (Player player : otherPlayers) {
-					if (!player.equals(this) /* && level.hasLOS(position, player.getPosition()) */
+					if (!player.equals(this) && level.hasLOS(gridPosition, world.displayPositionToCoords(player.getPosition()))
 							&& inRange(player.getPosition())) {
 						foundTarget = true;
 						Point target = world.displayPositionToCoords(player.getPosition());
 						double angle = calculateLookDirection(target);
 						setLookDirection(angle);
 						gun.fire(lookDirection, target, world);
-						// Won't repeatedly shoot at target but follows it around
 						break;
 					}
 				}
