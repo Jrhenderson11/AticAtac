@@ -136,7 +136,7 @@ public class World implements Serializable {
   	        	level.updateCoords(p.x, p.y, player.getColour());
   	        }
 			player.update();
-			if (regenTimer == REGEN_DELAY) { //used for a delay between each regeneraction call
+			if (regenTimer == REGEN_DELAY) { //used for a delay between each regeneration call
 				player.regenPaint(level.getPercentTiles(player.getColour()));
 				regenTimer = 0;
 			}
@@ -229,6 +229,9 @@ public class World implements Serializable {
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(2, 0);
 			}
+			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
+			    player.move(1,0);
+            }
 		}
 		// System.out.println(input.size());
 		// right
@@ -238,6 +241,9 @@ public class World implements Serializable {
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(-2, 0);
+			}
+			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
+				player.move(-1,0);
 			}
 		}
 		// System.out.println(input.size());
@@ -249,6 +255,9 @@ public class World implements Serializable {
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(0, 2);
 			}
+			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
+				player.move(0,1);
+			}
 		}
 		// System.out.println(input.size());
 		// down
@@ -259,6 +268,9 @@ public class World implements Serializable {
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(0, -2);
 			}
+			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
+				player.move(0,-1);
+			}
 		}
 		// System.out.println(input.size());
 		// down & right
@@ -268,11 +280,14 @@ public class World implements Serializable {
 			if (level.getGrid()[pS.x][pS.y] == 1) {
 				player.move(0, -1);
 			}
+
+
 			player.move(1, 0);
 			Point pD = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pD.x][pD.y] == 1) {
 				player.move(-1, 0);
 			}
+
 		}
 		// System.out.println(input.size());
 		// down & left
@@ -282,11 +297,13 @@ public class World implements Serializable {
 			if (level.getGrid()[pS.x][pS.y] == 1) {
 				player.move(0, -1);
 			}
+
 			player.move(-1, 0);
 			Point pA = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pA.x][pA.y] == 1) {
 				player.move(1, 0);
 			}
+
 		}
 		// System.out.println(input.size());
 		// up & right
@@ -296,11 +313,13 @@ public class World implements Serializable {
 			if (level.getGrid()[pW.x][pW.y] == 1) {
 				player.move(0, 1);
 			}
+
 			player.move(1, 0);
 			Point pD = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pD.x][pD.y] == 1) {
 				player.move(-1, 0);
 			}
+
 		}
 		// System.out.println(input.size());
 		// up & left
@@ -310,11 +329,13 @@ public class World implements Serializable {
 			if (level.getGrid()[pW.x][pW.y] == 1) {
 				player.move(0, 1);
 			}
+
 			player.move(-1, 0);
 			Point pA = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pA.x][pA.y] == 1) {
 				player.move(1, 0);
 			}
+
 		}
 		// System.out.println(input.size());
 
@@ -339,7 +360,6 @@ public class World implements Serializable {
 		player.setLookDirection(dir);
 
 	}
-	
 	/**
 	 * Sets up world for a given lobby
 	 * @param lobby The Lobby object to initialise the world with
