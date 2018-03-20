@@ -63,11 +63,12 @@ public class LevelTest {
 		for (int i = 12; i < 19; i++)
 			for (int j = 20; j < 25; j++)
 				pointsToCheck.add(new Point(i, j));
-		// The ordered associated expected values that you would get by using level.getCoords(x, y)
+		// The ordered associated expected values that you would get by using
+		// level.getCoords(x, y)
 		int[] associatedExpVals = new int[] { 0, 2, 2, 2, 1, 0, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0, 6, 6, 6, 1, 0, 6, 6, 6, 1,
 				0, 0, 0, 6, 1, 0, 0, 0, 0, 1 };
 		Point p;
-		for(int j = 0; j < pointsToCheck.size(); j++) {
+		for (int j = 0; j < pointsToCheck.size(); j++) {
 			p = pointsToCheck.get(j);
 			assertEquals(associatedExpVals[j], level.getCoords(p.x, p.y));
 		}
@@ -83,6 +84,10 @@ public class LevelTest {
 		assertFalse(level.hasLOS(new Point(4, 1), new Point(7, 4)));
 	}
 
+	/**
+	 * Test that it is correctly determined that points (6,10) and (13,7) do have a
+	 * direct line of sight
+	 */
 	@Test
 	public void testHasLOS2() {
 		assertTrue(level.hasLOS(new Point(6, 10), new Point(13, 7)));

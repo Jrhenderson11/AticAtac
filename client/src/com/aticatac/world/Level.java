@@ -14,8 +14,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Random;
 
+@SuppressWarnings("serial")
 public class Level implements Serializable {
 
 	/**
@@ -124,56 +124,6 @@ public class Level implements Serializable {
 	}
 
 	/**
-	 * Don't think this is used
-	 * 
-	 * @param playercolour
-	 * @return
-	 */
-	public int[][] getReducedMap(int playercolour) {
-		// returns a map: 1 indicates this square is playercolour, 0 means it is not
-		int[][] redMap = new int[10][10];
-
-		int chunkwidth = width / 10;
-		int chunkheight = height / 10;
-
-		for (int y = 0; y < 10; y++) {
-			for (int x = 0; x < 10; x++) {
-				// get max for 10th sq
-
-				int[] colours = new int[10];
-				for (int colour : colours) {
-					colour = 0;
-				}
-
-				for (int y2 = 0; y2 < chunkheight; y2++) {
-					for (int x2 = 0; x2 < chunkwidth; x2++) {
-						// colours[grid[x*chunkwidth + x2][y*chunkwidth + y2]] +=1;
-						if (grid[x * chunkwidth + x2][y * chunkwidth + y2] == playercolour) {
-							colours[1]++;
-						} else {
-							colours[0]++;
-						}
-					}
-				}
-				if (colours[1] > colours[0]) {
-					redMap[x][y] = 1;
-				} else {
-					redMap[x][y] = 0;
-				}
-				/*
-				 * //calc max and set in red int max = 0; for (int colour:colours) { if (colour
-				 * > max) {
-				 * 
-				 * } }
-				 */
-
-			}
-		}
-
-		return redMap;
-	}
-
-	/**
 	 * Counts the number of tiles associated to a colour
 	 * 
 	 * @param val
@@ -203,7 +153,6 @@ public class Level implements Serializable {
 		return (int) ((long) (this.getNumTiles(val) * 100) / (long) ((this.width * this.height) - this.getNumTiles(1)));
 	}
 
-	// updates coords with input restrictions and no overwriting walls
 	/**
 	 * Change a co-ordinate to have a new value
 	 * 
@@ -252,14 +201,12 @@ public class Level implements Serializable {
 		if (dx == 0) {
 			for (int y = 0; Math.abs(y - dy) > 0; y += stepy) {
 				if (grid[player.x][player.y + y] == 1) {
-					System.out.println("grid " + (player.x) + ", " + (player.y + y));
 					return false;
 				}
 			}
 		} else if (dy == 0) {
 			for (int x = 0; Math.abs(x - dx) > 0; x += stepx) {
 				if (grid[player.x + x][player.y] == 1) {
-					//System.out.println("grid " + (player.x + x) + ", " + (player.y));
 					return false;
 				}
 			}
@@ -269,7 +216,6 @@ public class Level implements Serializable {
 			for (int y = 0; Math.abs(y - dy) > 0; y += stepy) {
 
 				if (grid[player.x + x][player.y + y] == 1) {
-					//System.out.println("grid " + (player.x + x) + ", " + (player.y + y));
 					return false;
 				}
 			}
@@ -348,25 +294,28 @@ public class Level implements Serializable {
 	 *            The int that represents the colour to fill the cells with
 	 */
 	public void makeSpray(int posX, int posY, double direction, int colour) {
-		// placeholder: make spray of length 6, with the center at the given position
 		int length = 10;
-		boolean posSpray = true; // when a wall is hit, these will go false to stop the spray going through walls
+		boolean posSpray = true;
 		boolean negSpray = true;
+		// When a wall is hit, these will become false to stop the spray going through
+		// walls
 
 		// paint center point
 		updateCoords(posX, posY, colour);
 
-		// increase outwards from either side center point
+		// Increase outwards from either side centre point
 		for (int i = 0; i < length / 2; i++) {
-			int x1 = (int) (posX + (i * Math.sin(direction))); // one direction
+			int x1 = (int) (posX + (i * Math.sin(direction))); // In one direction
 			int y1 = (int) (posY - (i * Math.cos(direction)));
-			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); // the opposite direction
+			int x2 = (int) (posX + (i * Math.sin(direction + Math.PI))); // In the opposite direction
 			int y2 = (int) (posY - (i * Math.cos(direction + Math.PI)));
 			if (posSpray && !updateCoords(x1, y1, colour)) {
-				posSpray = false; // spray in positive direction has hit a wall
+				// Spray in positive direction has hit a wall
+				posSpray = false;
 			}
 			if (negSpray && !updateCoords(x2, y2, colour)) {
-				negSpray = false; // spray in negative direction has hit wall
+				// Spray in negative direction has hit wall
+				negSpray = false;
 			}
 		}
 	}
@@ -415,11 +364,12 @@ public class Level implements Serializable {
 
 	}
 
-	// filehandling
 	/**
+	 * Save the current map into a file
 	 * 
 	 * @param fileName
-	 * @return
+	 *            The file name of the file to write to
+	 * @return True if the map has been saved successfully, False if it has not
 	 */
 	public boolean saveMap(String fileName) {
 		String[] lines = new String[grid.length];
@@ -432,9 +382,6 @@ public class Level implements Serializable {
 			}
 			lines[j++] = line;
 		}
-		/*
-		 * for (String line:lines) { System.out.println("line: " + line); }
-		 */
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(fileName));
 			try {
@@ -443,13 +390,12 @@ public class Level implements Serializable {
 					output.newLine();
 				}
 				output.close();
-				System.out.println("map written to " + fileName);
 				return true;
 			} finally {
 				output.close();
 			}
 		} catch (FileNotFoundException ex) {
-			System.out.print("ERROR: file " + fileName + " not found");
+			System.err.print("ERROR: file " + fileName + " not found");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -459,8 +405,10 @@ public class Level implements Serializable {
 	}
 
 	/**
+	 * Load and construct a map from a file
 	 * 
 	 * @param fileName
+	 *            The file name of the file containing the map
 	 */
 	public void loadMap(String fileName) {
 		ArrayList<String> lines = new ArrayList<String>();
@@ -478,11 +426,10 @@ public class Level implements Serializable {
 			}
 
 		} catch (FileNotFoundException ex) {
-			System.out.print("ERROR: file " + fileName + " not found");
+			System.err.print("ERROR: file " + fileName + " not found");
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		String[] linesArr = new String[lines.size()];
 		for (int y = 0; y < lines.size(); y++) {
 			String line = lines.get(y);
 			int x = 0;
@@ -494,113 +441,11 @@ public class Level implements Serializable {
 	}
 
 	/**
-	 * 
+	 * Create a random map that is not connected
 	 */
 	public void randomiseMap() {
-
 		this.setGrid(LevelGen.get(this.width, this.height));
-
-		/*
-		 * previous code Random random = new Random(); // background this.fillmap(0);
-		 * 
-		 * // make squares
-		 * 
-		 * int numsquares = randomInt(25, 10);
-		 * 
-		 * for (int i = 0; i < numsquares; i++) { int x = random.nextInt(width); int y =
-		 * random.nextInt(height); makeSqRoom(x, y, random.nextInt(width / 3),
-		 * random.nextInt(height / 3), 1, random.nextInt(width / 6), 1); // pick shape
-		 * switch (random.nextInt(1)) { case 0: // rect makeRect(x, y,
-		 * random.nextInt(width / 3), random.nextInt(height / 3), 1); break; case 1: //
-		 * ellipse makeSqRoom(x, y, random.nextInt(width / 3), random.nextInt(height /
-		 * 3), 1, random.nextInt(width / 6), 1); break; }
-		 * 
-		 * }
-		 * 
-		 * this.makeRect(1, 1, 30, 30, 0); this.makeWalls();
-		 */
 	}
-
-	// random methods
-	/**
-	 * 
-	 * @param posX
-	 * @param posY
-	 * @param xLen
-	 * @param yLen
-	 * @param tile
-	 */
-	private void makeRect(int posX, int posY, int xLen, int yLen, int tile) {
-
-		for (int y = posY; (y - posY < yLen) && (y < height) && (y > 0); y++) {
-			for (int x = posX; (x - posX < xLen) && (x < width) && (x > 0); x++) {
-				grid[x][y] = tile;
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * @param posX
-	 * @param posY
-	 * @param xLen
-	 * @param yLen
-	 * @param thickness
-	 * @param doorwidth
-	 * @param tile
-	 */
-	private void makeSqRoom(int posX, int posY, int xLen, int yLen, int thickness, int doorwidth, int tile) {
-		// make outline
-		makeRect(posX, posY, xLen, yLen, tile);
-		// carve inner
-		makeRect(posX + thickness, posY + thickness, (xLen - 2 * thickness), (yLen - 2 * thickness), 0);
-
-		// make doors (even)
-		int centreX = posX + (xLen / 2);
-		int centreY = posY + (yLen / 2);
-
-		// carve horizontal and vertical to make rooms
-		makeRect(posX, (centreY - doorwidth / 2), xLen, doorwidth, 0);
-
-	}
-
-	/**
-	 * 
-	 * @param mean
-	 * @param standardDeviation
-	 * @return
-	 */
-	private int randomGaussian(double mean, double standardDeviation) {
-		Random randomer = new Random();
-		double val = randomer.nextGaussian() * standardDeviation + mean;
-		return (int) val;
-	}
-
-	/**
-	 * 
-	 * @param mean
-	 * @param standardDeviation
-	 * @return
-	 */
-	private int randomPosGaussian(double mean, double standardDeviation) {
-		Random randomer = new Random();
-		double val = randomer.nextGaussian() * standardDeviation + mean;
-		return (int) Math.abs(val);
-	}
-
-	/**
-	 * 
-	 * @param max
-	 * @param min
-	 * @return
-	 */
-	private int randomInt(int max, int min) {
-		Random rand = new Random();
-
-		return rand.nextInt((max - min) + 1) + min;
-	}
-
-	// serialization:
 
 	/**
 	 * Serialise the level object so that it may be sent via an output stream
@@ -614,15 +459,12 @@ public class Level implements Serializable {
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		int lastval = -1;
 		int num = 0;
-		int sum = 0;
-		int sum2 = 0;
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				if (this.grid[x][y] != lastval) {
 					if (num != 0) {
 						intList.add(num);
 						intList.add(lastval);
-						sum2 += num;
 						num = 0;
 					}
 
@@ -630,11 +472,9 @@ public class Level implements Serializable {
 				}
 				if ((x == width - 1 && y == height - 1)) {
 					intList.add(num + 1);
-					sum2 += num + 1;
 					intList.add(lastval);
 				}
 				num++;
-				sum++;
 			}
 		}
 
@@ -661,6 +501,7 @@ public class Level implements Serializable {
 	 * @throws IOException
 	 *             May occur due to reading from an input stream
 	 * @throws ClassNotFoundException
+	 *             If the object being received is not a Level object
 	 */
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 
