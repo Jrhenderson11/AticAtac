@@ -35,7 +35,7 @@ public class Main extends Application{
 	private UDPClient initialiseConnection() {
 		InetAddress srvAddress = null;
 		try {
-			srvAddress = InetAddress.getByName("172.22.204.79");
+			srvAddress = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			System.out.println("server unreachable on this network");
 			System.exit(-1);
