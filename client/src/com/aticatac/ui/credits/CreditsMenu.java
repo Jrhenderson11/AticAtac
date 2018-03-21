@@ -1,6 +1,9 @@
 package com.aticatac.ui.credits;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.aticatac.utils.SystemSettings;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -38,5 +41,9 @@ public class CreditsMenu extends Scene {
                 }
             }
         });
+
+        Set<KeyCode> pressedKeys = new HashSet<>();
+        this.setOnMouseMoved(new CreditsMouseMoved(names));
+
     }
 }

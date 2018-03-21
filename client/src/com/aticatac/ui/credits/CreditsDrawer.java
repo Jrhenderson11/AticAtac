@@ -32,10 +32,9 @@ public class CreditsDrawer {
     }
     public static void creditsItems(GraphicsContext gc, ArrayList<CreditsItems> items, double time) {
 
-        double animation = time / 500000000;
+        double animation = time / 900000000;
         double width = gc.getCanvas().getWidth();
         double height = gc.getCanvas().getHeight();
-
 
         gc.save();
 
@@ -65,20 +64,17 @@ public class CreditsDrawer {
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setFill(col);
             gc.setStroke(Color.BLACK);
-            gc.setFont(UIDrawer.TITLE_FONT);
 
             double x = width / 2;
             double y = (i + 3) * height / (items.size() + 3);
             gc.strokeText(item.getName(), x, y);
             gc.fillText(item.getName(), x, y);
 
-            item.setHitbox(x - 100, y - 15,  250, 40);
+            item.setHitbox(x - 100, y - 15,  250, 47);
 
             gc.restore();
 
         }
-
         gc.restore();
-
     }
 }

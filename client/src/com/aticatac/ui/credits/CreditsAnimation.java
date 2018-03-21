@@ -28,4 +28,7 @@ public class CreditsAnimation extends AnimationTimer {
         CreditsDrawer.title(canvas.getGraphicsContext2D(), now - then);
         CreditsDrawer.creditsItems(canvas.getGraphicsContext2D(), names, now - then);
     }
+
+
+
 }
