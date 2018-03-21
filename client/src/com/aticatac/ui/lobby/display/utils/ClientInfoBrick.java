@@ -5,9 +5,9 @@ import static java.lang.StrictMath.sin;
 import java.io.File;
 import java.util.Optional;
 
-import com.aticatac.Utils;
 import com.aticatac.lobby.ClientInfo;
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.ui.utils.UIDrawer;
@@ -31,7 +31,6 @@ public class ClientInfoBrick implements Drawable {
         this.mine = info;
         this.offset = i;
         kbutton1 = Optional.empty();
-        //TODO: replace placeholder 0 in lobby
         this.lead = info.getID().equals(server.updateLobby(0).getLobbyLeader().getID());
 
         if (isLead && mine != null && !info.getID().equals(server.updateLobby(0).getLobbyLeader().getID())) {
@@ -54,7 +53,7 @@ public class ClientInfoBrick implements Drawable {
 
     @Override
     public void draw(GraphicsContext gc, long now) {
-        if (mine==null) return; 
+        if (mine == null) return;
         int width = SystemSettings.getScreenWidth();
         int height = SystemSettings.getScreenHeight();
         double animation = (double) now / 500000000;
@@ -82,7 +81,7 @@ public class ClientInfoBrick implements Drawable {
 
         //      color
         int color = mine.getColour();
-        Color colorp = Utils.intToColor(color);
+        Color colorp = Renderer.getColourByVal(color);
         gc.setFill(colorp);
         gc.setStroke(Color.BLACK);
         gc.fillOval(x + w * 0.4, y + h * 0.15, h * 0.7, h * 0.7);
@@ -114,7 +113,7 @@ public class ClientInfoBrick implements Drawable {
         });
 
         // Crown :3
-        if(lead) {
+        if (lead) {
             File crown = new File("assets/ui/crown.png");
             gc.drawImage(new Image(crown.toURI().toString()), x + w * 0.9, y + h * 0.2, w * 0.1, h * 0.6);
         }

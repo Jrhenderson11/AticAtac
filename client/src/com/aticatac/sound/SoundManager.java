@@ -59,7 +59,7 @@ public class SoundManager{
 			choice = gun.getType();
 		}
 
-		if (gun.enoughPaint(player.getPaintLevel())){
+		if (gun.enoughPaint()){
 			switch(choice){
 			case 1:
 				//https://opengameart.org/content/flatshot-complete-sfx-pack
