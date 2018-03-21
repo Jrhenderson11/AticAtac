@@ -30,18 +30,21 @@ import javafx.stage.Stage;
 
 public class MainMenu extends Scene {
 
-  /**
-   * Creates main menu scene
-   * @param root Root group node
-   * @param primaryStage JavaFX stage
-   * @param server Server object
-   */
-	public MainMenu(Group root, Stage primaryStage, UDPClient server) {
+    private ArrayList<MenuItem> menuItems;
+
+    /**
+     * Creates main menu scene
+     *
+     * @param root         Root group node
+     * @param primaryStage JavaFX stage
+     * @param server       Server object
+     */
+    public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
-        
+
         // Supplier something = (() -> new Placeholder(new Group()));
-    
-        ArrayList<MenuItem> menuItems = new ArrayList<>();
+
+        menuItems = new ArrayList<>();
         menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
         menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
         //menuItems.add(new MenuItem("AI Demo", () -> new AiDemo(new Group())));
@@ -58,7 +61,7 @@ public class MainMenu extends Scene {
         Canvas canvas = new Canvas(width, height);
 
         root.getChildren().add(canvas);
-        
+
         MainMenuAnimation animation = new MainMenuAnimation(canvas, menuItems, System.nanoTime());
         animation.start();
 
@@ -68,8 +71,14 @@ public class MainMenu extends Scene {
         this.setOnMouseMoved(new MainMenuMouseMoved(menuItems));
         this.setOnMouseClicked(new MainMenuMouseClicked(menuItems, primaryStage, animation));
 
-        
 
     }
 
+    /**
+     * For testing
+     * @return List of menu items
+     */
+    public ArrayList<MenuItem> getMenuItems() {
+        return menuItems;
+    }
 }
