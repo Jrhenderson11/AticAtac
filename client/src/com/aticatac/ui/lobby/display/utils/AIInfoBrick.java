@@ -4,9 +4,9 @@ import static java.lang.StrictMath.sin;
 
 import java.util.Optional;
 
-import com.aticatac.Utils;
 import com.aticatac.lobby.Lobby.ai;
 import com.aticatac.lobby.LobbyServer;
+import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.lobby.display.Displayer;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.utils.SystemSettings;
@@ -76,7 +76,7 @@ public class AIInfoBrick implements Drawable {
 
         //      color
         int color = mine.colour;
-        Color colorp = Utils.intToColor(color);
+        Color colorp = Renderer.getColourByVal(color);
         gc.setFill(colorp);
         gc.setStroke(Color.BLACK);
         gc.fillOval(x + w * 0.4, y + h * 0.15, h * 0.7, h * 0.7);

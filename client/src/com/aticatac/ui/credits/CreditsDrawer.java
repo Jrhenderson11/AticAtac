@@ -25,6 +25,7 @@ public class CreditsDrawer {
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
         gc.setFont(UIDrawer.TITLE_FONT);
+        gc.translate(2 * sin(animation),sin(animation));
         gc.fillText("Credits", width / 2, height / 7);
         gc.strokeText("Credits", width / 2, height / 7);
 
