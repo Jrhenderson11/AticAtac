@@ -75,7 +75,7 @@ public class GameTimer implements Serializable {
 		world.setRoundTime(PRE_ROUND_DURATION);
 		countdownTimer = new Timeline(new KeyFrame(
 		        Duration.millis(1000),
-		        ae -> {world.changeRoundTime(-1);}));
+		        ae -> {world.changeRoundTime(-1); System.out.println("TICK TOCK");}));
 		countdownTimer.setCycleCount(PRE_ROUND_DURATION); //3 second countdown
 		countdownTimer.play();
 		startReadyTimer();

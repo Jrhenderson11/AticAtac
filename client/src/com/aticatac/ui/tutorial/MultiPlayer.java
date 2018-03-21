@@ -11,7 +11,9 @@ import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.ui.overlay.PauseMenu;
+import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.Controller;
+import com.aticatac.utils.GameState;
 import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
@@ -25,6 +27,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class MultiPlayer extends Scene {
@@ -155,6 +159,35 @@ public class MultiPlayer extends Scene {
 				renderer.render(gc);
 				pauseMenu.draw(gc);
 				overlay.drawOverlay(gc, world, myInfo.getID());
+				if (world.getGameState() == GameState.PLAYING) {
+  	        		world.update();
+  	        		//world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+  	        	}
+  	        	//check for round over
+  	        	if (world.getGameState() == GameState.OVER) {
+  	        		if (world.getWinner() != null) {
+  	        			Color color = new Color(0, 0, 0, 0.7f);
+  	        			gc.setFill(color);
+  	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+  	        			gc.setTextAlign(TextAlignment.CENTER);
+  	        			gc.setFill(Color.WHITE);
+  	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+  	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
+  	        		}
+  	        	}
+  	        	
+  	        	//check for ready message
+  	        	if (world.getGameState() == GameState.READY) {
+        			Color color = new Color(0, 0, 0, 0.7f);
+        			gc.setFill(color);
+        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        			gc.setTextAlign(TextAlignment.CENTER);
+        			gc.setFill(Color.WHITE);
+        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+        			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
+  	        	}
+
+			
 			}
 		}.start();
 	}

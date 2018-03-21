@@ -1,6 +1,7 @@
 package com.aticatac.world.items;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import com.aticatac.world.Player;
 

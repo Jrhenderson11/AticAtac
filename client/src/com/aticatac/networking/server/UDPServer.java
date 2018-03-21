@@ -1,7 +1,5 @@
 package com.aticatac.networking.server;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,7 +12,9 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-public class UDPServer extends Thread {
+import javafx.concurrent.Task;
+
+public class UDPServer extends Task {
 
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
@@ -31,8 +31,11 @@ public class UDPServer extends Thread {
 		this.lobbyInfo = null;
 	}
 
+	/**
+	 * javafx version of Thread.run()
+	 */
 	@Override
-	public void run() {
+	public Object call() {
 		Level level = new Level(100, 100);
 		level.randomiseMap();
 		this.model = new World(level);
@@ -49,6 +52,7 @@ public class UDPServer extends Thread {
 		}
 
 		System.out.println("TestServer stopped");
+		return null;
 	}
 
 	public void halt() {
@@ -127,6 +131,7 @@ public class UDPServer extends Thread {
 			}
 		}
 		System.out.println("Client left lobby");
+		
 	}
 
 	public Lobby getLobby() {
@@ -171,6 +176,7 @@ public class UDPServer extends Thread {
 		}
 		// give world lobby
 		model.init(this.lobby);
+		model.newRound();
 		if (this.status == Globals.IN_LOBBY) {
 			System.out.println("Game started");
 			this.lobby.setStarted();
