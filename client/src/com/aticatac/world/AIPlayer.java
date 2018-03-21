@@ -167,7 +167,7 @@ public class AIPlayer extends Player {
 		Player[] otherPlayers = world.getPlayers().toArray(new Player[world.getNumPlayers()]);
 
 		if (currentPath.isEmpty()) {
-			if (hasGun && cooldown-- >= 0 && getGun().enoughPaint(getPaintLevel())) {
+			if (hasGun && cooldown-- >= 0 && getGun().enoughPaint()) {
 				for (Player player : otherPlayers) {
 					if (!player.equals(this) && level.hasLOS(gridPosition, world.displayPositionToCoords(player.getPosition()))
 							&& inRange(player.getPosition())) {
@@ -192,7 +192,7 @@ public class AIPlayer extends Player {
 				makeNextMove();
 			} else {
 				if (cooldown == -5) {
-					if(hasGun && !gun.enoughPaint(getPaintLevel())) {
+					if(hasGun && !gun.enoughPaint()) {
 						hasGun = false;
 					}
 					cooldown = 0;
