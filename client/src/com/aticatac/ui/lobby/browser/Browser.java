@@ -30,11 +30,11 @@ public class Browser extends Scene {
      * @param back Main menu object to return back
      * @param primaryStage Stage obj
      */
-    private static MainMenu mainMenu;
+    private static Scene mainMenu;
     
     public Browser(Group root, LobbyServer server, MainMenu back, Stage primaryStage, Boolean makeNew) {
         super(root);
-        
+               
         if (makeNew) {
         	server.makeLobby();
         }
@@ -44,9 +44,14 @@ public class Browser extends Scene {
         int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
+        
         Browser.stage = primaryStage;
         Browser.server = server;
 
+        System.out.println("BROWSER STAGE");
+        System.out.println(primaryStage == null);
+        
+        
         selected = -1;
         offset = 0;
 
@@ -93,8 +98,10 @@ public class Browser extends Scene {
     public void join() {
         if (selected == -1) return;
         if (server.joinLobby(selected, "")) {
-        	Browser b = new Browser(new Group(), server, this.mainMenu, stage, false);
-        	stage.setScene(new Displayer(new Group(), selected, server, b, stage, mainMenu));
+        	System.out.println("STAGE CHECK");
+        	System.out.println(stage==null);
+        	//Browser b = new Browser(new Group(), server, this.mainMenu, Browser.stage, false);
+        	stage.setScene(new Displayer(new Group(), selected, server, this, stage, mainMenu));
         } else {
             System.err.println("Server rejected join");
         }

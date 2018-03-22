@@ -38,16 +38,21 @@ public class Displayer extends Scene {
      * @param newStage Stage object
      */
     
-    public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage, MainMenu mainMenu) {
+    public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage, Scene mainMenu) {
         super(root);
 
         int width = SystemSettings.getScreenWidth();
         int height = SystemSettings.getScreenHeight();
         Canvas canvas = new Canvas(width, height);
 
+        this.stage = newStage;
+        
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
+        
+        System.out.println("DISPLAYER STAGE");
+        System.out.println(stage==null);
+        
         DAnimator animator = new DAnimator(gc, selected, server, parent, stage, mainMenu);
         this.setOnMouseMoved(new DOnMouseMove());
         this.setOnMouseClicked(new DOnMouseClick());

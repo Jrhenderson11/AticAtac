@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 public class MainMenu extends Scene {
 
     private ArrayList<MenuItem> menuItems;
-
+    private Stage stage;
     /**
      * Creates main menu scene
      *
@@ -39,7 +39,15 @@ public class MainMenu extends Scene {
      */
     public MainMenu(Group root, Stage primaryStage, UDPClient server) {
         super(root);
+        
+        this.stage = primaryStage;
 
+        System.out.println("IS MAIN MENU FUCKED?");
+        if(primaryStage==null) {
+        	System.out.println("YES IT IS");
+        } else {
+        	System.out.println("NOPE");
+        }
         // Supplier something = (() -> new Placeholder(new Group()));
 
         menuItems = new ArrayList<>();
@@ -80,4 +88,11 @@ public class MainMenu extends Scene {
     public ArrayList<MenuItem> getMenuItems() {
         return menuItems;
     }
+
+    public Stage getStage() {
+    	return this.stage;
+    }
+    
 }
+
+

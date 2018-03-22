@@ -39,7 +39,7 @@ public class MultiPlayer extends Scene {
 	private UDPClient client;
 	private Stage stage;
 
-	public MultiPlayer(Group root, UDPClient newClient, Stage newStage, MainMenu mainMenu) {
+	public MultiPlayer(Group root, UDPClient newClient, Stage newStage, Scene mainMenu) {
 		super(root);
 		this.client = newClient;
 		this.stage = newStage;

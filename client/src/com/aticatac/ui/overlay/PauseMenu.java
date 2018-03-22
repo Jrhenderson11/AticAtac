@@ -9,6 +9,7 @@ import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
@@ -35,7 +36,7 @@ public class PauseMenu {
 	/**
 	 * The Main menu to return to when QUIT_TO_MENU
 	 */
-	private MainMenu mainmenu;
+	private Scene mainmenu;
 	/**
 	 * Controls the displaying of pause menu. True for displaying the pause menu
 	 */
@@ -55,7 +56,7 @@ public class PauseMenu {
 	 * @param stage The stage this pause menu is a child of
 	 * @param mainmenu The MainMenu to return to when RESUME
 	 */
-	public PauseMenu(Stage stage, MainMenu mainmenu) {
+	public PauseMenu(Stage stage, Scene mainmenu) {
 		this.stage = stage;
 		this.mainmenu = mainmenu;
 		this.paused = false;
@@ -69,7 +70,7 @@ public class PauseMenu {
 	 * @param mainmenu
 	 * @param server the server to connect to
 	 */
-	public PauseMenu(Stage stage, MainMenu mainmenu, UDPClient newServer) {
+	public PauseMenu(Stage stage, Scene mainmenu, UDPClient newServer) {
 		this.stage = stage;
 		this.mainmenu = mainmenu;
 		this.paused = false;

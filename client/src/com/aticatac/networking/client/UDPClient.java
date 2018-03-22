@@ -139,7 +139,6 @@ public class UDPClient extends Task implements LobbyServer {
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
 	}
-
 	
 	public void setLobbyInfo(LobbyInfo newInfo) {
 		this.lobbyInfo = newInfo;
@@ -179,6 +178,8 @@ public class UDPClient extends Task implements LobbyServer {
 	
 	@Override
 	public boolean startGame() {
+		System.out.println("I AM STARTING GAME!!!!");
+		
 		if (this.status == Globals.IN_LOBBY) {
 			sendData("start");
 			return true;

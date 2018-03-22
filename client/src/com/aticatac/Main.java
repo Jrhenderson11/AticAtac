@@ -81,11 +81,6 @@ public class Main extends Application{
             }
 
         });  
-        //m.setMenuVolume(2);
-        //m.playBgMenu();
-
-        //m.playBgMenu2();
-        
         primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
                 SystemSettings.setScreenHeight((int) ((double) newValue) - 15));
         primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->

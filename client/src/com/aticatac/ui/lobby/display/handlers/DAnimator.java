@@ -25,6 +25,7 @@ import com.aticatac.utils.SystemSettings;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -39,7 +40,7 @@ public class DAnimator extends AnimationTimer {
     private boolean isLead;
     private Browser parent;
     private Stage stage;
-private MainMenu mainMenu;
+    private Scene mainMenu;
     
     
     private BackButton backButton;
@@ -49,7 +50,7 @@ private MainMenu mainMenu;
     private int width;
     private int height;
 
-    public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage, MainMenu mainMenu) {
+    public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage, Scene mainMenu) {
         this.gc = gc;
         this.selected = selected;
         this.server = server;
@@ -57,6 +58,8 @@ private MainMenu mainMenu;
         this.parent = newParent;
         this.stage = newStage;
         this.mainMenu = mainMenu;
+        System.out.println("SAGE===============================");
+        System.out.println(stage==null);
         
         this.width = SystemSettings.getScreenWidth();
         this.height = SystemSettings.getScreenHeight();
@@ -154,11 +157,12 @@ private MainMenu mainMenu;
 
         // if game has been started go to game screen
         if (lobby.getStarted() || this.server.getStatus() == Globals.IN_GAME) {
-            // TODO: maybe add transition screen
+            
             System.out.println("starting!!!");
+            
+            stage.setScene(new MultiPlayer(new Group(), (UDPClient) server, stage, mainMenu));
             this.stop();
 
-            stage.setScene(new MultiPlayer(new Group(), (UDPClient) server, stage, mainMenu));
         }
 
         // If I am kicked go to previous menu
