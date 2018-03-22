@@ -89,13 +89,19 @@ public class ServerReciever extends Thread {
 	 */
 	private void processData(String data, InetAddress origin, int originPort) {
 		int port = Globals.CLIENT_PORT;
-		// System.out.println(data);
+
 		if (data.equals("join")) {
 			if (clientList.size() < Globals.MAX_CONNECTIONS) {
 				// add to list + send confirmation
 
 				String newName = "P" + Integer.toString(clientList.size() + 1);
-				port = Globals.CLIENT_PORT + (clientList.size());
+				int numfound = 0;
+				for (ConnectionInfo i : this.clientList) {
+					if (i.getAddress().equals(origin)) {
+						numfound++;
+					}
+				}
+				port = Globals.CLIENT_PORT + (numfound);
 				ConnectionInfo newClient = new ConnectionInfo(newName, origin, port, originPort);
 				this.clientList.add(newClient);
 				this.addressList.add(origin);
@@ -111,6 +117,7 @@ public class ServerReciever extends Thread {
 		if (data.equals("whatismyip")) {
 			master.replyIP(origin, originPort);
 		} if (data.equals("init")) {
+
 			ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.joinLobby(info.getID(), origin, 2, this.getConnectionInfo(origin, originPort).getDestPort(),
 					originPort);

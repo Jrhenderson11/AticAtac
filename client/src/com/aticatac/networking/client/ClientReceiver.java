@@ -90,7 +90,9 @@ public class ClientReceiver extends Thread {
 					try {
 						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
 						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, newLobby.NAME));
-					} catch (Exception e2) {}
+					} catch (Exception e2) {
+						System.out.println("got something that should be lobby info");
+					}
 				}
 				//System.out.println("getting info");
 				
