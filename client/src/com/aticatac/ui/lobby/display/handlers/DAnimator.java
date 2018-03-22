@@ -17,6 +17,7 @@ import com.aticatac.ui.lobby.display.utils.BackButton;
 import com.aticatac.ui.lobby.display.utils.ClientInfoBrick;
 import com.aticatac.ui.lobby.display.utils.LobbyHeader;
 import com.aticatac.ui.lobby.display.utils.ReadyStartButton;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.tutorial.MultiPlayer;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.ui.utils.UIDrawer;
@@ -38,7 +39,9 @@ public class DAnimator extends AnimationTimer {
     private boolean isLead;
     private Browser parent;
     private Stage stage;
-
+private MainMenu mainMenu;
+    
+    
     private BackButton backButton;
     private ReadyStartButton sbutton;
     private AddAIButton aiButton;
@@ -46,14 +49,15 @@ public class DAnimator extends AnimationTimer {
     private int width;
     private int height;
 
-    public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage) {
+    public DAnimator(GraphicsContext gc, int selected, LobbyServer server, Browser newParent, Stage newStage, MainMenu mainMenu) {
         this.gc = gc;
         this.selected = selected;
         this.server = server;
         this.isLead = false;
         this.parent = newParent;
         this.stage = newStage;
-
+        this.mainMenu = mainMenu;
+        
         this.width = SystemSettings.getScreenWidth();
         this.height = SystemSettings.getScreenHeight();
 
@@ -154,7 +158,7 @@ public class DAnimator extends AnimationTimer {
             System.out.println("starting!!!");
             this.stop();
 
-            stage.setScene(new MultiPlayer(new Group(), (UDPClient) server));
+            stage.setScene(new MultiPlayer(new Group(), (UDPClient) server, stage, mainMenu));
         }
 
         // If I am kicked go to previous menu

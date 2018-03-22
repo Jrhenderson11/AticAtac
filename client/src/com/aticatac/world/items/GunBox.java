@@ -3,11 +3,12 @@ package com.aticatac.world.items;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-public abstract class GunBox {
+public abstract class GunBox implements Serializable {
 	
 	/**
 	 * Default dimensions of the gun box rectangle

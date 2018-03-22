@@ -1,6 +1,5 @@
 package com.aticatac.ui.lobby.browser.utils;
 
-
 import static java.lang.StrictMath.abs;
 import static java.lang.StrictMath.sin;
 
@@ -16,102 +15,116 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 
-
 public class LBDrawer {
 
-    private static ArrayList<Rectangle> hitboxs;
+	private static ArrayList<Rectangle> hitboxs;
 
-    // TODO: 100% not where this should be, but whatever.
-    public static ArrayList<Rectangle> getHitboxs() {
-        return hitboxs;
-    }
+	// TODO: 100% not where this should be, but whatever.
+	public static ArrayList<Rectangle> getHitboxs() {
+		return hitboxs;
+	}
 
-    public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
+	public static void lobbies(GraphicsContext gc, ArrayList<LobbyInfo> lobbies, int offset, long now) {
 
-        gc.save();
+		int width = SystemSettings.getScreenWidth();
+		int height = SystemSettings.getScreenHeight();
+		
+		hitboxs = new ArrayList<>();
+		
+		// if no lobbies just display some text in centre
+		if (lobbies.size() == 0) {
+			gc.setTextAlign(TextAlignment.CENTER);
+			gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
+			gc.setStroke(Color.GRAY);
+			gc.setFill(Color.WHITE);
 
-        // Probably bad code, I should've used an object, but nevermind
-        hitboxs = new ArrayList<>();
-        for (int i = offset; i < lobbies.size(); i++) {
-            drawLobbyInfo(gc, i, lobbies.get(i), now);
-        }
+			gc.strokeText("No lobbies available", width / 2, height /2);
+			gc.fillText("No lobbies available", width / 2, height /2);
+		} else {
+			gc.save();
+			// Probably bad code, I should've used an object, but nevermind
+			
+			for (int i = offset; i < lobbies.size(); i++) {
+				drawLobbyInfo(gc, i, lobbies.get(i), now);
+			}
 
-        gc.restore();
+			gc.restore();
+		}
 
-    }
+	}
 
-    private static void drawLobbyInfo(GraphicsContext gc, int i, LobbyInfo lob, long now) {
+	private static void drawLobbyInfo(GraphicsContext gc, int i, LobbyInfo lob, long now) {
 
-        int width = SystemSettings.getScreenWidth();
-        int height = SystemSettings.getScreenHeight();
-        boolean selected = i == Browser.getSelected();
+		int width = SystemSettings.getScreenWidth();
+		int height = SystemSettings.getScreenHeight();
+		boolean selected = i == Browser.getSelected();
 
-        // Name, ID, Current players
-        gc.save();
+		// Name, ID, Current players
+		gc.save();
 
-        gc.setStroke(Color.BLACK);
-        gc.setFill(Color.gray(0.1));
+		gc.setStroke(Color.BLACK);
+		gc.setFill(Color.gray(0.1));
 
-        int x = width / 9;
-        int y = i * height / 7;
-        int w = 7 * width / 9;
-        int h = height / 7;
+		int x = width / 9;
+		int y = i * height / 7;
+		int w = 7 * width / 9;
+		int h = height / 7;
 
-        gc.strokeRect(x, y, w, h);
-        gc.fillRect(x, y, w, h);
+		gc.strokeRect(x, y, w, h);
+		gc.fillRect(x, y, w, h);
 
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
-        gc.setStroke(Color.GRAY);
-        gc.setFill(Color.WHITE);
+		gc.setTextAlign(TextAlignment.LEFT);
+		gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
+		gc.setStroke(Color.GRAY);
+		gc.setFill(Color.WHITE);
 
-        gc.strokeText("Name: " + lob.NAME, x + width / 100, y + height / 17);
-        gc.fillText("Name: " + lob.NAME, x + width / 100, y + height / 17);
+		gc.strokeText("Name: " + lob.NAME, x + width / 100, y + height / 17);
+		gc.fillText("Name: " + lob.NAME, x + width / 100, y + height / 17);
 
-        gc.strokeText("ID: " + lob.ID, x + width / 100, y + 2 * height / 17);
-        gc.fillText("ID: " + lob.ID, x + width / 100, y + 2 * height / 17);
+		gc.strokeText("ID: " + lob.ID, x + width / 100, y + 2 * height / 17);
+		gc.fillText("ID: " + lob.ID, x + width / 100, y + 2 * height / 17);
 
-        String players = "Players: " + lob.CURRENT_PLAYERS + " / " + lob.MAX_PLAYERS;
-        gc.strokeText(players, x + 3 * width / 9, y + height / 13);
-        gc.fillText(players, x + 3 * width / 9, y + height / 13);
+		String players = "Players: " + lob.CURRENT_PLAYERS + " / " + lob.MAX_PLAYERS;
+		gc.strokeText(players, x + 3 * width / 9, y + height / 13);
+		gc.fillText(players, x + 3 * width / 9, y + height / 13);
 
-        // JOIN
+		// JOIN
 
-        if (selected) {
-            double animation = (double) now / 500000000;
-            gc.setFill(Color.rgb(0, 200 + (int) (55 * abs(sin(animation))), 0));
-        } else {
-            gc.setFill(Color.GREEN);
-        }
+		if (selected) {
+			double animation = (double) now / 500000000;
+			gc.setFill(Color.rgb(0, 200 + (int) (55 * abs(sin(animation))), 0));
+		} else {
+			gc.setFill(Color.GREEN);
+		}
 
-        gc.setStroke(Color.BLACK);
-        Rectangle hitbox = new Rectangle(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
-        gc.fillRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
-        gc.strokeRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+		gc.setStroke(Color.BLACK);
+		Rectangle hitbox = new Rectangle(x + 6 * width / 10, y + height / 30, width / 9, height / 12);
+		gc.fillRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+		gc.strokeRect(hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 
-        hitboxs.add(hitbox);
+		hitboxs.add(hitbox);
 
-        gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
-        gc.setFill(Color.BLACK);
-        gc.fillText("JOIN", x + width * 0.635, y + height * 0.085);
+		gc.setFont(UIDrawer.LOBBY_BROWS_TEXT);
+		gc.setFill(Color.BLACK);
+		gc.fillText("JOIN", x + width * 0.635, y + height * 0.085);
 
-        gc.restore();
+		gc.restore();
 
-    }
+	}
 
-    public static void create(GraphicsContext gc, long now) {
-    }
+	public static void create(GraphicsContext gc, long now) {
+	}
 
-    public static void back(GraphicsContext gc, long now) {
-    }
+	public static void back(GraphicsContext gc, long now) {
+	}
 
-    public static void borders(GraphicsContext gc) {
+	public static void borders(GraphicsContext gc) {
 
-        int width = SystemSettings.getScreenWidth();
-        int height = SystemSettings.getScreenHeight();
+		int width = SystemSettings.getScreenWidth();
+		int height = SystemSettings.getScreenHeight();
 
-        gc.setStroke(Color.BLACK);
-        gc.strokeRect(width / 9, 0, 7 * width / 9, height);
+		gc.setStroke(Color.BLACK);
+		gc.strokeRect(width / 9, 0, 7 * width / 9, height);
 
-    }
+	}
 }

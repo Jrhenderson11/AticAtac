@@ -8,6 +8,9 @@ public interface LobbyServer {
 	
     // Only allowed when client is in a lobby
     Lobby updateLobby(int id);
+
+    boolean makeLobby();
+    
     // Only give full testserver info once client actually joins
     boolean joinLobby(int id, String password);
 

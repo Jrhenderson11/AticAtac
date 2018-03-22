@@ -7,6 +7,7 @@ import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.lobby.display.handlers.DAnimator;
 import com.aticatac.ui.lobby.display.handlers.DOnMouseClick;
 import com.aticatac.ui.lobby.display.handlers.DOnMouseMove;
+import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.utils.Button;
 import com.aticatac.ui.utils.Drawable;
 import com.aticatac.utils.SystemSettings;
@@ -23,6 +24,11 @@ public class Displayer extends Scene {
     private static HashSet<Drawable> drawables;
     private static HashSet<Button> buttons;
 
+    private static Browser parent;
+    private static Stage stage;
+
+    
+    
     /**
      * Creates lobby object which displays info
      * @param root Root object
@@ -31,7 +37,8 @@ public class Displayer extends Scene {
      * @param newParent Browser object
      * @param newStage Stage object
      */
-    public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage) {
+    
+    public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage, MainMenu mainMenu) {
         super(root);
 
         int width = SystemSettings.getScreenWidth();
@@ -41,7 +48,7 @@ public class Displayer extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        DAnimator animator = new DAnimator(gc, selected, server, newParent, newStage);
+        DAnimator animator = new DAnimator(gc, selected, server, parent, stage, mainMenu);
         this.setOnMouseMoved(new DOnMouseMove());
         this.setOnMouseClicked(new DOnMouseClick());
         animator.start();

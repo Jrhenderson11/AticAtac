@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.utils.Controller;
+import com.aticatac.utils.SystemSettings;
 import com.aticatac.world.AIPlayer;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
@@ -117,10 +118,21 @@ public class ServerReciever extends Thread {
 			int lobbyNum = Integer.parseInt(parts[1]);
 			
 			
+		} else if(parts[0].equals("makelobby")) {			
+			master.makeLobby();
+			System.out.println("lobby created");
 		} else if (data.equals("ready")) {
 			// SET LOBBY TO READY
 			this.master.setClientReady(origin, originPort);
 
+		} else if (data.equals("quit")) {
+			//remove player from game
+			master.removePlayer(origin, originPort);
+			//remove player from lobby
+			master.leaveLobby(origin, originPort);
+			//remove from connection table
+			this.master.removeConnection(origin, originPort);
+			System.out.println("client quit successful");
 		} else if (data.equals("lobbypls")) {
 			// SENDLOBBY
 			this.master.sendAllLobby();
@@ -131,7 +143,6 @@ public class ServerReciever extends Thread {
 
 		} else if (parts[0].equals("name")) {
 			//this.master.startGame();
-
 		} else if (parts[0].equals("kick")) {
 			String id = parts[1];
 			//TODO: check if this user is actually lobby leader
@@ -141,8 +152,12 @@ public class ServerReciever extends Thread {
 			master.addAI();
 					
 		} else if (data.equals("leavelobby")) {
-			//ConnectionInfo info = this.getConnectionInfo(origin, originPort);
 			master.leaveLobby(origin, originPort);
+		} else if (data.equals("leavegame")) {
+			//quit game and lobby
+			master.removePlayer(origin, originPort);
+			master.leaveLobby(origin, originPort);
+			System.out.println("client left game");
 		} else if (data.equals("start")) {
 			this.master.startGame();
 		} else if (data.equals("stop")) {
@@ -160,7 +175,9 @@ public class ServerReciever extends Thread {
 			model.handleInput(input, dir, this.getConnectionInfo(origin, originPort).getID());
 			model.update();
 		} else if(parts[0].equals("click")) {
-			model.shoot(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), this.getConnectionInfo(origin, originPort).getID());
+			int x = Integer.parseInt(parts[1]);
+			int y = Integer.parseInt(parts[2]);
+			model.shoot( (int) SystemSettings.getDescaledX(x), (int) SystemSettings.getDescaledY(y) , this.getConnectionInfo(origin, originPort).getID());
 		}
 	}
 }

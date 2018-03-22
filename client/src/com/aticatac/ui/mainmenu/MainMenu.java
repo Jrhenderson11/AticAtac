@@ -15,10 +15,8 @@ import com.aticatac.ui.mainmenu.handlers.MainMenuMouseMoved;
 import com.aticatac.ui.mainmenu.utils.MenuItem;
 import com.aticatac.ui.quit.Quit;
 import com.aticatac.ui.settings.Settings;
-import com.aticatac.ui.tutorial.AiDemo;
 import com.aticatac.ui.tutorial.SinglePlayer;
 import com.aticatac.ui.tutorial.Tutorial;
-import com.aticatac.ui.tutorial.TutorialNetworked;
 import com.aticatac.ui.utils.Placeholder;
 import com.aticatac.utils.SystemSettings;
 
@@ -45,9 +43,10 @@ public class MainMenu extends Scene {
         // Supplier something = (() -> new Placeholder(new Group()));
 
         menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage)));
-        menuItems.add(new MenuItem("Create a Lobby", () -> new Placeholder(new Group())));
+        menuItems.add(new MenuItem("Find a Lobby", () -> new Browser(new Group(), server, this, primaryStage, false)));
+        menuItems.add(new MenuItem("Create a Lobby", () -> new Browser(new Group(), server, this, primaryStage, true)));
         //menuItems.add(new MenuItem("AI Demo", () -> new AiDemo(new Group())));
+
         menuItems.add(new MenuItem("Tutorial", () -> new Tutorial(new Group(), primaryStage, this)));
         menuItems.add(new MenuItem("SinglePlayer", () -> new SinglePlayer(new Group(), primaryStage, this)));
         //menuItems.add(new MenuItem("MultiPlayer Demo", () -> new TutorialNetworked(new Group(), server)));

@@ -47,7 +47,12 @@ public class ClientReceiver extends Thread {
 		System.out.println(name + " bound to " + port);
 		this.master = newMaster;
 	}
-	
+	/**
+	 * This is the run method, it keeps running in a loop
+	 * at every iteration it listens for packets
+	 *  tries to cast them into the appropriate game state based 
+	 *  off UDPClient.getStatus()
+	 */
 	@Override
 	public void run() {
 		this.running = true;
@@ -147,7 +152,10 @@ public class ClientReceiver extends Thread {
 	public World getModel() {
 		return this.model;
 	}
-
+	
+	/** used for debugging stuff over network 
+	 * 
+	 */
 	private static String byteArrayToHexString(byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {

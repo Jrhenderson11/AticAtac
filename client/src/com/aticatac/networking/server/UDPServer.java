@@ -1,7 +1,5 @@
 package com.aticatac.networking.server;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,7 +12,9 @@ import com.aticatac.world.Level;
 import com.aticatac.world.Player;
 import com.aticatac.world.World;
 
-public class UDPServer extends Thread {
+import javafx.concurrent.Task;
+
+public class UDPServer extends Task {
 
 	private CopyOnWriteArrayList<ConnectionInfo> clientList;
 	private ServerReciever receiver;
@@ -28,11 +28,14 @@ public class UDPServer extends Thread {
 	public UDPServer() {
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
-		this.lobbyInfo = new LobbyInfo(4, 0, 1, "lobby1");
+		this.lobbyInfo = null;
 	}
 
+	/**
+	 * javafx version of Thread.run()
+	 */
 	@Override
-	public void run() {
+	public Object call() {
 		Level level = new Level(100, 100);
 		level.randomiseMap();
 		this.model = new World(level);
@@ -49,6 +52,7 @@ public class UDPServer extends Thread {
 		}
 
 		System.out.println("TestServer stopped");
+		return null;
 	}
 
 	public void halt() {
@@ -68,6 +72,12 @@ public class UDPServer extends Thread {
 
 	public void sendAllLobby() {
 		this.sender.sendAllLobby();
+	}
+
+	public void makeLobby() {
+		if (this.lobbyInfo == null) {
+			this.lobbyInfo = new LobbyInfo(4, 0, 1, "Lobby");
+		}
 	}
 
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
@@ -109,16 +119,19 @@ public class UDPServer extends Thread {
 	}
 
 	public void leaveLobby(InetAddress address, int originPort) {
-		ClientInfo newClient = this.getClientInfo(address, originPort);
 
-		if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
-			this.lobby.removeClient(newClient.getID());
-		}
-		this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
-		if (this.lobby.getAll().size() == 0) {
-			this.status = Globals.IN_LIMBO;
+		ClientInfo newClient = this.getClientInfo(address, originPort);
+		if (this.lobby != null) {
+			if ((this.status == Globals.IN_LOBBY) && this.lobby.getAll().contains(newClient)) {
+				this.lobby.removeClient(newClient.getID());
+			}
+			this.lobbyInfo = new LobbyInfo(4, this.lobby.getAll().size(), 1, this.lobbyInfo.NAME);
+			if (this.lobby.getAll().size() == 0) {
+				this.status = Globals.IN_LIMBO;
+			}
 		}
 		System.out.println("Client left lobby");
+		
 	}
 
 	public Lobby getLobby() {
@@ -130,11 +143,14 @@ public class UDPServer extends Thread {
 	}
 
 	public ClientInfo getClientInfo(InetAddress address, int port) {
-
-		for (ClientInfo info : this.lobby.getAll()) {
-			if (info.getAddress().equals(address) && info.getOriginPort() == port) {
-				return info;
+		try {
+			for (ClientInfo info : this.lobby.getAll()) {
+				if (info.getAddress().equals(address) && info.getOriginPort() == port) {
+					return info;
+				}
 			}
+		} catch (NullPointerException e) {
+			System.out.println("client disconnected and info no longer exists");
 		}
 		System.out.println("invalid client address to search for");
 		return null;
@@ -160,6 +176,7 @@ public class UDPServer extends Thread {
 		}
 		// give world lobby
 		model.init(this.lobby);
+		model.newRound();
 		if (this.status == Globals.IN_LOBBY) {
 			System.out.println("Game started");
 			this.lobby.setStarted();
@@ -176,5 +193,25 @@ public class UDPServer extends Thread {
 	public void replyIP(InetAddress origin, int originPort) {
 		String msg = "IP:" + (origin.toString());
 		this.sender.sendClientMessage(origin, originPort, msg);
+	}
+
+	public void removePlayer(InetAddress origin, int originPort) {
+		if (this.status == Globals.IN_GAME) {
+			this.model.removePlayer(this.getClientInfo(origin, originPort).getID());
+		}
+	}
+
+	public void removeConnection(InetAddress origin, int originPort) {
+		for (int i = 0; i < this.clientList.size(); i++) {
+			if (this.clientList.get(i).getAddress().equals(origin)
+					&& this.clientList.get(i).getOriginPort() == originPort) {
+				this.clientList.remove(i);
+			}
+		}
+		// reset state if only connection
+		if (this.clientList.size() == 0) {
+			this.status = Globals.IN_LIMBO;
+		}
+
 	}
 }

@@ -3,6 +3,7 @@ package com.aticatac.ui.overlay;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.aticatac.networking.client.UDPClient;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
@@ -45,6 +46,11 @@ public class PauseMenu {
 	private int selection;
 	
 	/**
+	 * the server to connect to
+	 */
+	private UDPClient server;
+	
+	/**
 	 * Creates a pause menu.
 	 * @param stage The stage this pause menu is a child of
 	 * @param mainmenu The MainMenu to return to when RESUME
@@ -54,6 +60,21 @@ public class PauseMenu {
 		this.mainmenu = mainmenu;
 		this.paused = false;
 		this.selection = 0;
+		this.server = null;
+	}
+	
+	/** Constructor for if network exists
+	 * 
+	 * @param stage
+	 * @param mainmenu
+	 * @param server the server to connect to
+	 */
+	public PauseMenu(Stage stage, MainMenu mainmenu, UDPClient newServer) {
+		this.stage = stage;
+		this.mainmenu = mainmenu;
+		this.paused = false;
+		this.selection = 0;
+		this.server = newServer;
 	}
 	
 	/**
@@ -61,12 +82,17 @@ public class PauseMenu {
 	 * @param mousePosition The position of the mouse
 	 */
 	public int handleClick() {
+		System.out.println("CLICKED");
 		if (paused) {
 			if (selection == RESUME) {
 				setPaused(false);
 				return RESUME;
 			} else if (selection == QUIT_TO_MENU) {
 				stage.setScene(mainmenu);
+				if (this.server!=null) {
+					//tell server I'm leaving game
+					this.server.leaveGame();
+				}
 				return QUIT_TO_MENU;
 			} else if (selection == QUIT_GAME) {
 				Platform.exit();

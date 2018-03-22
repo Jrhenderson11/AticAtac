@@ -87,7 +87,6 @@ public class World implements Serializable {
 	 */
 	private int round;
 	
-	
 	// -----------
 	// Constructor
 	// -----------
@@ -581,6 +580,17 @@ public class World implements Serializable {
 			this.players.add(player);
 			return true;
 		} else return false;
+	}
+
+	public boolean removePlayer(String id) {
+		for (int i=0;i< this.players.size();i++) {
+			Player currentPlayer = (Player) ((LinkedList<Player>) players).get(i); 
+			if (currentPlayer.getIdentifier().equals(id)) {
+				this.players.remove(currentPlayer);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

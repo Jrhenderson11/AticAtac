@@ -20,11 +20,16 @@ public class Main extends Application{
      * Main method - calls the javafx execution method
      * @param args controls if sound is disabled for testing
      */
+	UDPClient server;
+	public static boolean soundEnabled;
+	
     public static void main(String[] args) {
-
+    	soundEnabled = true;
+    	if (args.length>0 && args[0].equals("soundoff")) {
+    		soundEnabled = false;
+    	}
         //SystemSettings.setScreenHeight(480);
         //SystemSettings.setScreenWidth(720);
-
         Main.launch(args);
     }
 
@@ -34,7 +39,7 @@ public class Main extends Application{
      */
 	private UDPClient initialiseConnection() {
 		InetAddress srvAddress = null;
-		try {
+		try {//172.22.204.79
 			srvAddress = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			System.out.println("server unreachable on this network");
@@ -63,14 +68,19 @@ public class Main extends Application{
         SystemSettings.setScreenWidth(720);
         primaryStage.setWidth(SystemSettings.getScreenWidth());
         primaryStage.setHeight(SystemSettings.getScreenHeight());
-    	UDPClient server;
     	server = this.initialiseConnection();
    	    primaryStage.setTitle("AticAtac");
         primaryStage.setScene(new MainMenu(new Group(), primaryStage, server));
         primaryStage.show();
-        SoundManager m = new SoundManager();
+        SoundManager m = new SoundManager(soundEnabled);
         
-        primaryStage.setOnCloseRequest(we -> System.exit(0));
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                server.quit();
+            	System.exit(0);
+            }
+
+        });  
         //m.setMenuVolume(2);
         //m.playBgMenu();
 

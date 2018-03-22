@@ -25,19 +25,19 @@ public class GameTimer implements Serializable {
 	/**
 	 * The timer used for the countdown during the READY phase
 	 */
-	private Timeline countdownTimer;
+	private transient Timeline countdownTimer;
 	/**
 	 * The timer used to start the round after the countdownTimer during READY phase
 	 */
-	private Timeline readyTimer;
+	private transient Timeline readyTimer;
 	/**
 	 * The timer for the round during PLAYING phase
 	 */
-	private Timeline roundTimer;
+	private transient Timeline roundTimer;
 	/**
 	 * The timer for the end round period during the OVER phase
 	 */
-	private Timeline endRoundTimer;
+	private transient Timeline endRoundTimer;
 	/**
 	 * The world object to manipulate the time of
 	 */
@@ -75,7 +75,7 @@ public class GameTimer implements Serializable {
 		world.setRoundTime(PRE_ROUND_DURATION);
 		countdownTimer = new Timeline(new KeyFrame(
 		        Duration.millis(1000),
-		        ae -> {world.changeRoundTime(-1);}));
+		        ae -> {world.changeRoundTime(-1); System.out.println("TICK TOCK");}));
 		countdownTimer.setCycleCount(PRE_ROUND_DURATION); //3 second countdown
 		countdownTimer.play();
 		startReadyTimer();

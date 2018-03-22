@@ -1,18 +1,20 @@
 package com.aticatac.ui.mainmenu.utils;
 
-import javafx.scene.Scene;
-import javafx.scene.shape.Rectangle;
-
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import com.aticatac.Main;
 import com.aticatac.sound.SoundManager;
+
+import javafx.scene.Scene;
+import javafx.scene.shape.Rectangle;
 
 public class MenuItem {
 	
 	/**
 	 * Name of this menu item
 	 */
+
     private String name;
     /**
      * Whether this menu item is selected or not
@@ -45,7 +47,6 @@ public class MenuItem {
      * @return The index of the MenuItem within the list that is selected
      */
     public static int whichSelected(ArrayList<MenuItem> menuItems) {
-
         for (int i = 0; i < menuItems.size(); i++) {
 
             if(menuItems.get(i).selected()) return i;
@@ -100,12 +101,11 @@ public class MenuItem {
      * @return Returns the Scene this menu item links to 
      */
     public Scene choose() { 
-    	SoundManager m = new SoundManager();
-    	//m.stopMenuBg();
-    	//m.playClick();
-    	return link.get();
+    	SoundManager m = new SoundManager(Main.soundEnabled);
+    	m.stopMenuBg();
+    	m.playClick();
+    	return link.get(); 
     }
- 
     /**
      * Sets the hitbox of this MenuItem to the given dimension
      * @param x The x position
