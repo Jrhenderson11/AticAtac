@@ -46,12 +46,6 @@ public class Tutorial extends Scene {
 	public Tutorial (Group root, Stage primaryStage, MainMenu mainMenu) {
         super(root);
         
-        //Image image = new Image("~/Documents/teamproj/aticatac/client/assets/sprites/crosshair.png");
-        //Image image = new Image("assets/sprites/crosshair.png");
-        
-        Image image = new Image("file:assets/sprites/crosshair.png");
-        this.setCursor(new ImageCursor(image));
-        
         //init display stuff
         this.displayWidth = SystemSettings.getScreenWidth();
         this.displayHeight = SystemSettings.getScreenHeight();
@@ -72,10 +66,7 @@ public class Tutorial extends Scene {
         player.setPosition(new Point(25, 25));
         world.addPlayerWithoutPosition(player);
         
-        Point[] points = world.generateBoxSpawnPoints(3);
-        for (Point point: points) {
-        	System.out.println(point.toString());
-        }
+        Point[] points = {new Point(100, 200), new Point(275, 200), new Point(400, 200)};
         
         //testing with gun boxes
         world.spawnShootGunBox(points[0]);
@@ -257,25 +248,52 @@ public class Tutorial extends Scene {
   	        	for (int i=0;i<10;i++) {
   	        		for (int j=0;j<10;j++) {
   	  	        		pos[i][j] = new Point(400, 400);
-  	  	        	}	
+  	  	        	}
   	        	}
+  	        	
   	        	texts[0][0]  ="Use WASD to move";
   	        	pos[0][0] = new Point((int) SystemSettings.getScaledX(60), (int) SystemSettings.getScaledY(75));
-  	        	texts[2][0]  ="Use mouse to aim";
-  	        	pos[2][0] = new Point((int) SystemSettings.getScaledX(170), (int) SystemSettings.getScaledY(20));
-  	        	texts[2][1]  ="Use mouse to aim";
-  	        	pos[2][1] = new Point((int) SystemSettings.getScaledX(170), (int) SystemSettings.getScaledY(20));
+  	        	texts[2][0]  ="you paint the ground when you walk";
+  	        	pos[2][0] = new Point((int) SystemSettings.getScaledX(255), (int) SystemSettings.getScaledY(20));
+  	        	texts[2][1]  ="you paint the ground when you walk";
+  	        	pos[2][1] = new Point((int) SystemSettings.getScaledX(255), (int) SystemSettings.getScaledY(20));
   	        	
-  	        	
-  	        	texts[4][2]  ="press O to select splat cannon";
-	        	pos[4][2] = new Point((int) SystemSettings.getScaledX(190), (int) SystemSettings.getScaledY(105));
+  	        	 	        	
+  	        	texts[6][0]  ="and walk faster on your paint";
+	        	pos[6][0] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(85));
+	        	texts[6][1]  ="and walk faster on your paint";
+	        	pos[6][1] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(85));
 	        	
+	        	
+	        	texts[8][0]  ="Use mouse to aim";
+	        	pos[8][0] = new Point((int) SystemSettings.getScaledX(530), (int) SystemSettings.getScaledY(55));
+	        	texts[8][1]  ="Use mouse to aim";
+	        	pos[8][1] = new Point((int) SystemSettings.getScaledX(530), (int) SystemSettings.getScaledY(55));
+	        	texts[8][4]  ="and left click to shoot";
+	        	pos[8][4] = new Point((int) SystemSettings.getScaledX(530), (int) SystemSettings.getScaledY(325));
   	        	
-  	        	texts[6][0]  ="and left click to shoot";
-	        	pos[6][0] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(20));
-	        	texts[6][1]  ="and left click to shoot";
-	        	pos[6][1] = new Point((int) SystemSettings.getScaledX(330), (int) SystemSettings.getScaledY(20));
-  	        	gc.setFill(Color.WHITE);
+	        	
+	        	
+	        	
+	        	//Gunbox descriptons, left to right
+  	        	texts[1][5]  ="     Shoot Cannon\n\n\n\n\n\n\n\n\n\n\n\n\n   Aim at other players";
+	        	pos[1][5] = new Point((int) SystemSettings.getScaledX(55), (int) SystemSettings.getScaledY(195));
+  	        	
+  	        	texts[4][5]  ="Splat Cannon\n\n\n\n\n\n\n\n\n\n\n\n\nCover areas in paint";
+	        	pos[4][5] = new Point((int) SystemSettings.getScaledX(250), (int) SystemSettings.getScaledY(195));
+	        	
+	        	texts[4][6]  ="Splat Cannon\n\n\n\n\n\n\n\n\n\n\n\n\nCover areas in paint";
+	        	pos[4][6] = new Point((int) SystemSettings.getScaledX(250), (int) SystemSettings.getScaledY(195));
+	        	
+  	        	texts[6][5]  ="Spray Cannon\n\n\n\n\n\n\n\n\n\n\n\n\nLong range area paint";
+	        	pos[6][5] = new Point((int) SystemSettings.getScaledX(390), (int) SystemSettings.getScaledY(195));
+	        	
+	        	texts[6][6]  ="Spray Cannon\n\n\n\n\n\n\n\n\n\n\n\n\nLong range area paint";
+	        	pos[6][6] = new Point((int) SystemSettings.getScaledX(390), (int) SystemSettings.getScaledY(195));
+	        	
+	        	
+	        	
+	        	gc.setFill(Color.WHITE);
   	        	gc.setFont(UIDrawer.TUTORIAL_FONT);
   	        	
   	        	//draw help tips
@@ -303,6 +321,5 @@ public class Tutorial extends Scene {
 		}
 		return false;
 	}
+
 }
-
-
