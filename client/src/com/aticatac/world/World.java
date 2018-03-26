@@ -1,8 +1,8 @@
 package com.aticatac.world;
 
-
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ import javafx.scene.input.KeyCode;
 
 @SuppressWarnings("serial")
 public class World implements Serializable {
-	
+
 	/**
 	 * Delay between paint regeneration ticks.
 	 */
@@ -39,7 +39,7 @@ public class World implements Serializable {
 	 */
 	private Collection<Player> players;
 	/**
-	 * The Collection of Bullts that are currently travelling in the world.
+	 * The Collection of Bullets that are currently travelling in the world.
 	 */
 	private Collection<Bullet> bullets;
 	/**
@@ -79,22 +79,24 @@ public class World implements Serializable {
 	 */
 	private Player winner;
 	/**
-	 * Number of times the GunBoxes have been respawned, used to avoid respawning multiple times
+	 * Number of times the GunBoxes have been respawned, used to avoid respawning
+	 * multiple times
 	 */
 	private int boxRespawns;
 	/**
 	 * The current round number of the game.
 	 */
 	private int round;
-	
+
 	// -----------
 	// Constructor
 	// -----------
-	
-	
+
 	/**
 	 * Creates a World with the given Level
-	 * @param level The Level object.
+	 * 
+	 * @param level
+	 *            The Level object.
 	 */
 	public World(Level level) {
 		this.level = level;
@@ -111,42 +113,41 @@ public class World implements Serializable {
 		this.round = 0;
 	}
 
-	
 	// -------
 	// Methods
 	// -------
-	
-	
+
 	/**
-	 * Updates the world, calls the update method for all Bullets, Player and GunBoxes
+	 * Updates the world, calls the update method for all Bullets, Player and
+	 * GunBoxes
 	 */
 	public void update() {
 		// update bullets
-		for (int i=0; i<bullets.size(); i++) { //iterating this way prevents ConcurrentModificationExceptions
+		for (int i = 0; i < bullets.size(); i++) { // iterating this way prevents ConcurrentModificationExceptions
 			((Bullet) bullets.toArray()[i]).update(this);
 		}
 		// update players
 		for (Player player : players) {
-			if(player.controller == Controller.AI) {
+			if (player.controller == Controller.AI) {
 				((AIPlayer) player).update();
 			}
 			Point p = displayPositionToCoords(player.getPosition());
-  	        if(level.getGrid()[p.x][p.y] == 0) {
-  	        	level.updateCoords(p.x, p.y, player.getColour());
-  	        }
+			if (level.getGrid()[p.x][p.y] == 0) {
+				level.updateCoords(p.x, p.y, player.getColour());
+			}
 			player.update();
-			if (regenTimer == REGEN_DELAY) { //used for a delay between each regeneration call
+			if (regenTimer == REGEN_DELAY) { // used for a delay between each regeneration call
 				player.regenPaint(level.getPercentTiles(player.getColour()));
 				regenTimer = 0;
 			}
 			regenTimer++;
 		}
 		// update gunboxes
-		for (int i=0; i<gunboxes.size(); i++) {
+		for (int i = 0; i < gunboxes.size(); i++) {
 			((GunBox) gunboxes.toArray()[i]).update(this);
 		}
 		// respawn gunboxes at 20 and 40 seconds in the round
-		if ((getRoundTime() == 20 && boxRespawns == 0)|| (getRoundTime() == 40) && boxRespawns == 1) {
+		if ((getRoundTime() == 20 && boxRespawns == 0) || (getRoundTime() == 40) && boxRespawns == 1) {
 			respawnGunBoxes();
 			boxRespawns += 1;
 		}
@@ -154,10 +155,10 @@ public class World implements Serializable {
 		if (getRoundTime() == GameTimer.ROUND_DURATION && gameState != GameState.OVER) {
 			System.out.println("world game over");
 			setGameState(GameState.OVER);
-			//reset players, calculate winner and award point
+			// reset players, calculate winner and award point
 			int maxControl = 0;
 			Player winner = null;
-			for (Player player: players) {
+			for (Player player : players) {
 				player.reset();
 				int control = level.getPercentTiles(player.getColour());
 				if (control > maxControl) {
@@ -167,12 +168,12 @@ public class World implements Serializable {
 			}
 			winner.awardPoint();
 			setWinner(winner);
-			//notify winner, change to a visual display at some point
+			// notify winner, change to a visual display at some point
 			System.out.println("winner of the round is: " + winner.getIdentifier());
 			gameTimer.startEndRoundDelay();
 		}
 	}
-	
+
 	/**
 	 * Resets the World for a new round
 	 */
@@ -187,18 +188,18 @@ public class World implements Serializable {
 		// generate player spawns
 		this.startLocs = generatePlayerSpawnPoints();
 		int i = 0;
-		for (Player player: players) {
+		for (Player player : players) {
 			player.setPosition(startLocs[i++]);
 		}
 		// generate gunbox spawns
 		this.gunBoxLocs = generateBoxSpawnPoints(3);
 		respawnGunBoxes();
 		gameTimer.startCountdownTimer();
-		//reset box respawn counter
+		// reset box respawn counter
 		boxRespawns = 0;
-		
+
 	}
-	
+
 	/**
 	 * Set the gamestate to playing and starts the game.
 	 */
@@ -213,73 +214,81 @@ public class World implements Serializable {
 
 	/**
 	 * Handles the inputs for a given Player
-	 * @param input The ArrayList of KeyCode's pressed by the player this update.
-	 * @param dir The direction the Player is facing
-	 * @param id The unique identifier of this Player
+	 * 
+	 * @param input
+	 *            The ArrayList of KeyCode's pressed by the player this update.
+	 * @param dir
+	 *            The direction the Player is facing
+	 * @param id
+	 *            The unique identifier of this Player
 	 */
 	public void handleInput(ArrayList<KeyCode> input, double dir, String id) {
-		
+
 		Player player = this.getPlayerById(id);
 		// left
-		if (input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)) {
-	
+		if (input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.S)
+				&& !input.contains(KeyCode.D)) {
+
 			player.move(-2, 0);
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(2, 0);
+			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
+					|| level.getGrid()[p.x][p.y] == 5) {
+				player.move(1, 0);
 			}
-			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
-			    player.move(1,0);
-            }
 		}
 		// System.out.println(input.size());
 		// right
-		if (input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)) {
-		
+		if (input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)
+				&& !input.contains(KeyCode.S)) {
+
 			player.move(2, 0);
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(-2, 0);
-			}
-			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
-				player.move(-1,0);
+			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
+					|| level.getGrid()[p.x][p.y] == 5) {
+				player.move(-1, 0);
 			}
 		}
 		// System.out.println(input.size());
 		// up
-		if (input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
-		
+		if (input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.A)
+				&& !input.contains(KeyCode.D)) {
+
 			player.move(0, -2);
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(0, 2);
-			}
-			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
-				player.move(0,1);
+			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
+					|| level.getGrid()[p.x][p.y] == 5) {
+				player.move(0, 1);
 			}
 		}
 		// System.out.println(input.size());
 		// down
-		if (input.contains(KeyCode.S) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
-		
+		if (input.contains(KeyCode.S) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)
+				&& !input.contains(KeyCode.D)) {
+
 			player.move(0, 2);
 			Point p = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[p.x][p.y] == 1) {
 				player.move(0, -2);
-			}
-			else if(level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4 || level.getGrid()[p.x][p.y] == 5){
-				player.move(0,-1);
+			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
+					|| level.getGrid()[p.x][p.y] == 5) {
+				player.move(0, -1);
 			}
 		}
 		// System.out.println(input.size());
 		// down & right
-		if (input.contains(KeyCode.S) && input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)){
+		if (input.contains(KeyCode.S) && input.contains(KeyCode.D) && !input.contains(KeyCode.W)
+				&& !input.contains(KeyCode.A)) {
 			player.move(0, 1);
 			Point pS = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pS.x][pS.y] == 1) {
 				player.move(0, -1);
 			}
-
 
 			player.move(1, 0);
 			Point pD = this.displayPositionToCoords(player.getPosition());
@@ -290,7 +299,8 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// down & left
-		if (input.contains(KeyCode.S) && input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.D)){
+		if (input.contains(KeyCode.S) && input.contains(KeyCode.A) && !input.contains(KeyCode.W)
+				&& !input.contains(KeyCode.D)) {
 			player.move(0, 1);
 			Point pS = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pS.x][pS.y] == 1) {
@@ -306,7 +316,8 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// up & right
-		if (input.contains(KeyCode.W) && input.contains(KeyCode.D) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)){
+		if (input.contains(KeyCode.W) && input.contains(KeyCode.D) && !input.contains(KeyCode.A)
+				&& !input.contains(KeyCode.S)) {
 			player.move(0, -1);
 			Point pW = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pW.x][pW.y] == 1) {
@@ -322,7 +333,8 @@ public class World implements Serializable {
 		}
 		// System.out.println(input.size());
 		// up & left
-		if (input.contains(KeyCode.W) && input.contains(KeyCode.A) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)){
+		if (input.contains(KeyCode.W) && input.contains(KeyCode.A) && !input.contains(KeyCode.S)
+				&& !input.contains(KeyCode.D)) {
 			player.move(0, -1);
 			Point pW = this.displayPositionToCoords(player.getPosition());
 			if (level.getGrid()[pW.x][pW.y] == 1) {
@@ -359,47 +371,55 @@ public class World implements Serializable {
 		player.setLookDirection(dir);
 
 	}
+
 	/**
 	 * Sets up world for a given lobby
-	 * @param lobby The Lobby object to initialise the world with
+	 * 
+	 * @param lobby
+	 *            The Lobby object to initialise the world with
 	 */
 	public void init(Lobby lobby) {
-		
-		for (ClientInfo client: lobby.getAll()) {
+
+		for (ClientInfo client : lobby.getAll()) {
 			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour());
 			this.addPlayer(newPlayer);
 		}
-		
-		for(ai a: lobby.getBots()) {
+
+		for (ai a : lobby.getBots()) {
 			AIPlayer aiPlayer = new AIPlayer(Controller.AI, this, a.name, a.colour);
 			this.addPlayer(aiPlayer);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Shoots the gun of the given Player at the target location
-	 * @param targetX The target X position to shoot towards
-	 * @param targetY The target Y position to shoot towards
-	 * @param id The unique ID of the Player shooting the gun
+	 * 
+	 * @param targetX
+	 *            The target X position to shoot towards
+	 * @param targetY
+	 *            The target Y position to shoot towards
+	 * @param id
+	 *            The unique ID of the Player shooting the gun
 	 */
 	public void shoot(int targetX, int targetY, String id) {
-		
+
 		Player player = this.getPlayerById(id);
 
 		if (player.getGun() != null) {
-      		player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)), this);
-      	}
+			player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)),
+					this);
+		}
 	}
-	
+
 	/**
 	 * Respawns random GunBoxes in each of the gunBoxLocs
 	 */
 	public void respawnGunBoxes() {
 		gunboxes.clear();
 		Random rand = new Random();
-		for (Point point: gunBoxLocs) {
-			int r = rand.nextInt(3); //random box type
+		for (Point point : gunBoxLocs) {
+			int r = rand.nextInt(3); // random box type
 			if (r == 0) {
 				spawnShootGunBox(point);
 			} else if (r == 1) {
@@ -409,83 +429,100 @@ public class World implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Randomly generates a set amount of spawn positions, used for GunBox spawns
-	 * @param amount The amount of points to generate
+	 * 
+	 * @param amount
+	 *            The amount of points to generate
 	 * @return An array of Points
 	 */
 	public Point[] generateBoxSpawnPoints(int amount) {
 		Point[] points = new Point[amount];
 		Random rand = new Random();
-		for (int i=0; i<amount; i++) {
-			int x, y;
+		for (int i = 0; i < amount; i++) {
+			int x, y, x1, y1, x2, y2;
+			Point tL, tR, bL, bR;
+			Dimension d = GunBox.DEFAULT_DIMENSION;
 			do {
 				x = rand.nextInt(level.getWidth());
 				y = rand.nextInt(level.getHeight());
-			} while (level.getCoords(x, y) != 0); //generate points, keep randomising until point is not on a wall tile.
-			points[i] = coordsToDisplayPosition(new Point(x, y));
+				tL = coordsToDisplayPosition(new Point(x, y));
+				x1 = tL.x;
+				y1 = tL.y;
+				x2 = x1 + d.width;
+				y2 = y1 + d.height;
+				tR = displayPositionToCoords(new Point(x2, y1));
+				bL = displayPositionToCoords(new Point(x1, y2));
+				bR = displayPositionToCoords(new Point(x2, y2));
+			} while (!(level.getCoords(x, y) == 0 && level.getCoords(tR.x, tR.y) == 0
+					&& level.getCoords(bL.x, bL.y) == 0 && level.getCoords(bR.x, bR.y) == 0));
+			// generate points, keep randomising until point is not on a wall tile.
+			points[i] = tL;
 		}
 		return points;
 	}
-	
+
 	/**
-	 * Generates 4 spawn points for Players
-	 * Point[0] will be a spawn point in the top left quadrant
-	 * Point[1] will be a spawn point in the top right quadrant
-	 * Point[2] will be a spawn point in the bottom left quadrant
-	 * Point[3] will be a spawn point in the borrom right quadrant
+	 * Generates 4 spawn points for Players Point[0] will be a spawn point in the
+	 * top left quadrant Point[1] will be a spawn point in the top right quadrant
+	 * Point[2] will be a spawn point in the bottom left quadrant Point[3] will be a
+	 * spawn point in the borrom right quadrant
+	 * 
 	 * @return Returns an array of 4 spawn points
 	 */
 	public Point[] generatePlayerSpawnPoints() {
 		int x, y;
 		Point[] points = new Point[4];
 		Random rand = new Random();
-		//top left
+		// top left
 		do {
-			x = rand.nextInt(level.getWidth()/2);
-			y = rand.nextInt(level.getHeight()/2);
+			x = rand.nextInt(level.getWidth() / 2);
+			y = rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
 		points[0] = coordsToDisplayPosition(new Point(x, y));
-		//top right
+		// top right
 		do {
-			x = (level.getWidth()/2) + rand.nextInt(level.getWidth()/2);
-			y = rand.nextInt(level.getHeight()/2);
+			x = (level.getWidth() / 2) + rand.nextInt(level.getWidth() / 2);
+			y = rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
 		points[1] = coordsToDisplayPosition(new Point(x, y));
-		//bottom left
+		// bottom left
 		do {
-			x = rand.nextInt(level.getWidth()/2);
-			y = (level.getHeight()/2) + rand.nextInt(level.getHeight()/2);
+			x = rand.nextInt(level.getWidth() / 2);
+			y = (level.getHeight() / 2) + rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
 		points[2] = coordsToDisplayPosition(new Point(x, y));
-		//bottom right
+		// bottom right
 		do {
-			x = (level.getWidth()/2) + rand.nextInt(level.getWidth()/2);
-			y = (level.getHeight()/2) + rand.nextInt(level.getHeight()/2);
+			x = (level.getWidth() / 2) + rand.nextInt(level.getWidth() / 2);
+			y = (level.getHeight() / 2) + rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
 		points[3] = coordsToDisplayPosition(new Point(x, y));
 		return points;
 	}
-	
+
 	/**
 	 * Gets the level this World is based on
+	 * 
 	 * @return The Level object
 	 */
 	public Level getLevel() {
 		return level;
 	}
-	
+
 	/**
 	 * Returns the number of Players in the World
+	 * 
 	 * @return Returns the number of players.
 	 */
 	public int getNumPlayers() {
 		return players.size();
 	}
-	
+
 	/**
 	 * Returns the Collection of Bullets currently travelling
+	 * 
 	 * @return A Collection of Bullets
 	 */
 	public Collection<Bullet> getBullets() {
@@ -494,7 +531,9 @@ public class World implements Serializable {
 
 	/**
 	 * Adds a Bullet to the World
-	 * @param collidable The Bullet to add to the World
+	 * 
+	 * @param collidable
+	 *            The Bullet to add to the World
 	 * @return Returns True if the bullet is added to the world
 	 */
 	public boolean addBullet(Bullet collidable) {
@@ -503,15 +542,18 @@ public class World implements Serializable {
 
 	/**
 	 * Removes a Bullet from the World
-	 * @param bullet The Bullet to remove
+	 * 
+	 * @param bullet
+	 *            The Bullet to remove
 	 * @return Returns True if the Bullet is removed
 	 */
 	public boolean removeBullet(Bullet bullet) {
 		return bullets.remove(bullet);
 	}
-	
+
 	/**
 	 * Returns a Collection of GunBoxes in the world
+	 * 
 	 * @return A Collection of GunBoxes
 	 */
 	public Collection<GunBox> getGunBoxes() {
@@ -520,16 +562,20 @@ public class World implements Serializable {
 
 	/**
 	 * Adds a GunBox to the world
-	 * @param gunbox The GunBox to add
+	 * 
+	 * @param gunbox
+	 *            The GunBox to add
 	 * @return Returns True if the GunBox was added
 	 */
 	public boolean addGunBox(GunBox gunbox) {
 		return gunboxes.add(gunbox);
 	}
-	
+
 	/**
 	 * Removes the GunBox from the world
-	 * @param gunbox The GunBox to remove
+	 * 
+	 * @param gunbox
+	 *            The GunBox to remove
 	 * @return True if the GunBox was removed
 	 */
 	public boolean removeGunBox(GunBox gunbox) {
@@ -538,30 +584,37 @@ public class World implements Serializable {
 
 	/**
 	 * Spawns a ShootGun box in the given position
-	 * @param position The Position to spawn the GunBox at
+	 * 
+	 * @param position
+	 *            The Position to spawn the GunBox at
 	 */
 	public void spawnShootGunBox(Point position) {
 		addGunBox(new ShootGunBox(position));
 	}
-	
+
 	/**
 	 * Spawns a SlatGun box in the given position
-	 * @param position The Position to spawn the GunBox at
+	 * 
+	 * @param position
+	 *            The Position to spawn the GunBox at
 	 */
 	public void spawnSplatGunBox(Point position) {
 		addGunBox(new SplatGunBox(position));
 	}
-	
+
 	/**
 	 * Spawns a SprayGun box in the given position
-	 * @param position The Position to spawn the GunBox at
+	 * 
+	 * @param position
+	 *            The Position to spawn the GunBox at
 	 */
 	public void spawnSprayGunBox(Point position) {
 		addGunBox(new SprayGunBox(position));
 	}
-	
+
 	/**
 	 * Get the Players in this World
+	 * 
 	 * @return A Collection of Players
 	 */
 	public Collection<Player> getPlayers() {
@@ -570,7 +623,9 @@ public class World implements Serializable {
 
 	/**
 	 * Adds a player to the world
-	 * @param player to add
+	 * 
+	 * @param player
+	 *            to add
 	 * @returns whether it was succesful
 	 */
 	public boolean addPlayer(Player player) {
@@ -579,12 +634,13 @@ public class World implements Serializable {
 			player.setPosition(this.startLocs[players.size()]);
 			this.players.add(player);
 			return true;
-		} else return false;
+		} else
+			return false;
 	}
 
 	public boolean removePlayer(String id) {
-		for (int i=0;i< this.players.size();i++) {
-			Player currentPlayer = (Player) ((LinkedList<Player>) players).get(i); 
+		for (int i = 0; i < this.players.size(); i++) {
+			Player currentPlayer = (Player) ((LinkedList<Player>) players).get(i);
 			if (currentPlayer.getIdentifier().equals(id)) {
 				this.players.remove(currentPlayer);
 				return true;
@@ -592,10 +648,12 @@ public class World implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get the color int of the given player
-	 * @param playerIdentifier The unique player identifier
+	 * 
+	 * @param playerIdentifier
+	 *            The unique player identifier
 	 * @return An int representing the color of the Player
 	 */
 	public int getPlayerColour(String playerIdentifier) {
@@ -606,27 +664,32 @@ public class World implements Serializable {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Returns the Player instance given the players id
-	 * @param id The unique identifier 
+	 * 
+	 * @param id
+	 *            The unique identifier
 	 * @return The Player instance with the given identifier
 	 */
 	public Player getPlayerById(String id) {
-		for (Player p: this.getPlayers()) {
+		for (Player p : this.getPlayers()) {
 			if (p.getIdentifier().equals(id)) {
 				return p;
-			} 
+			}
 		}
-		//System.out.println("cant find " + id);
+		// System.out.println("cant find " + id);
 		return null;
 	}
 
 	/**
 	 * Gets the corresponding map coordinate from the given position within the
 	 * specified size of the display.
-	 * @param displayPosition The position on the display
-	 * @param displaySize The dimensions of the display
+	 * 
+	 * @param displayPosition
+	 *            The position on the display
+	 * @param displaySize
+	 *            The dimensions of the display
 	 * @return The Coordinates on the Level this corresponds to
 	 */
 	public Point displayPositionToCoords(Point displayPosition, Dimension displaySize) {
@@ -637,7 +700,9 @@ public class World implements Serializable {
 
 	/**
 	 * As above but with the game's default dislpay dimension.
-	 * @param displayPosition The position on the display
+	 * 
+	 * @param displayPosition
+	 *            The position on the display
 	 * @return The Coordinates on the Level this corresponds to
 	 */
 	public Point displayPositionToCoords(Point displayPosition) {
@@ -647,8 +712,11 @@ public class World implements Serializable {
 
 	/**
 	 * Gets the position of center of the given coordinates
-	 * @param coords The coordinates of the tile to get the display position of
-	 * @param displaySize The dimensions of the display
+	 * 
+	 * @param coords
+	 *            The coordinates of the tile to get the display position of
+	 * @param displaySize
+	 *            The dimensions of the display
 	 * @return The displayPosition of the center of the given coordinate tile
 	 */
 	public Point coordsToDisplayPosition(Point coords, Dimension displaySize) {
@@ -659,7 +727,9 @@ public class World implements Serializable {
 
 	/**
 	 * As above but with the game's default display dimension
-	 * @param coords The coordinates of the tile to get the display position of
+	 * 
+	 * @param coords
+	 *            The coordinates of the tile to get the display position of
 	 * @return The displayPosition of the center of the given coordinate tile
 	 */
 	public Point coordsToDisplayPosition(Point coords) {
@@ -669,7 +739,9 @@ public class World implements Serializable {
 
 	/**
 	 * Adds a player to the world without assigning it a position
-	 * @param player to add
+	 * 
+	 * @param player
+	 *            to add
 	 * @returns whether it was succesful
 	 */
 	public boolean addPlayerWithoutPosition(Player player) {
@@ -681,9 +753,10 @@ public class World implements Serializable {
 	public GameTimer getGameTimer() {
 		return gameTimer;
 	}
-	
+
 	/**
 	 * Returns the current second of the round time
+	 * 
 	 * @return The current second as an integer.
 	 */
 	public int getRoundTime() {
@@ -692,6 +765,7 @@ public class World implements Serializable {
 
 	/**
 	 * Sets the current round time
+	 * 
 	 * @param roundTime
 	 * @return
 	 */
@@ -699,43 +773,40 @@ public class World implements Serializable {
 		if (roundTime <= GameTimer.ROUND_DURATION && roundTime > 0) {
 			this.roundTime = roundTime;
 			return true;
-		} else return false;
+		} else
+			return false;
 	}
-	
+
 	/**
 	 * Changes the current round time by the given value
-	 * @param change The number of seconds to change the time by
+	 * 
+	 * @param change
+	 *            The number of seconds to change the time by
 	 * @return True if the round time has been changed
 	 */
 	public boolean changeRoundTime(int change) {
 		return setRoundTime(roundTime + change);
 	}
 
-
 	public GameState getGameState() {
 		return gameState;
 	}
-
 
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
 
-
 	public Player getWinner() {
 		return winner;
 	}
-
 
 	public void setWinner(Player winner) {
 		this.winner = winner;
 	}
 
-
 	public int getRound() {
 		return round;
 	}
-
 
 	public void setRound(int rounds) {
 		this.round = rounds;
