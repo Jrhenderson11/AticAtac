@@ -25,6 +25,9 @@ public class UDPServer extends Task {
 
 	private int status;
 
+	/**
+	 * Cosntructor... (sets up new client lsit and resets status)
+	 */
 	public UDPServer() {
 		this.clientList = new CopyOnWriteArrayList<ConnectionInfo>();
 		this.status = Globals.IN_LIMBO;
@@ -55,31 +58,57 @@ public class UDPServer extends Task {
 		return null;
 	}
 
+	/**
+	 * stops this running
+	 */
 	public void halt() {
 		this.receiver.halt();
 		this.sender.halt();
 	}
 
+	/**
+	 * returns this servers status 
+	 * @return status code
+	 */
 	public int getStatus() {
 		return this.status;
 	}
 
+	/**
+	 *  Uses a clientInfo obj to initialise a new lobby 
+	 * @param newClient clients info to use
+	 * @param info Lobby info to use
+	 */
 	public void startLobby(ClientInfo newClient, LobbyInfo info) {
 		this.lobby = new Lobby(newClient, info);
 		this.status = Globals.IN_LOBBY;
 		System.out.println("new lobby created");
 	}
 
+	/**
+	 * send every client a lobby object
+	 */
 	public void sendAllLobby() {
 		this.sender.sendAllLobby();
 	}
 
+	/**
+	 * create a new lobbyInfo
+	 */
 	public void makeLobby() {
 		if (this.lobbyInfo == null) {
 			this.lobbyInfo = new LobbyInfo(4, 0, 1, "Lobby");
 		}
 	}
 
+	/**
+	 * Add a client to a lobby
+	 * @param name client name
+	 * @param address client IP address
+	 * @param colour client colour
+	 * @param destPort client destination port
+	 * @param originPort client source port
+	 */
 	public void joinLobby(String name, InetAddress address, int colour, int destPort, int originPort) {
 		ClientInfo newClient;
 		// create new lobby
@@ -108,6 +137,9 @@ public class UDPServer extends Task {
 		System.out.println("Client joined lobby");
 	}
 
+	/**
+	 * add an ai player to the lobby
+	 */
 	public void addAI() {
 		int numAI = this.lobby.getBots().size() + 1;
 
@@ -118,6 +150,11 @@ public class UDPServer extends Task {
 		}
 	}
 
+	/**
+	 * remove a player from the lobby
+	 * @param address IP to remove
+	 * @param originPort source port to remove
+	 */
 	public void leaveLobby(InetAddress address, int originPort) {
 
 		ClientInfo newClient = this.getClientInfo(address, originPort);
@@ -134,14 +171,28 @@ public class UDPServer extends Task {
 		
 	}
 
+	/**
+	 * gets this lobby
+	 * @return the lobby object
+	 */
 	public Lobby getLobby() {
 		return this.lobby;
 	}
 
+	/**
+	 * gets this servers lobby information
+	 * @return the LobbyInfo object
+	 */
 	public LobbyInfo getLobbyInfo() {
 		return this.lobbyInfo;
 	}
 
+	/**
+	 * gets a clientinfo object based on IP and port
+	 * @param address IP to look for
+	 * @param port port to look for
+	 * @return ClientInfo obj
+	 */
 	public ClientInfo getClientInfo(InetAddress address, int port) {
 		try {
 			for (ClientInfo info : this.lobby.getAll()) {
@@ -156,6 +207,11 @@ public class UDPServer extends Task {
 		return null;
 	}
 
+	/**
+	 *  set a clients state to ready
+	 * @param origin IP
+	 * @param originPort source port
+	 */
 	public void setClientReady(InetAddress origin, int originPort) {
 		if (this.getClientInfo(origin, originPort) == null) {
 			return;
@@ -163,6 +219,11 @@ public class UDPServer extends Task {
 		this.getClientInfo(origin, originPort).ready();
 	}
 
+	/**
+	 * remove client state ready
+	 * @param origin IP
+	 * @param originPort source port
+	 */
 	public void setClientUnReady(InetAddress origin, int originPort) {
 		if (this.getClientInfo(origin, originPort) == null) {
 			return;
@@ -170,6 +231,9 @@ public class UDPServer extends Task {
 		this.getClientInfo(origin, originPort).unready();
 	}
 
+	/**
+	 * begins the game
+	 */
 	public void startGame() {
 		if (!this.lobby.allReady()) {
 			return;
@@ -190,17 +254,32 @@ public class UDPServer extends Task {
 		}
 	}
 
+	/**
+	 * debug message, tells clinet what its external IP is
+	 * @param origin ip to reply to
+	 * @param originPort client source port
+	 */
 	public void replyIP(InetAddress origin, int originPort) {
 		String msg = "IP:" + (origin.toString());
 		this.sender.sendClientMessage(origin, originPort, msg);
 	}
 
+	/**
+	 * removes player from game
+	 * @param origin IP
+	 * @param originPort client source port
+	 */
 	public void removePlayer(InetAddress origin, int originPort) {
 		if (this.status == Globals.IN_GAME) {
 			this.model.removePlayer(this.getClientInfo(origin, originPort).getID());
 		}
 	}
 
+	/**
+	 * removes connection from connection list
+	 * @param origin IP
+	 * @param originPort source port
+	 */
 	public void removeConnection(InetAddress origin, int originPort) {
 		for (int i = 0; i < this.clientList.size(); i++) {
 			if (this.clientList.get(i).getAddress().equals(origin)

@@ -31,6 +31,12 @@ public class ServerReciever extends Thread {
 	private CopyOnWriteArrayList<InetAddress> addressList;
 	private UDPServer master;
 
+	/**
+	 *  Constructor
+	 * @param newModel World object to process inpu
+	 * @param newList List of valid clients to receive connections from
+	 * @param newMaster UDPServer object to report to
+	 */
 	public ServerReciever(World newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
@@ -43,6 +49,9 @@ public class ServerReciever extends Thread {
 		this.addressList = new CopyOnWriteArrayList<>();
 	}
 
+	/**
+	 * Thread method makes this run
+	 */
 	public void run() {
 		InetAddress origin;
 		running = true;
@@ -68,10 +77,19 @@ public class ServerReciever extends Thread {
 		socket.close();
 	}
 
+	/**
+	 * stops this running
+	 */
 	public void halt() {
 		this.running = false;
 	}
 
+	/** Gets a connectionInfo object by its IP and port
+	 * 
+	 * @param origin IP address
+	 * @param originPort port number
+	 * @return connectionInfo obj with that ip and port
+	 */
 	private ConnectionInfo getConnectionInfo(InetAddress origin, int originPort) {
 		for (ConnectionInfo info : this.clientList) {
 			if (info.getAddress().equals(origin) && info.getOriginPort() == originPort) {

@@ -21,12 +21,21 @@ public class ServerSender extends Thread {
 	private DatagramSocket socket;
 	private UDPServer master;
 	
+	/**
+	 * 
+	 * @param newModel World to distribute
+	 * @param newList List of clients to send data to
+	 * @param newMaster UDPServer object to interact with
+	 */
 	public ServerSender(World newModel, CopyOnWriteArrayList<ConnectionInfo> newList, UDPServer newMaster) {
 		this.model = newModel;
 		this.clientList = newList;
 		this.master = newMaster;
 	}
 
+	/**
+	 * Thread run method, continously sends clients data
+	 */
 	public void run() {
 		InetAddress address;
 		System.out.println("TestServer sender started");
@@ -82,6 +91,10 @@ public class ServerSender extends Thread {
 		System.out.println("server sender stopped");
 	}
 	
+	
+	/**
+	 * forcibly sends every client on connection list a lobby object
+	 */
 	public void sendAllLobby() {
 		InetAddress address;
 		for (ConnectionInfo client : clientList) {
@@ -116,10 +129,19 @@ public class ServerSender extends Thread {
 		
 	}
 
+	/**
+	 * stops this running
+	 */
 	public void halt() {
 		this.running = false;
 	}
 
+	/** sends a mesage to a client
+	 * 
+	 * @param origin client IP
+	 * @param originPort client port
+	 * @param msg message to send
+	 */
 	public void sendClientMessage(InetAddress origin, int originPort, String msg) {
 		for (ConnectionInfo i : this.clientList) {
 			if (i.getAddress().equals(origin) && (i.getOriginPort() == originPort)) {
