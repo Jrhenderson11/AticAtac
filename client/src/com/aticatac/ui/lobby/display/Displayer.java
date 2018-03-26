@@ -36,8 +36,8 @@ public class Displayer extends Scene {
      * @param server Server object
      * @param newParent Browser object
      * @param newStage Stage object
+     * @param mainMenu The scene for the Main Menu
      */
-    
     public Displayer(Group root, int selected, LobbyServer server, Browser newParent, Stage newStage, Scene mainMenu) {
         super(root);
 

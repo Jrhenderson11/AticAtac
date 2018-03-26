@@ -80,8 +80,8 @@ public class ClientSender extends Task {
 	}
 
 	/**
-	 * returns port this is sending from (because this is dynamic)
-	 * @return
+	 * Return the port this is sending from (because this is dynamic)
+	 * @return The number of the port the sender is sending from
 	 */
 	public int getPort() {
 		return this.port;

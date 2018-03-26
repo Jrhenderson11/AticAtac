@@ -133,8 +133,9 @@ public abstract class Bullet implements Collidable, Serializable{
 	/**
 	 * Called when a bullet hits a wall or another Collideable.
 	 * Removes this object from the world and destroys the object.
-	 * More specific bullet classes can override this to create paint splats when hitting things.
-	 * @param world The world that contains this object, to delete from.
+	 * More specific bullet classes can override this to create paint splats when hitting things
+	 * @param world The world that contains this object to delete from
+	 * @param location The location of the object in the world when it is killed
 	 */
 	public void hit(World world, Point location) {
 		kill(world);
@@ -142,7 +143,7 @@ public abstract class Bullet implements Collidable, Serializable{
 	
 	/**
 	 * Deletes the object from the world and destroys the object
-	 * @param world
+	 * @param world The world that contains this object to delete from
 	 */
 	public void kill(World world) {
 		world.removeBullet(this); 
@@ -201,7 +202,7 @@ public abstract class Bullet implements Collidable, Serializable{
 
 	/**
 	 * Get the unique player identifier of the Player that fired this bullet
-	 * @return
+	 * @return The colour of the player who shot the bullet
 	 */
 	public int getShooter() {
 		return shooter;

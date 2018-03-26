@@ -30,7 +30,6 @@ public class Renderer {
 	
 	/**
 	 * Constructs a Renderer with the given rectangle as the display rectangle
-	 * @param displayRect The rectangle that describes the display's position and dimensions
 	 */
 	public Renderer() {
 		this.world = null;

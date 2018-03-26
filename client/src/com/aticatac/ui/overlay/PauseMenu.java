@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import com.aticatac.networking.client.UDPClient;
-import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
 
@@ -66,9 +65,9 @@ public class PauseMenu {
 	
 	/** Constructor for if network exists
 	 * 
-	 * @param stage
-	 * @param mainmenu
-	 * @param server the server to connect to
+	 * @param stage The JavaFX stage
+	 * @param mainmenu The scene of the Main Menu
+	 * @param newServer The server to connect to
 	 */
 	public PauseMenu(Stage stage, Scene mainmenu, UDPClient newServer) {
 		this.stage = stage;
@@ -80,7 +79,7 @@ public class PauseMenu {
 	
 	/**
 	 * Handles clicks to the screen
-	 * @param mousePosition The position of the mouse
+	 * @return The status of the game after the click
 	 */
 	public int handleClick() {
 		//System.out.println("CLICKED");

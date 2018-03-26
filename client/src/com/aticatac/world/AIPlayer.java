@@ -145,11 +145,14 @@ public class AIPlayer extends Player {
 		this.position = position;
 		this.gridPosition = world.displayPositionToCoords(position);
 	}
-	
+
 	/**
 	 * Moves the player by the given dX, dY values and sets the grid position
-	 * @param dX The change in x coordinate, can be negative
-	 * @param dY The change in y coordinate, can be negative
+	 * 
+	 * @param dX
+	 *            The change in x coordinate, can be negative
+	 * @param dY
+	 *            The change in y coordinate, can be negative
 	 */
 	@Override
 	public void move(int dX, int dY) {
@@ -169,7 +172,8 @@ public class AIPlayer extends Player {
 		if (currentPath.isEmpty()) {
 			if (hasGun && cooldown-- >= 0 && getGun().enoughPaint()) {
 				for (Player player : otherPlayers) {
-					if (!player.equals(this) && level.hasLOS(gridPosition, world.displayPositionToCoords(player.getPosition()))
+					if (!player.equals(this)
+							&& level.hasLOS(gridPosition, world.displayPositionToCoords(player.getPosition()))
 							&& inRange(player.getPosition())) {
 						foundTarget = true;
 						Point target = world.displayPositionToCoords(player.getPosition());
@@ -192,7 +196,7 @@ public class AIPlayer extends Player {
 				makeNextMove();
 			} else {
 				if (cooldown == -5) {
-					if(hasGun && !gun.enoughPaint()) {
+					if (hasGun && !gun.enoughPaint()) {
 						hasGun = false;
 					}
 					cooldown = 0;
@@ -237,7 +241,8 @@ public class AIPlayer extends Player {
 			angle = Math.PI / 2;
 		} else {
 			// tan^-1(opp/adj)
-			angle = Math.atan(Math.abs(target.getY() - gridPosition.getY()) / Math.abs(target.getX() - gridPosition.getX()));
+			angle = Math.atan(
+					Math.abs(target.getY() - gridPosition.getY()) / Math.abs(target.getX() - gridPosition.getX()));
 		}
 
 		if (target.getY() <= gridPosition.getY() && target.getX() < gridPosition.getX()) {
@@ -258,6 +263,8 @@ public class AIPlayer extends Player {
 	 * A method to get the direction which has the greatest gain of tiles if a splat
 	 * gun is used here
 	 * 
+	 * @param rng
+	 *            The range of the gun being analysed
 	 * @return The point to represent the direction with the greatest gain of tiles
 	 */
 	public Point getQuadrant(double rng) {
@@ -320,8 +327,8 @@ public class AIPlayer extends Player {
 			for (int j = -splatCoverage; j < splatCoverage + 1; j++) {
 				point = new Point(current.x + i, current.y + j);
 				// If the point is in the circle that would be created by the splat bullet
-				if(calculateDistance(current, point) <= splatCoverage) {
-					coord = level.getCoords(point.x , point.y);
+				if (calculateDistance(current, point) <= splatCoverage) {
+					coord = level.getCoords(point.x, point.y);
 					// If the coordinate is not the player's colour, a wall or out of bounds
 					if (coord != -1 && coord != 1 && coord != colour) {
 						x++;
@@ -380,8 +387,8 @@ public class AIPlayer extends Player {
 
 	/**
 	 * 
-	 * @param currentGrid
-	 *            The current grid point on the map that the user is currently at
+	 * @param currentPos
+	 *            The current point on the display that the user is currently at
 	 * @param nextGrid
 	 *            The next grid point on the map that the user wants to move to
 	 * @return An "intermediate" path of display points that join the current grid

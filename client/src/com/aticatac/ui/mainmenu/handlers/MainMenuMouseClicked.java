@@ -26,9 +26,9 @@ public class MainMenuMouseClicked implements EventHandler<MouseEvent> {
 
     /**
      * Creates a handler for mouse clicks
-     * @param menuItems
-     * @param primaryStage
-     * @param animation
+     * @param menuItems The menu items in the Main Menu
+     * @param primaryStage JavaFX stage
+     * @param animation The animation for the Main Menu
      */
     public MainMenuMouseClicked(ArrayList<MenuItem> menuItems, Stage primaryStage, MainMenuAnimation animation) {
         this.menuItems = menuItems;

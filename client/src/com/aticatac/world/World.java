@@ -625,8 +625,8 @@ public class World implements Serializable {
 	 * Adds a player to the world
 	 * 
 	 * @param player
-	 *            to add
-	 * @returns whether it was succesful
+	 *            The player to add to the world
+	 * @return True if the player was added successfully and False if otherwise
 	 */
 	public boolean addPlayer(Player player) {
 		if (players.size() < 4) {
@@ -638,6 +638,13 @@ public class World implements Serializable {
 			return false;
 	}
 
+	/**
+	 * Remove a player from the game
+	 * 
+	 * @param id The identifier of the player to remove
+	 * @return True if the player was removed successfully and False if
+	 * otherwise
+	 */
 	public boolean removePlayer(String id) {
 		for (int i = 0; i < this.players.size(); i++) {
 			Player currentPlayer = (Player) ((LinkedList<Player>) players).get(i);
@@ -741,8 +748,8 @@ public class World implements Serializable {
 	 * Adds a player to the world without assigning it a position
 	 * 
 	 * @param player
-	 *            to add
-	 * @returns whether it was succesful
+	 *            The player to add
+	 * @return True if the player was added successfully and False if otherwise
 	 */
 	public boolean addPlayerWithoutPosition(Player player) {
 		System.out.println("adding player " + player.getIdentifier());
@@ -757,7 +764,7 @@ public class World implements Serializable {
 	/**
 	 * Returns the current second of the round time
 	 * 
-	 * @return The current second as an integer.
+	 * @return The current second in the round that the current game is at
 	 */
 	public int getRoundTime() {
 		return roundTime;
@@ -766,8 +773,8 @@ public class World implements Serializable {
 	/**
 	 * Sets the current round time
 	 * 
-	 * @param roundTime
-	 * @return
+	 * @param roundTime The number of seconds to set the time to
+	 * @return True if the round time has been set successfully
 	 */
 	public boolean setRoundTime(int roundTime) {
 		if (roundTime <= GameTimer.ROUND_DURATION && roundTime > 0) {

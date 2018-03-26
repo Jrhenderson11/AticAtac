@@ -99,33 +99,33 @@ public class UDPClient extends Task implements LobbyServer {
 		return this.receiver.getModel();
 	}
 
-	/**returns this client status (see Globals for various statuses)
-	 * 
-	 * @return
+	/**
+	 * Returns this client's status (see Globals for various statuses)
+	 * @return The status of the client
 	 */
 	public int getStatus() {
 		return this.status;
 	}
 
 	/**
-	 * guess what this does
-	 * @param newStatus
+	 * Set the status of the client
+	 * @param newStatus The integer that represents the client's new status (see Globals for various statuses)
 	 */
 	public void setStatus(int newStatus) {
 		this.status = newStatus;
 	}
 
 	/**
-	 * 
-	 * @return this clients lobby 
+	 * Get the lobby that the client is in
+	 * @return This client's lobby 
 	 */
 	public Lobby getLobby() {
 		return this.lobby;
 	}
 
 	/**
-	 * sets the lobby
-	 * @param newLobby
+	 * Sets the lobby
+	 * @param newLobby The lobby to set the client as being in
 	 */
 	public void setLobby(Lobby newLobby) {
 		this.lobby = newLobby;

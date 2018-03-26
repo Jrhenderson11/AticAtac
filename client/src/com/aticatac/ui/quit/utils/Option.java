@@ -102,7 +102,7 @@ public class Option {
 
     /**
      * Sets the hitbox to the given rectangle
-     * @param The rectangle defining the hit box collision boundaries
+     * @param rectangle The rectangle defining the hit box collision boundaries
      */
     public void setHitbox(Rectangle rectangle) {
         this.hitbox = rectangle;

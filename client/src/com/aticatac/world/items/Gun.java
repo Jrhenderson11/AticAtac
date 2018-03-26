@@ -34,8 +34,8 @@ public abstract class Gun implements Serializable{
 	
 	/**
 	 * @param user The Player using the gun
-	 * @param range The maximum range of the gun
-	 * @param cooldownTime The cooldown between shots
+	 * @param cooldownTime The cool-down between shots
+	 * @param paintCost The amount of paint needed to shoot the gun 
 	 */
 	public Gun(Player user, int cooldownTime, int paintCost) {
 		this.cooldownTime = cooldownTime;

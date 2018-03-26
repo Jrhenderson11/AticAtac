@@ -58,7 +58,7 @@ public class MenuItem {
 
     /**
      * Unselects all MenuItems
-     * @param menuItems
+     * @param menuItems The list of items in the Main Menu
      */
     public static void unselectAll(ArrayList<MenuItem> menuItems) {
         for (MenuItem m : menuItems) {

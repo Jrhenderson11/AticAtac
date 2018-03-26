@@ -15,7 +15,7 @@ public class MainMenuKeyReleased implements EventHandler<KeyEvent> {
 
     /**
      * Creates a handler for keys on release.
-     * @param pressedKeys
+     * @param pressedKeys The keys that have been pressed
      */
     public MainMenuKeyReleased(Set<KeyCode> pressedKeys) {
         this.pressedKeys = pressedKeys;

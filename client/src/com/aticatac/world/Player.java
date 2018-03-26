@@ -91,7 +91,7 @@ public class Player implements Serializable{
     
     /**
      * Returns the Controller type for this player
-     * @return 
+     * @return The type of player that it is: AI or Real
      */
     public Controller getController() {
     	return controller;
@@ -218,7 +218,8 @@ public class Player implements Serializable{
 	/**
 	 * Sets the paint level to the given value
 	 * @param paintLevel The level of paint to set it to
-	 * @return Returns True if the paint level was changed, False is negative or < MAX_PAINTLEVEL 
+	 * @return Returns True if the paint level was changed, 
+	 * False if the paint level is negative or less than MAX_PAINTLEVEL 
 	 */
 	public boolean setPaintLevel(double paintLevel) {
 		if (paintLevel >= 0 && paintLevel <= MAX_PAINTLEVEL) {

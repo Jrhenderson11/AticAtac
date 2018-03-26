@@ -40,7 +40,7 @@ public class MainMenuKeyPressed implements EventHandler<KeyEvent> {
 
     /**
      * Handles KeyEvents for the given event
-     * @param The KeyEvent to handle
+     * @param event The KeyEvent to handle
      */
     @Override
     public void handle(KeyEvent event) {

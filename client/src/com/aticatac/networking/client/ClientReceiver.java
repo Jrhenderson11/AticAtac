@@ -148,15 +148,15 @@ public class ClientReceiver extends Thread {
 	}
 
 	/**
-	 * returns most up to date model of the world
-	 * @return
+	 * Return the most up to date model of the world
+	 * @return The world object
 	 */
 	public World getModel() {
 		return this.model;
 	}
 	
-	/** used for debugging stuff over network 
-	 * 
+	/** 
+	 * A method used for debugging over the networking
 	 */
 	private static String byteArrayToHexString(byte[] data) {
 		StringBuffer buf = new StringBuffer();
