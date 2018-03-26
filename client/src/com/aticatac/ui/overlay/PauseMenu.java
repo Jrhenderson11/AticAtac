@@ -83,7 +83,7 @@ public class PauseMenu {
 	 * @param mousePosition The position of the mouse
 	 */
 	public int handleClick() {
-		System.out.println("CLICKED");
+		//System.out.println("CLICKED");
 		if (paused) {
 			if (selection == RESUME) {
 				setPaused(false);

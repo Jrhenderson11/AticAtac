@@ -3,7 +3,9 @@ package com.aticatac.ui.tutorial;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.aticatac.Main;
 import com.aticatac.rendering.display.Renderer;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.mainmenu.MainMenu;
 import com.aticatac.ui.overlay.Overlay;
 import com.aticatac.ui.overlay.PauseMenu;
@@ -41,6 +43,7 @@ public class SinglePlayer extends Scene {
 	 */
 	public SinglePlayer(Group root, Stage primaryStage, MainMenu mainMenu) {
 		super(root);
+		SoundManager m = new SoundManager(Main.soundEnabled);
 		Renderer renderer = new Renderer();
 		Canvas canvas = new Canvas(SystemSettings.getScreenWidth(), SystemSettings.getScreenHeight());
         root.getChildren().add(canvas);
@@ -50,6 +53,7 @@ public class SinglePlayer extends Scene {
         this.world = new World(new Level(100, 100));
         world.newRound();
         renderer.setWorld(world);
+        m.playBgBattle();
         
         Player player = new Player(Controller.REAL, "player", 2);
         AIPlayer ai1 = new AIPlayer(Controller.AI, world, "ai 1", 3);
@@ -80,8 +84,12 @@ public class SinglePlayer extends Scene {
   				}
   				if (code == KeyCode.ESCAPE) {
   					if (pauseMenu.isPaused()) {
+  						m.playBgBattle();
   						world.getGameTimer().resume();
-  					} else world.getGameTimer().pause();
+  					} else {
+  						m.stopBattleBg();
+  						world.getGameTimer().pause();
+  					}
   					pauseMenu.togglePaused();
   					input.remove(code);
   				}
@@ -144,8 +152,10 @@ public class SinglePlayer extends Scene {
   	        	}
   	        	int result = pauseMenu.handleClick();
   	        	if (result == PauseMenu.RESUME) {
+  	        		m.playBgBattle();
   	        		world.getGameTimer().resume();
   	        	} else if (result == PauseMenu.QUIT_TO_MENU) {
+  	        		m.playBgMenu();
   	        		world.getGameTimer().stop();
   	        	}
   	        }

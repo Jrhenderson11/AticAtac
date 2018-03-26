@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.aticatac.Main;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.utils.SystemSettings;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -16,6 +18,7 @@ import javafx.stage.Stage;
 public class CreditsMenu extends Scene {
     public CreditsMenu(Group root, Scene mainMenu, Stage primaryStage){
         super(root);
+        SoundManager m = new SoundManager(Main.soundEnabled);
         ArrayList<CreditsItems> names = new ArrayList<>();
         names.add(new CreditsItems("Tom Taylor"));
         names.add(new CreditsItems("James Henderson"));
@@ -38,6 +41,7 @@ public class CreditsMenu extends Scene {
                 KeyCode code = e.getCode();
                 if (code == KeyCode.ESCAPE) {
                     primaryStage.setScene(mainMenu);
+                    m.playBgMenu();
                 }
             }
         });

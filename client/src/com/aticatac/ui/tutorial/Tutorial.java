@@ -90,6 +90,11 @@ public class Tutorial extends Scene {
   					input.add(code);
   				}
   				if (code == KeyCode.ESCAPE) {
+  					if(pauseMenu.isPaused()) {
+  						m.playBgBattle();
+  					}else {
+  						m.stopBattleBg();
+  					}
   					pauseMenu.togglePaused();
   					input.remove(code);
   				}
@@ -150,7 +155,12 @@ public class Tutorial extends Scene {
   									  (int) SystemSettings.getDescaledY(me.getY())), 
   							world);
   	        	}
-  	        	pauseMenu.handleClick();
+  	        	int result = pauseMenu.handleClick();
+  	        	if(result == PauseMenu.RESUME) {
+  	        		m.playBgBattle();
+  	        	}else if (result == PauseMenu.QUIT_TO_MENU){
+  	        		m.playBgMenu();
+  	        	}
   	        }
   		});
   		

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.aticatac.Main;
 import com.aticatac.networking.client.UDPClient;
+import com.aticatac.sound.SoundManager;
 import com.aticatac.ui.credits.CreditsMenu;
 import com.aticatac.ui.lobby.browser.Browser;
 import com.aticatac.ui.mainmenu.handlers.MainMenuAnimation;
@@ -41,13 +43,15 @@ public class MainMenu extends Scene {
         super(root);
         
         this.stage = primaryStage;
+        SoundManager m = new SoundManager(Main.soundEnabled);
+        m.playBgMenu();
 
-        System.out.println("IS MAIN MENU FUCKED?");
+        /*System.out.println("Does main menu work?");
         if(primaryStage==null) {
-        	System.out.println("YES IT IS");
+        	System.out.println("No");
         } else {
-        	System.out.println("NOPE");
-        }
+        	System.out.println("Yes");
+        }*/
         // Supplier something = (() -> new Placeholder(new Group()));
 
         menuItems = new ArrayList<>();

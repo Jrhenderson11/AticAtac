@@ -158,6 +158,9 @@ public class Settings extends Scene{
    	    	public void handle(ActionEvent e) {
    	    		primaryStage.setResizable(false);
    	    		primaryStage.setScene(mainMenu);
+   	    		// Stop the battle background if someone has been changing their music
+   	    		m.stopBattleBg();
+   	    		m.playBgMenu();
    	    	}
    		});
        
