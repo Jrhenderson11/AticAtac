@@ -11,6 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.packets.Packet;
 import com.aticatac.world.World;
 
 public class ServerSender extends Thread {
@@ -49,20 +50,29 @@ public class ServerSender extends Thread {
 		while (running) {
 			for (ConnectionInfo client : clientList) {
 				address = client.getAddress();
-				byte[] buffer;
-				if (master.getStatus() == Globals.IN_LIMBO && master.getLobbyInfo() !=null) {
-					buffer = SerializationUtils.serialize(master.getLobbyInfo());
+				byte[] data;
+				String type;
+				if (master.getStatus() == Globals.IN_LIMBO && master.getLobbyInfo() != null) {
+					data = SerializationUtils.serialize(master.getLobbyInfo());
+					type = "lbi";
 				} else if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
+					type = "lby";
 					try {
-						buffer = SerializationUtils.serialize(master.getLobby());
+						data = SerializationUtils.serialize(master.getLobby());
 					} catch (ConcurrentModificationException e) {
-						buffer = new byte[256];
+						data = new byte[256];
 					}
 				} else {
 					// serve game object
-					buffer = SerializationUtils.serialize(model);
+					type = "gam";
+					data = SerializationUtils.serialize(model);
 				}
+
+				
+				Packet frame =  new Packet(type, data);
+				byte[] buffer = SerializationUtils.serialize(frame);
+				
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
 
 				try {
@@ -101,7 +111,7 @@ public class ServerSender extends Thread {
 			address = client.getAddress();
 			byte[] buffer;
 
-			buffer = SerializationUtils.serialize(master.getLobby());
+			buffer = SerializationUtils.serialize(new Packet("lby", SerializationUtils.serialize(master.getLobby())));
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
 
 			try {
@@ -146,7 +156,7 @@ public class ServerSender extends Thread {
 		for (ConnectionInfo i : this.clientList) {
 			if (i.getAddress().equals(origin) && (i.getOriginPort() == originPort)) {
 		//		System.out.println("sending message to " + i.getAddress() + " " + msg);
-				byte[] buffer = msg.getBytes();
+				byte[] buffer = SerializationUtils.serialize(new Packet("msg", msg.getBytes()));
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, i.getAddress(), Globals.SERVER_PORT);
 				try {
 					socket.send(packet);

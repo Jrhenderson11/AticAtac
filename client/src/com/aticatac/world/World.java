@@ -367,7 +367,7 @@ public class World implements Serializable {
 			player.setGun(new SprayGun(player));
 			// input.remove(KeyCode.P);
 		}
-
+		System.out.println(player==null);
 		player.setLookDirection(dir);
 
 	}

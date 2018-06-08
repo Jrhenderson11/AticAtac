@@ -166,6 +166,7 @@ public class UDPClient extends Task implements LobbyServer {
 		if (this.status == Globals.IN_LIMBO) {
 			sendData("init");
 			this.status = Globals.IN_LOBBY;
+			System.out.println("IN LOBBY");
 			return true;
 		}
 		return false;

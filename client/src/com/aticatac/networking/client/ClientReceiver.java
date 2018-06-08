@@ -5,12 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
+import com.aticatac.networking.packets.Packet;
 import com.aticatac.world.World;
 
 public class ClientReceiver extends Thread {
@@ -20,16 +22,18 @@ public class ClientReceiver extends Thread {
 	private boolean running;
 	private byte[] buffer = new byte[100000];
 	private DatagramSocket socket;
-	
+
 	private int port;
 
 	private UDPClient master;
-	
+
 	/**
 	 * makes a new receiver
 	 * 
-	 * @param newName 	name of this client (useful for debugging stuff)
-	 * @param newMaster UDPClient that controls this thread
+	 * @param newName
+	 *            name of this client (useful for debugging stuff)
+	 * @param newMaster
+	 *            UDPClient that controls this thread
 	 */
 	public ClientReceiver(String newName, UDPClient newMaster) {
 		this.name = newName;
@@ -47,11 +51,11 @@ public class ClientReceiver extends Thread {
 		System.out.println(name + " bound to " + port);
 		this.master = newMaster;
 	}
+
 	/**
-	 * This is the run method, it keeps running in a loop
-	 * at every iteration it listens for packets
-	 *  tries to cast them into the appropriate game state based 
-	 *  off UDPClient.getStatus()
+	 * This is the run method, it keeps running in a loop at every iteration it
+	 * listens for packets tries to cast them into the appropriate game state based
+	 * off UDPClient.getStatus()
 	 */
 	@Override
 	public void run() {
@@ -60,79 +64,51 @@ public class ClientReceiver extends Thread {
 		while (running) {
 
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
+			Packet frame;
 			try {
 				socket.receive(packet);
+				frame = SerializationUtils.deserialize(packet.getData());
 			} catch (IOException e) {
 				System.out.println("IO error in Client Receiver Thread (Server Down)");
 				break;
 			}
-			
-			try {
-				String s = new String(packet.getData(), 0,packet.getLength());
-				if (s.contains("IP:")) {
-					//System.out.println(s);
-					master.setMyIP(InetAddress.getByName(s));
-				} else {
-				//	System.out.println(s);
+
+			if (frame.getType().equals("ipp")) {
+				try {
+					master.setMyIP(InetAddress.getByName(frame.data.toString()));
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				System.out.println("fail");
+			} else if (frame.getType().equals("lbi")) {
+				LobbyInfo newInfo = SerializationUtils.deserialize(frame.data);
+				master.setLobbyInfo(newInfo);
+			} else if (frame.getType().equals("lby")) {
+				//System.out.println("I HAZ LOBBY");
+				Lobby newLobby = SerializationUtils.deserialize(frame.data);
+				if (master.getStatus() == Globals.IN_LIMBO) {
+					 master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, newLobby.NAME));
+				}
+				master.setLobby(newLobby);
+				if (master.getStatus()==Globals.IN_LOBBY && newLobby.getStarted() == true) {
+					System.out.println("start game");
+					master.setStatus(Globals.IN_GAME);
+				}
+			} else if (frame.getType().equals("gam")) {
+				this.model = SerializationUtils.deserialize(frame.data);
+			} else {
+				System.out.println("type: " + frame.getType());
 			}
-			if (master.getStatus() == Globals.IN_LIMBO) {
-				// deserialise into lobby obj
-				try {
-					LobbyInfo newInfo = SerializationUtils.deserialize(packet.getData());
-					master.setLobbyInfo(newInfo);
-				} catch (Exception e) {
-					
-					//System.out.println("cannot deserialise lobbyinfo (is it a model?)");
-					try {
-						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-						master.setLobbyInfo(new LobbyInfo(4, newLobby.getAll().size(), newLobby.ID, newLobby.NAME));
-					} catch (Exception e2) {
-						System.out.println("got something that should be lobby info");
-					}
+
+			if (master.getStatus() == Globals.IN_LOBBY) {
+				if (this.model != null) {
+					this.master.setStatus(Globals.IN_GAME);
 				}
-				//System.out.println("getting info");
-				
-			} else if (master.getStatus() == Globals.IN_LOBBY) {
-				// deserialise into lobby obj
-				try {
-					Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-					master.setLobby(newLobby);
-					if (newLobby.getStarted()==true) {
-						System.out.println("start game");
-						master.setStatus(Globals.IN_GAME);
-					}
-				} catch (Exception e) {
-					System.out.println("cannot deserialise lobby (is it a model?)");
-					try {
-						this.model = SerializationUtils.deserialize(packet.getData());
-						this.master.setStatus(Globals.IN_GAME);
-					} catch (Exception e2) {
-					}
-				}
-				//System.out.println("in lobby");
 			} else if (master.getStatus() == Globals.IN_GAME) {
-				//make game model
-				try {
-					this.model = SerializationUtils.deserialize(packet.getData());
-				} catch (Exception e) {
-					try {
-						Lobby newLobby = SerializationUtils.deserialize(packet.getData());
-						master.setLobby(newLobby);
-					} catch (Exception e2) {
-						System.out.println("uh - oh");
-						//e2.printStackTrace();
-					}
-					
-				}
-				//System.out.println("in game");
+				// System.out.println("in game");
 				if (this.master.getLobby() == null) {
 					this.master.requestLobby();
-				} 
-	}
+				}
+			}
 
 		}
 		socket.close();
@@ -149,13 +125,14 @@ public class ClientReceiver extends Thread {
 
 	/**
 	 * Return the most up to date model of the world
+	 * 
 	 * @return The world object
 	 */
 	public World getModel() {
 		return this.model;
 	}
-	
-	/** 
+
+	/**
 	 * A method used for debugging over the networking
 	 */
 	private static String byteArrayToHexString(byte[] data) {

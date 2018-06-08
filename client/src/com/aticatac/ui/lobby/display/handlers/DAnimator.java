@@ -58,7 +58,7 @@ public class DAnimator extends AnimationTimer {
         this.parent = newParent;
         this.stage = newStage;
         this.mainMenu = mainMenu;
-        System.out.println("SAGE===============================");
+        System.out.println("STAGE===============================");
         System.out.println(stage==null);
         
         this.width = SystemSettings.getScreenWidth();
@@ -72,7 +72,7 @@ public class DAnimator extends AnimationTimer {
         Lobby lobby = server.updateLobby(selected);
         // don't be greedy: let the server take some time to get it's lobby object
         while (lobby == null) {
-            System.out.println("waiting for lobby obj");
+            //System.out.println("waiting for lobby obj");
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ignored) {
