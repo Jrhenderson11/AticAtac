@@ -1,7 +1,5 @@
 package com.aticatac.world;
 
-import com.aticatac.world.utils.LevelGen;
-
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +10,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
+
+import com.aticatac.world.utils.LevelGen;
 
 @SuppressWarnings("serial")
 public class Level implements Serializable {
@@ -456,41 +456,49 @@ public class Level implements Serializable {
 	 *             May occur due to using an output stream
 	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		ArrayList<Integer> intList = new ArrayList<Integer>();
-		int lastval = -1;
-		int num = 0;
+		ArrayList<Short> shortList = new ArrayList<Short>();
+		short lastval = -1;
+		short num = 0;
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if (this.grid[x][y] != lastval) {
+
+				if ((short)this.grid[x][y] != lastval) {
 					if (num != 0) {
-						intList.add(num);
-						intList.add(lastval);
+						shortList.add(num);
+						shortList.add(lastval);
 						num = 0;
 					}
-
-					lastval = this.grid[x][y];
+					lastval = (short) this.grid[x][y];
 				}
 				if ((x == width - 1 && y == height - 1)) {
-					intList.add(num + 1);
-					intList.add(lastval);
+					shortList.add((short)(num + 1));
+					shortList.add(lastval);
 				}
 				num++;
 			}
 		}
-
-		byte[] arr = new byte[(intList.size() + 1) * 4];
-		int x = 4;
-		byte[] num2 = ByteBuffer.allocate(4).putInt((intList.size() * 4)).array();
-		for (int j = 0; j < 4; j++) {
+		//System.out.println("LENGTH: " + shortList.size());
+		//System.out.print("SERIALIZE: ");
+		//for (short jj : shortList) {
+		//	System.out.print(jj+",");
+		//}
+		//System.out.println();
+		byte[] arr = new byte[(shortList.size() + 1) * 2];
+		int x = 2;
+		
+		byte[] num2 = ByteBuffer.allocate(2).putShort((short) (shortList.size() * 2)).array(); //put length into array
+		for (int j = 0; j < 2; j++) {
 			arr[j] = num2[j];
 		}
-		for (int i = 0; i < intList.size(); i++) {
-			num2 = ByteBuffer.allocate(4).putInt(intList.get(i)).array();
-			for (int j = 0; j < 4; j++) {
+		//put data into array
+		for (int i = 0; i < shortList.size(); i++) {
+			num2 = ByteBuffer.allocate(2).putShort(shortList.get(i)).array();
+			for (int j = 0; j < 2; j++) {
 				arr[x++] = num2[j];
 			}
 		}
 		out.write(arr);
+		//System.out.println();
 	}
 
 	/**
@@ -505,31 +513,37 @@ public class Level implements Serializable {
 	 */
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 
-		byte[] byteArray = new byte[in.readInt()];
+		byte[] byteArray = new byte[in.readShort()];
 
 		for (int i = 0; i < byteArray.length; i++) {
 			byteArray[i] = in.readByte();
 		}
-		IntBuffer intBuf = ByteBuffer.wrap(byteArray).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
-
-		int[] intArray = new int[intBuf.remaining()];
-
-		for (int j = 0; j < intArray.length; j++) {
-			intArray[j] = intBuf.get(j);
+		ShortBuffer shortBuf = ByteBuffer.wrap(byteArray).order(ByteOrder.BIG_ENDIAN).asShortBuffer();
+		short[] shortArray = new short[shortBuf.remaining()];
+		//System.out.println("LENGTH: " + shortArray.length);
+		//System.out.print("DESERIALIZE: ");
+		//for (short jj : shortArray) {
+		//	System.out.print(jj+",");
+		//}
+		//System.out.println();
+		
+		for (int j = 0; j < shortArray.length; j++) {
+			shortArray[j] = shortBuf.get(j);
 		}
 
 		int sum = 0;
-		for (int x2 = 0; x2 < intArray.length; x2 += 2) {
-			sum += intArray[x2];
+		for (int x2 = 0; x2 < shortArray.length; x2 += 2) {
+			sum += shortArray[x2];
 		}
+
 		int width = (int) Math.sqrt(sum);
 
 		int x = 0;
 		int y = 0;
 		int[][] grid = new int[width][width];
-		for (int i = 0; i < intArray.length; i += 2) {
-			int val = intArray[i + 1];
-			int num = intArray[i];
+		for (int i = 0; i < shortArray.length; i += 2) {
+			int val = shortArray[i + 1];
+			int num = shortArray[i];
 			for (int count = 0; count < num; count++) {
 				grid[x][y] = val;
 

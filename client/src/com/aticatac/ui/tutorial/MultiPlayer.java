@@ -159,7 +159,7 @@ public class MultiPlayer extends Scene {
 
 					renderer.render(gc);
 					pauseMenu.draw(gc);
-					System.out.println("SERVER STATE: " + client.getStatus());
+					//System.out.println("SERVER STATE: " + client.getStatus());
 					overlay.drawOverlay(gc, world, myInfo.getID());
 					if (world.getGameState() == GameState.PLAYING) {
 						world.update();
@@ -190,8 +190,9 @@ public class MultiPlayer extends Scene {
 						gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth() / 2,
 								SystemSettings.getScreenHeight() / 2);
 					}
-				} catch (Exception e) {
+				} catch (NullPointerException e) {
 					System.out.println("UH-OH");
+					e.printStackTrace();
 				}
 
 			}
