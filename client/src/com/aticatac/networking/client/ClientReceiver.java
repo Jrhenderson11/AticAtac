@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -13,6 +14,7 @@ import com.aticatac.lobby.Lobby;
 import com.aticatac.lobby.LobbyInfo;
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.packets.Packet;
+import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
 public class ClientReceiver extends Thread {
@@ -95,17 +97,28 @@ public class ClientReceiver extends Thread {
 					master.setStatus(Globals.IN_GAME);
 				}
 			} else if (frame.getType().equals("gam")) {
+				Level level = null;
+				if (this.model != null) {
+					level = this.model.getLevel();
+				}
 				this.model = SerializationUtils.deserialize(frame.data);
+				if (level!=null) {
+					this.model.setLevel(level);
+				}
 				if (master.getStatus() == Globals.IN_LOBBY) {
 					master.setStatus(Globals.IN_GAME);
 				}
+			} else if (frame.getType().equals("lev")) {
+				Level level = SerializationUtils.deserialize(frame.data);
+				this.model.setLevel(level);
+			} else if (frame.getType().equals("dif")) {
+				ArrayList<Short> difList = SerializationUtils.deserialize(frame.data);
+				this.model.applyDifference(difList);
 			} else {
 				System.out.println("type: " + frame.getType());
 			}
 
 			if (master.getStatus() == Globals.IN_LOBBY) {
-
-				
 				
 			} else if (master.getStatus() == Globals.IN_GAME) {
 				// System.out.println("in game");

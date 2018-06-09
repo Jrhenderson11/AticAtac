@@ -447,6 +447,30 @@ public class Level implements Serializable {
 		this.setGrid(LevelGen.get(this.width, this.height));
 	}
 
+	//alternative serialisation technique using difference
+	public ArrayList<Short> generateDifference(Level oldLevel) {
+		ArrayList<Short> difList = new ArrayList<Short>();
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (oldLevel.getGrid()[x][y] != this.grid[x][y]) {
+					difList.add((short) x);
+					difList.add((short) y);
+					difList.add((short) this.grid[x][y]);
+				}
+			}
+		}
+		return difList;
+	}
+
+	public void applyDifference(ArrayList<Short> difList) {
+		for (int i=0; i< difList.size(); i+=3) {
+			int x = (int) difList.get(i);
+			int y = (int) difList.get(i+1);
+			int val = (int) difList.get(i+2);
+			this.grid[x][y] = val;
+		}
+	} 
+	
 	/**
 	 * Serialise the level object so that it may be sent via an output stream
 	 * 
@@ -462,7 +486,7 @@ public class Level implements Serializable {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 
-				if ((short)this.grid[x][y] != lastval) {
+				if ((short) this.grid[x][y] != lastval) {
 					if (num != 0) {
 						shortList.add(num);
 						shortList.add(lastval);
@@ -471,26 +495,26 @@ public class Level implements Serializable {
 					lastval = (short) this.grid[x][y];
 				}
 				if ((x == width - 1 && y == height - 1)) {
-					shortList.add((short)(num + 1));
+					shortList.add((short) (num + 1));
 					shortList.add(lastval);
 				}
 				num++;
 			}
 		}
-		//System.out.println("LENGTH: " + shortList.size());
-		//System.out.print("SERIALIZE: ");
-		//for (short jj : shortList) {
-		//	System.out.print(jj+",");
-		//}
-		//System.out.println();
+		// System.out.println("LENGTH: " + shortList.size());
+		// System.out.print("SERIALIZE: ");
+		// for (short jj : shortList) {
+		// System.out.print(jj+",");
+		// }
+		// System.out.println();
 		byte[] arr = new byte[(shortList.size() + 1) * 2];
 		int x = 2;
-		
-		byte[] num2 = ByteBuffer.allocate(2).putShort((short) (shortList.size() * 2)).array(); //put length into array
+
+		byte[] num2 = ByteBuffer.allocate(2).putShort((short) (shortList.size() * 2)).array(); // put length into array
 		for (int j = 0; j < 2; j++) {
 			arr[j] = num2[j];
 		}
-		//put data into array
+		// put data into array
 		for (int i = 0; i < shortList.size(); i++) {
 			num2 = ByteBuffer.allocate(2).putShort(shortList.get(i)).array();
 			for (int j = 0; j < 2; j++) {
@@ -498,7 +522,7 @@ public class Level implements Serializable {
 			}
 		}
 		out.write(arr);
-		//System.out.println();
+		// System.out.println();
 	}
 
 	/**
@@ -520,13 +544,13 @@ public class Level implements Serializable {
 		}
 		ShortBuffer shortBuf = ByteBuffer.wrap(byteArray).order(ByteOrder.BIG_ENDIAN).asShortBuffer();
 		short[] shortArray = new short[shortBuf.remaining()];
-		//System.out.println("LENGTH: " + shortArray.length);
-		//System.out.print("DESERIALIZE: ");
-		//for (short jj : shortArray) {
-		//	System.out.print(jj+",");
-		//}
-		//System.out.println();
-		
+		// System.out.println("LENGTH: " + shortArray.length);
+		// System.out.print("DESERIALIZE: ");
+		// for (short jj : shortArray) {
+		// System.out.print(jj+",");
+		// }
+		// System.out.println();
+
 		for (int j = 0; j < shortArray.length; j++) {
 			shortArray[j] = shortBuf.get(j);
 		}

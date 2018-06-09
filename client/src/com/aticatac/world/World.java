@@ -49,7 +49,7 @@ public class World implements Serializable {
 	/**
 	 * The Level of this world that defines the walls and floors of the map.
 	 */
-	private Level level;
+	private transient Level level;
 	/**
 	 * Some start locations for Players
 	 */
@@ -511,6 +511,14 @@ public class World implements Serializable {
 		return level;
 	}
 
+	public void setLevel(Level newLevel) {
+		this.level = newLevel;
+	}
+	
+	public void applyDifference(ArrayList<Short> difList) {
+		this.level.applyDifference(difList);
+	}
+	
 	/**
 	 * Returns the number of Players in the World
 	 * 
@@ -818,4 +826,8 @@ public class World implements Serializable {
 	public void setRound(int rounds) {
 		this.round = rounds;
 	}
+
+
+
+
 }

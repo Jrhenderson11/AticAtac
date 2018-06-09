@@ -12,6 +12,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 import com.aticatac.networking.globals.Globals;
 import com.aticatac.networking.packets.Packet;
+import com.aticatac.world.Level;
 import com.aticatac.world.World;
 
 public class ServerSender extends Thread {
@@ -47,6 +48,9 @@ public class ServerSender extends Thread {
 		}
 		System.out.println("got sender socket");
 		running = true;
+		
+		Level lastLevel = null;
+		int counter = 0;
 		while (running) {
 			for (ConnectionInfo client : clientList) {
 				address = client.getAddress();
@@ -55,6 +59,11 @@ public class ServerSender extends Thread {
 				if (master.getStatus() == Globals.IN_LIMBO && master.getLobbyInfo() != null) {
 					data = SerializationUtils.serialize(master.getLobbyInfo());
 					type = "lbi";
+					Packet frame =  new Packet(type, data);
+					byte[] buffer = SerializationUtils.serialize(frame);
+					
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
+					sendPacket(packet);
 				} else if (master.getStatus() == Globals.IN_LOBBY) {
 					// serve lobby object
 					type = "lby";
@@ -63,40 +72,43 @@ public class ServerSender extends Thread {
 					} catch (ConcurrentModificationException e) {
 						data = new byte[256];
 					}
-				} else {
+					Packet frame =  new Packet(type, data);
+					byte[] buffer = SerializationUtils.serialize(frame);
+					
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
+					sendPacket(packet);
+				} else if (master.getStatus() == Globals.IN_GAME) {
 					// serve game object
 					type = "gam";
 					data = SerializationUtils.serialize(model);
-				}
-
+					Packet frame =  new Packet(type, data);
+					byte[] buffer = SerializationUtils.serialize(frame);
+					
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
+					sendPacket(packet);
 				
-				Packet frame =  new Packet(type, data);
-				byte[] buffer = SerializationUtils.serialize(frame);
-				
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
+					if (counter==0) {
+						type = "lev";
+						data = SerializationUtils.serialize(model.getLevel());
+					
+					} else {
+						type = "dif";
+						data = SerializationUtils.serialize(model.getLevel().generateDifference(lastLevel));
+						if (counter==100) {
+							counter=-1;
+						}
+					} 
+					lastLevel = this.model.getLevel();
+					frame =  new Packet(type, data);
+					buffer = SerializationUtils.serialize(frame);
+					
+					packet = new DatagramPacket(buffer, buffer.length, address, client.getDestPort());
+					sendPacket(packet);
 
-				try {
-					int len = (packet.getLength() + 100);
-					socket.setSendBufferSize(len);
-				} catch (SocketException e2) {
-					e2.printStackTrace();
+					counter++;
 				}
-				try {
-					socket.send(packet);
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("buffer length:");
-					System.out.println(buffer.length);
-					try {
-						System.out.println("max allowed length");
-						System.out.println(socket.getSendBufferSize());
-					} catch (SocketException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+		
 			}
-
 		}
 		System.out.println("server sender stopped");
 	}
@@ -170,5 +182,26 @@ public class ServerSender extends Thread {
 		}
 	}	
 	
-	
+	private void sendPacket(DatagramPacket packet) {
+		try {
+			int len = (packet.getLength() + 100);
+			socket.setSendBufferSize(len);
+			socket.send(packet);
+
+		} catch (SocketException e2) {
+			e2.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("buffer length:");
+			System.out.println(packet.getData().length);
+			try {
+				System.out.println("max allowed length");
+				System.out.println(socket.getSendBufferSize());
+			} catch (SocketException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
 }
