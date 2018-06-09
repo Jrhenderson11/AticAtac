@@ -78,7 +78,7 @@ public class MultiPlayer extends Scene {
 				if (code == (KeyCode.ESCAPE)) {
 					System.out.println("ESCAPE PRESSED");
 					pauseMenu.togglePaused();
-  				} else {
+				} else {
 					if (!input.contains(code)) {
 						input.add(code);
 					}
@@ -133,7 +133,7 @@ public class MultiPlayer extends Scene {
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-  	        	int result = pauseMenu.handleClick();
+				int result = pauseMenu.handleClick();
 				m.playShoot(player);
 				client.sendData("click:" + (int) me.getX() + ":" + (int) me.getY());
 			}
@@ -142,52 +142,58 @@ public class MultiPlayer extends Scene {
 		// sets up an AnimationTimer to update the display
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
-
-				World world = client.getModel();
-				renderer.setWorld(world);
-
-				ClientInfo myInfo = client.myInfo();
-
 				try {
-					Player p = (world.getPlayerById(myInfo.getID()));
-					player.setPosition(p.getPosition());
+					client.sendData("input:" + input.toString() + ":" + (int) (player.getLookDirection() * 1000));
+
+					World world = client.getModel();
+					renderer.setWorld(world);
+
+					ClientInfo myInfo = client.myInfo();
+
+					try {
+						Player p = (world.getPlayerById(myInfo.getID()));
+						player.setPosition(p.getPosition());
+					} catch (Exception e) {
+						// shhhh, let's just pretend this never happened
+					}
+
+					renderer.render(gc);
+					pauseMenu.draw(gc);
+					System.out.println("SERVER STATE: " + client.getStatus());
+					overlay.drawOverlay(gc, world, myInfo.getID());
+					if (world.getGameState() == GameState.PLAYING) {
+						world.update();
+						// world.handleInput(input, player.getLookDirection(), player.getIdentifier());
+					}
+					// check for round over
+					if (world.getGameState() == GameState.OVER) {
+						if (world.getWinner() != null) {
+							Color color = new Color(0, 0, 0, 0.7f);
+							gc.setFill(color);
+							gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+							gc.setTextAlign(TextAlignment.CENTER);
+							gc.setFill(Color.WHITE);
+							gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+							gc.fillText("Winner is: " + world.getWinner().getIdentifier(),
+									SystemSettings.getScreenWidth() / 2, SystemSettings.getScreenHeight() / 2);
+						}
+					}
+
+					// check for ready message
+					if (world.getGameState() == GameState.READY) {
+						Color color = new Color(0, 0, 0, 0.7f);
+						gc.setFill(color);
+						gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+						gc.setTextAlign(TextAlignment.CENTER);
+						gc.setFill(Color.WHITE);
+						gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
+						gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth() / 2,
+								SystemSettings.getScreenHeight() / 2);
+					}
 				} catch (Exception e) {
-					// shhhh, let's just pretend this never happened
+					System.out.println("UH-OH");
 				}
 
-				renderer.render(gc);
-				pauseMenu.draw(gc);
-				overlay.drawOverlay(gc, world, myInfo.getID());
-				if (world.getGameState() == GameState.PLAYING) {
-  	        		world.update();
-  	        		//world.handleInput(input, player.getLookDirection(), player.getIdentifier());
-  	        	}
-  	        	//check for round over
-  	        	if (world.getGameState() == GameState.OVER) {
-  	        		if (world.getWinner() != null) {
-  	        			Color color = new Color(0, 0, 0, 0.7f);
-  	        			gc.setFill(color);
-  	        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-  	        			gc.setTextAlign(TextAlignment.CENTER);
-  	        			gc.setFill(Color.WHITE);
-  	        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-  	        			gc.fillText("Winner is: " + world.getWinner().getIdentifier(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
-  	        		}
-  	        	}
-  	        	
-  	        	//check for ready message
-  	        	if (world.getGameState() == GameState.READY) {
-        			Color color = new Color(0, 0, 0, 0.7f);
-        			gc.setFill(color);
-        			gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-        			gc.setTextAlign(TextAlignment.CENTER);
-        			gc.setFill(Color.WHITE);
-        			gc.setFont(UIDrawer.OVERLAY_FONT_SMALL);
-        			gc.fillText("Ready: " + world.getRoundTime(), SystemSettings.getScreenWidth()/2, SystemSettings.getScreenHeight()/2);
-  	        	}
-
-			
 			}
 		}.start();
 	}

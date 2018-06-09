@@ -61,6 +61,7 @@ public class ClientReceiver extends Thread {
 	public void run() {
 		this.running = true;
 		System.out.println(name + " Listening");
+
 		while (running) {
 
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -90,19 +91,22 @@ public class ClientReceiver extends Thread {
 				}
 				master.setLobby(newLobby);
 				if (master.getStatus()==Globals.IN_LOBBY && newLobby.getStarted() == true) {
-					System.out.println("start game");
+					System.out.println("got started lobby packet, starting game");
 					master.setStatus(Globals.IN_GAME);
 				}
 			} else if (frame.getType().equals("gam")) {
 				this.model = SerializationUtils.deserialize(frame.data);
+				if (master.getStatus() == Globals.IN_LOBBY) {
+					master.setStatus(Globals.IN_GAME);
+				}
 			} else {
 				System.out.println("type: " + frame.getType());
 			}
 
 			if (master.getStatus() == Globals.IN_LOBBY) {
-				if (this.model != null) {
-					this.master.setStatus(Globals.IN_GAME);
-				}
+
+				
+				
 			} else if (master.getStatus() == Globals.IN_GAME) {
 				// System.out.println("in game");
 				if (this.master.getLobby() == null) {

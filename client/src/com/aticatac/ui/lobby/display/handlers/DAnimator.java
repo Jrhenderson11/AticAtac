@@ -41,8 +41,7 @@ public class DAnimator extends AnimationTimer {
     private Browser parent;
     private Stage stage;
     private Scene mainMenu;
-    
-    
+        
     private BackButton backButton;
     private ReadyStartButton sbutton;
     private AddAIButton aiButton;
@@ -58,8 +57,7 @@ public class DAnimator extends AnimationTimer {
         this.parent = newParent;
         this.stage = newStage;
         this.mainMenu = mainMenu;
-        System.out.println("STAGE===============================");
-        System.out.println(stage==null);
+        System.out.println("(Danimator) STAGE==NULL? " + (stage==null));
         
         this.width = SystemSettings.getScreenWidth();
         this.height = SystemSettings.getScreenHeight();
@@ -157,7 +155,9 @@ public class DAnimator extends AnimationTimer {
 
         // if game has been started go to game screen
         if (lobby.getStarted() || this.server.getStatus() == Globals.IN_GAME) {
-            
+       	
+        	//WTF
+        	System.out.println("Is server staus IN_GAME? " + (this.server.getStatus() == Globals.IN_GAME));
             System.out.println("starting!!!");
             
             stage.setScene(new MultiPlayer(new Group(), (UDPClient) server, stage, mainMenu));

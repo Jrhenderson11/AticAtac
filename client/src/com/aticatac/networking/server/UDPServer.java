@@ -235,6 +235,7 @@ public class UDPServer extends Task {
 	 * begins the game
 	 */
 	public void startGame() {
+		System.out.println("STARTING GAME");
 		if (!this.lobby.allReady()) {
 			return;
 		}

@@ -172,10 +172,8 @@ public class ServerReciever extends Thread {
 			String id = parts[1];
 			//TODO: check if this user is actually lobby leader
 			this.master.getLobby().removeClient(id);
-
 		} else if (data.equals("addAI")) {
 			master.addAI();
-					
 		} else if (data.equals("leavelobby")) {
 			master.leaveLobby(origin, originPort);
 		} else if (data.equals("leavegame")) {
@@ -184,12 +182,13 @@ public class ServerReciever extends Thread {
 			master.leaveLobby(origin, originPort);
 			System.out.println("client left game");
 		} else if (data.equals("start")) {
+			System.out.println("SERVER STARTING GAME");
 			this.master.startGame();
 		} else if (data.equals("stop")) {
 			this.master.halt();
 
 			// GAME
-		} else if (parts[0].equals("input")) {
+		} else if (parts[0].equals("input") && this.master.getStatus()==Globals.IN_GAME) {
 			//System.out.println(data);
 			ArrayList<KeyCode> input = new ArrayList<KeyCode>();
 			for (String letter : parts[1].replaceAll("\\[", "").replaceAll(" ", "").replaceAll("\\]", "").split(",")) {

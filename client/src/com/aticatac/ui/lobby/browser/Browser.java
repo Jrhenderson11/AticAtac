@@ -48,9 +48,8 @@ public class Browser extends Scene {
         Browser.stage = primaryStage;
         Browser.server = server;
 
-        System.out.println("BROWSER STAGE");
-        System.out.println(primaryStage == null);
-        
+        System.out.println("(Broswer) STAGE==Null? " + (primaryStage == null));
+       
         
         selected = -1;
         offset = 0;
@@ -98,8 +97,7 @@ public class Browser extends Scene {
     public void join() {
         if (selected == -1) return;
         if (server.joinLobby(selected, "")) {
-        	System.out.println("STAGE CHECK");
-        	System.out.println(stage==null);
+        	System.out.println("(browser join) stage==Null? " + (stage==null));
         	//Browser b = new Browser(new Group(), server, this.mainMenu, Browser.stage, false);
         	stage.setScene(new Displayer(new Group(), selected, server, this, stage, mainMenu));
         } else {

@@ -36,7 +36,7 @@ public class ReadyStartButton extends Button {
 
 	@Override
 	public void click() {
-
+		System.out.println("STARTBUTTON PRESSED");
 		if (this.isLeader) {
 			server.startGame();
 		} else {
