@@ -237,7 +237,6 @@ public class World implements Serializable {
 			xAcc+=player.SPEED;
 		}
 		
-		
 		player.setxAccel(xAcc);
 		player.setyAccel(yAcc);
 		
@@ -738,8 +737,5 @@ public class World implements Serializable {
 	public void setRound(int rounds) {
 		this.round = rounds;
 	}
-
-
-
 
 }

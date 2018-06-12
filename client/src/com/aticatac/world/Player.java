@@ -48,7 +48,7 @@ public class Player implements Serializable {
     
     protected World world;
     
-    public static double SPEED = 1;
+    public static double SPEED = 1.5;
     public static double MAXSPEED = 1.5;
     
 	protected double xAccel=0, yAccel = 0;
@@ -121,25 +121,25 @@ public class Player implements Serializable {
 		
     	//apply friction
     	if (this.xVel > 0) {
-    		
     		//going right so friction should be applied left
-			
-    		this.xAccel=Math.min(0, xAccel-Math.abs(friction*xVel));
-    		
+    		//Math.min(0, 
+    		this.xAccel=xAccel-Math.abs(friction*xVel);
     	}else if (this.xVel < 0) {
-    		this.xAccel=Math.max(0, xAccel+Math.abs(friction*xVel));
+    		//Math.max(0,
+    		this.xAccel= xAccel+Math.abs(friction*xVel);
     	}
     	
     	if (this.yVel > 0) {
-    		this.yAccel=Math.min(0, yAccel-Math.abs(friction*yVel));
+    		//Math.min(0, 
+    		this.yAccel=yAccel-Math.abs(friction*yVel);
     	}else if (this.yVel < 0) {
-    		this.yAccel=Math.max(0, yAccel+Math.abs(friction*yVel));
+    		//Math.max(0, 
+    		this.yAccel=yAccel+Math.abs(friction*yVel);
     	}
     	
     	System.out.println("AFTER FRICTION:");
     	System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
     	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
-
     	
     	//apply acceleration and cap
 		this.xVel = (xVel+xAccel);
@@ -147,12 +147,16 @@ public class Player implements Serializable {
 		
 		this.xVel = Math.min(MAXSPEED, Math.max(-MAXSPEED, this.xVel));
 		this.yVel = Math.min(MAXSPEED, Math.max(-MAXSPEED, this.yVel));
-   
 		
 		if (xVel<0.001 && xVel>0) {
 			xVel=0;
+		} else if (xVel>-0.001 && xVel<0) {
+			xVel=0;
 		}
+
 		if (yVel<0.001 && yVel>0) {
+			yVel=0;
+		} else if (xVel>-0.001 && xVel<0) {
 			yVel=0;
 		}
 		

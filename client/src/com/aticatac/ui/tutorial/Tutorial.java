@@ -57,7 +57,7 @@ public class Tutorial extends Scene {
         root.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         this.level = new Level(100, 100);
-        //level.randomiseMap();
+        
         level.loadMap("assets/maps/tutorial.txt");
         World world = new World(level);
         
@@ -173,7 +173,7 @@ public class Tutorial extends Scene {
   	        	GraphicsContext gc = canvas.getGraphicsContext2D();
 
   	        	//handle movement
-  	        	world.handleInput(input, 0, player.getIdentifier());
+  	        	world.handleInput(input, player.getLookDirection(), player.getIdentifier());
   	        	
   	        	//Gun spawn in, using for testing, remove in game
   	        	//Shoot gun
