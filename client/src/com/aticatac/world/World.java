@@ -223,133 +223,24 @@ public class World implements Serializable {
 	 *            The unique identifier of this Player
 	 */
 	public void handleInput(ArrayList<KeyCode> input, double dir, String id) {
-
+		
+		double xAcc = 0, yAcc = 0;
 		Player player = this.getPlayerById(id);
-		// left
-		if (input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.S)
-				&& !input.contains(KeyCode.D)) {
-
-			player.move(-2, 0);
-			Point p = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[p.x][p.y] == 1) {
-				player.move(2, 0);
-			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
-					|| level.getGrid()[p.x][p.y] == 5) {
-				player.move(1, 0);
-			}
+		
+		if (input.contains(KeyCode.W)) {
+			yAcc-=player.SPEED;
+		} if (input.contains(KeyCode.S)) {
+			yAcc+=player.SPEED;
+		} if (input.contains(KeyCode.A)) {
+			xAcc-=player.SPEED;
+		} if (input.contains(KeyCode.D)) {
+			xAcc+=player.SPEED;
 		}
-		// System.out.println(input.size());
-		// right
-		if (input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)
-				&& !input.contains(KeyCode.S)) {
-
-			player.move(2, 0);
-			Point p = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[p.x][p.y] == 1) {
-				player.move(-2, 0);
-			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
-					|| level.getGrid()[p.x][p.y] == 5) {
-				player.move(-1, 0);
-			}
-		}
-		// System.out.println(input.size());
-		// up
-		if (input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.A)
-				&& !input.contains(KeyCode.D)) {
-
-			player.move(0, -2);
-			Point p = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[p.x][p.y] == 1) {
-				player.move(0, 2);
-			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
-					|| level.getGrid()[p.x][p.y] == 5) {
-				player.move(0, 1);
-			}
-		}
-		// System.out.println(input.size());
-		// down
-		if (input.contains(KeyCode.S) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)
-				&& !input.contains(KeyCode.D)) {
-
-			player.move(0, 2);
-			Point p = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[p.x][p.y] == 1) {
-				player.move(0, -2);
-			} else if (level.getGrid()[p.x][p.y] == 3 || level.getGrid()[p.x][p.y] == 4
-					|| level.getGrid()[p.x][p.y] == 5) {
-				player.move(0, -1);
-			}
-		}
-		// System.out.println(input.size());
-		// down & right
-		if (input.contains(KeyCode.S) && input.contains(KeyCode.D) && !input.contains(KeyCode.W)
-				&& !input.contains(KeyCode.A)) {
-			player.move(0, 1);
-			Point pS = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pS.x][pS.y] == 1) {
-				player.move(0, -1);
-			}
-
-			player.move(1, 0);
-			Point pD = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pD.x][pD.y] == 1) {
-				player.move(-1, 0);
-			}
-
-		}
-		// System.out.println(input.size());
-		// down & left
-		if (input.contains(KeyCode.S) && input.contains(KeyCode.A) && !input.contains(KeyCode.W)
-				&& !input.contains(KeyCode.D)) {
-			player.move(0, 1);
-			Point pS = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pS.x][pS.y] == 1) {
-				player.move(0, -1);
-			}
-
-			player.move(-1, 0);
-			Point pA = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pA.x][pA.y] == 1) {
-				player.move(1, 0);
-			}
-
-		}
-		// System.out.println(input.size());
-		// up & right
-		if (input.contains(KeyCode.W) && input.contains(KeyCode.D) && !input.contains(KeyCode.A)
-				&& !input.contains(KeyCode.S)) {
-			player.move(0, -1);
-			Point pW = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pW.x][pW.y] == 1) {
-				player.move(0, 1);
-			}
-
-			player.move(1, 0);
-			Point pD = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pD.x][pD.y] == 1) {
-				player.move(-1, 0);
-			}
-
-		}
-		// System.out.println(input.size());
-		// up & left
-		if (input.contains(KeyCode.W) && input.contains(KeyCode.A) && !input.contains(KeyCode.S)
-				&& !input.contains(KeyCode.D)) {
-			player.move(0, -1);
-			Point pW = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pW.x][pW.y] == 1) {
-				player.move(0, 1);
-			}
-
-			player.move(-1, 0);
-			Point pA = this.displayPositionToCoords(player.getPosition());
-			if (level.getGrid()[pA.x][pA.y] == 1) {
-				player.move(1, 0);
-			}
-
-		}
-		// System.out.println(input.size());
-
+		
+		
+		player.setxAccel(xAcc);
+		player.setyAccel(yAcc);
+		
 		// Gun spawn in, using for testing, remove in game
 		// Shoot gun
 		if (input.contains(KeyCode.I)) {
@@ -367,7 +258,6 @@ public class World implements Serializable {
 			player.setGun(new SprayGun(player));
 			// input.remove(KeyCode.P);
 		}
-		System.out.println(player==null);
 		player.setLookDirection(dir);
 
 	}
@@ -381,7 +271,7 @@ public class World implements Serializable {
 	public void init(Lobby lobby) {
 
 		for (ClientInfo client : lobby.getAll()) {
-			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour());
+			Player newPlayer = new Player(Controller.REAL, client.getID(), client.getColour(), this);
 			this.addPlayer(newPlayer);
 		}
 
@@ -407,7 +297,7 @@ public class World implements Serializable {
 		Player player = this.getPlayerById(id);
 
 		if (player.getGun() != null) {
-			player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point(targetX, targetY)),
+			player.getGun().fire(player.getLookDirection(), this.displayPositionToCoords(new Point.Double(targetX, targetY)),
 					this);
 		}
 	}
@@ -447,14 +337,14 @@ public class World implements Serializable {
 			do {
 				x = rand.nextInt(level.getWidth());
 				y = rand.nextInt(level.getHeight());
-				tL = coordsToDisplayPosition(new Point(x, y));
+				tL = coordsToDisplayPosition(new Point.Double(x, y));
 				x1 = tL.x;
 				y1 = tL.y;
 				x2 = x1 + d.width;
 				y2 = y1 + d.height;
-				tR = displayPositionToCoords(new Point(x2, y1));
-				bL = displayPositionToCoords(new Point(x1, y2));
-				bR = displayPositionToCoords(new Point(x2, y2));
+				tR = displayPositionToCoords(new Point.Double(x2, y1));
+				bL = displayPositionToCoords(new Point.Double(x1, y2));
+				bR = displayPositionToCoords(new Point.Double(x2, y2));
 			} while (!(level.getCoords(x, y) == 0 && level.getCoords(tR.x, tR.y) == 0
 					&& level.getCoords(bL.x, bL.y) == 0 && level.getCoords(bR.x, bR.y) == 0));
 			// generate points, keep randomising until point is not on a wall tile.
@@ -480,19 +370,19 @@ public class World implements Serializable {
 			x = rand.nextInt(level.getWidth() / 2);
 			y = rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
-		points[0] = coordsToDisplayPosition(new Point(x, y));
+		points[0] = coordsToDisplayPosition(new Point.Double(x, y));
 		// top right
 		do {
 			x = (level.getWidth() / 2) + rand.nextInt(level.getWidth() / 2);
 			y = rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
-		points[1] = coordsToDisplayPosition(new Point(x, y));
+		points[1] = coordsToDisplayPosition(new Point.Double(x, y));
 		// bottom left
 		do {
 			x = rand.nextInt(level.getWidth() / 2);
 			y = (level.getHeight() / 2) + rand.nextInt(level.getHeight() / 2);
 		} while (level.getCoords(x, y) != 0);
-		points[2] = coordsToDisplayPosition(new Point(x, y));
+		points[2] = coordsToDisplayPosition(new Point.Double(x, y));
 		// bottom right
 		do {
 			x = (level.getWidth() / 2) + rand.nextInt(level.getWidth() / 2);
@@ -712,14 +602,25 @@ public class World implements Serializable {
 		int tileHeight = displaySize.height / level.getHeight();
 		return new Point((displayPosition.x / tileWidth), (displayPosition.y / tileHeight));
 	}
+	
+	public Point displayPositionToCoords(Point.Double displayPosition, Dimension displaySize) {
+		int tileWidth = displaySize.width / level.getWidth();
+		int tileHeight = displaySize.height / level.getHeight();
+		return new Point(((int) displayPosition.x / tileWidth), ((int) displayPosition.y / tileHeight));
+	}
 
 	/**
-	 * As above but with the game's default dislpay dimension.
+	 * As above but with the game's default display dimension.
 	 * 
 	 * @param displayPosition
 	 *            The position on the display
 	 * @return The Coordinates on the Level this corresponds to
 	 */
+	public Point displayPositionToCoords(Point.Double displayPosition) {
+		return displayPositionToCoords(displayPosition,
+				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
+	}
+	
 	public Point displayPositionToCoords(Point displayPosition) {
 		return displayPositionToCoords(displayPosition,
 				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
@@ -739,6 +640,12 @@ public class World implements Serializable {
 		int tileHeight = displaySize.height / level.getHeight();
 		return new Point((coords.x * tileWidth) + (tileWidth / 2), (coords.y * tileHeight) + (tileHeight / 2));
 	}
+	
+	public Point coordsToDisplayPosition(Point.Double coords, Dimension displaySize) {
+		int tileWidth = displaySize.width / level.getWidth();
+		int tileHeight = displaySize.height / level.getHeight();
+		return new Point(((int) coords.x * tileWidth) + (tileWidth / 2), ((int) coords.y * tileHeight) + (tileHeight / 2));
+	}
 
 	/**
 	 * As above but with the game's default display dimension
@@ -748,6 +655,11 @@ public class World implements Serializable {
 	 * @return The displayPosition of the center of the given coordinate tile
 	 */
 	public Point coordsToDisplayPosition(Point coords) {
+		return coordsToDisplayPosition(coords,
+				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
+	}
+	
+	public Point coordsToDisplayPosition(Point.Double coords) {
 		return coordsToDisplayPosition(coords,
 				new Dimension(SystemSettings.getNativeWidth(), SystemSettings.getNativeHeight()));
 	}

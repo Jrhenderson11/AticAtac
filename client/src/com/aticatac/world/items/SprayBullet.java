@@ -38,6 +38,10 @@ public class SprayBullet extends Bullet {
 	public SprayBullet(double direction, Point target, Point startPosition, int shooter) {
 		super((int) Math.min(target.distance(startPosition), RANGE), direction, target, MOVESPEED, new Rectangle(startPosition, RECTSIZE), shooter);
 	}
+	
+	public SprayBullet(double direction, Point target, Point.Double startPositionD, int shooter) {
+		super((int) Math.min(target.distance(new Point((int) startPositionD.x,(int) startPositionD.x)), RANGE), direction, target, MOVESPEED, new Rectangle(new Point((int) startPositionD.x,(int) startPositionD.x), RECTSIZE), shooter);
+	}
 
 	
 	// -------

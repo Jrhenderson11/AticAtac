@@ -55,7 +55,7 @@ public class SinglePlayer extends Scene {
         renderer.setWorld(world);
         m.playBgBattle();
         
-        Player player = new Player(Controller.REAL, "player", 2);
+        Player player = new Player(Controller.REAL, "player", 2, world);
         AIPlayer ai1 = new AIPlayer(Controller.AI, world, "ai 1", 3);
         AIPlayer ai2 = new AIPlayer(Controller.AI, world, "ai 2", 4);
         AIPlayer ai3 = new AIPlayer(Controller.AI, world, "ai 3", 5);
@@ -110,7 +110,7 @@ public class SinglePlayer extends Scene {
   	        public void handle(MouseEvent me) {
   	        	pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
   	        	
-  	        	Point p = player.getPosition();
+  	        	Point.Double p = player.getPosition();
   	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
   	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
   	        	double r = 0.0;

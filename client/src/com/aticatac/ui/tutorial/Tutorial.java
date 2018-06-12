@@ -62,7 +62,7 @@ public class Tutorial extends Scene {
         World world = new World(level);
         
         renderer.setWorld(world);
-        Player player = new Player(Controller.REAL, "player", 2);
+        Player player = new Player(Controller.REAL, "player", 2, world);
         player.setPosition(new Point(25, 25));
         world.addPlayerWithoutPosition(player);
         
@@ -115,7 +115,7 @@ public class Tutorial extends Scene {
   	        public void handle(MouseEvent me) {
   	        	pauseMenu.handleHover(new Point((int) me.getX(), (int) me.getY()));
   	        	
-  	        	Point p = player.getPosition();
+  	        	Point.Double p = player.getPosition();
   	        	double dy = (int) SystemSettings.getDescaledY(me.getY()) - p.y; //y axis goes down
   	        	double dx = (int) SystemSettings.getDescaledX(me.getX()) - p.x;
   	        	double r = 0.0;
@@ -171,102 +171,10 @@ public class Tutorial extends Scene {
   	        	canvas.setWidth(SystemSettings.getScreenWidth());
   	        	canvas.setHeight(SystemSettings.getScreenHeight());
   	        	GraphicsContext gc = canvas.getGraphicsContext2D();
-  	        	//handle movement, reverting moves when detecting collision
-				// left
-				if (input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)) {
 
-					player.move(-2, 0);
-					Point p = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[p.x][p.y] == 1) {
-						player.move(2, 0);
-					}
-				}
-				// System.out.println(input.size());
-				// right
-				if (input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)) {
-
-					player.move(2, 0);
-					Point p = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[p.x][p.y] == 1) {
-						player.move(-2, 0);
-					}
-				}
-				// System.out.println(input.size());
-				// up
-				if (input.contains(KeyCode.W) && !input.contains(KeyCode.S) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
-
-					player.move(0, -2);
-					Point p = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[p.x][p.y] == 1) {
-						player.move(0, 2);
-					}
-				}
-				// System.out.println(input.size());
-				// down
-				if (input.contains(KeyCode.S) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A) && !input.contains(KeyCode.D)) {
-
-					player.move(0, 2);
-					Point p = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[p.x][p.y] == 1) {
-						player.move(0, -2);
-					}
-				}
-				// System.out.println(input.size());
-				// down & right
-				if (input.contains(KeyCode.S) && input.contains(KeyCode.D) && !input.contains(KeyCode.W) && !input.contains(KeyCode.A)){
-					player.move(0, 1);
-					Point pS = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pS.x][pS.y] == 1) {
-						player.move(0, -1);
-					}
-					player.move(1, 0);
-					Point pD = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pD.x][pD.y] == 1) {
-						player.move(-1, 0);
-					}
-				}
-				// System.out.println(input.size());
-				// down & left
-				if (input.contains(KeyCode.S) && input.contains(KeyCode.A) && !input.contains(KeyCode.W) && !input.contains(KeyCode.D)){
-					player.move(0, 1);
-					Point pS = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pS.x][pS.y] == 1) {
-						player.move(0, -1);
-					}
-					player.move(-1, 0);
-					Point pA = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pA.x][pA.y] == 1) {
-						player.move(1, 0);
-					}
-				}
-				// System.out.println(input.size());
-				// up & right
-				if (input.contains(KeyCode.W) && input.contains(KeyCode.D) && !input.contains(KeyCode.A) && !input.contains(KeyCode.S)){
-					player.move(0, -1);
-					Point pW = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pW.x][pW.y] == 1) {
-						player.move(0, 1);
-					}
-					player.move(1, 0);
-					Point pD = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pD.x][pD.y] == 1) {
-						player.move(-1, 0);
-					}
-				}
-				// System.out.println(input.size());
-				// up & left
-				if (input.contains(KeyCode.W) && input.contains(KeyCode.A) && !input.contains(KeyCode.S) && !input.contains(KeyCode.D)){
-					player.move(0, -1);
-					Point pW = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pW.x][pW.y] == 1) {
-						player.move(0, 1);
-					}
-					player.move(-1, 0);
-					Point pA = world.displayPositionToCoords(player.getPosition());
-					if (level.getGrid()[pA.x][pA.y] == 1) {
-						player.move(1, 0);
-					}
-				}
+  	        	//handle movement
+  	        	world.handleInput(input, 0, player.getIdentifier());
+  	        	
   	        	//Gun spawn in, using for testing, remove in game
   	        	//Shoot gun
   	        	if (input.contains(KeyCode.I)) {

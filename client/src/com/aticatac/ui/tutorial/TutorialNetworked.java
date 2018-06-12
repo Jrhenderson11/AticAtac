@@ -65,7 +65,7 @@ public class TutorialNetworked extends Scene {
 		root.getChildren().add(canvas);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 
-		Player player = new Player(Controller.REAL, "id", 2);
+		Player player = new Player(Controller.REAL, "id", 2, null);
 		player.setPosition(new Point(50, 50));
 		System.out.println("added player");
 		// add key event listeners
@@ -93,7 +93,7 @@ public class TutorialNetworked extends Scene {
 		setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				Point p = player.getPosition();
+				Point.Double p = player.getPosition();
 				double dy = me.getY() - p.y; // y axis goes down
 				double dx = me.getX() - p.x;
 				double r = 0.0;

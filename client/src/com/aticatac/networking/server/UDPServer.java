@@ -129,7 +129,7 @@ public class UDPServer extends Task {
 			this.lobby.addClient(newClient);
 
 			if (this.model.getNumPlayers() < 4) {
-				Player newPlayer = new Player(Controller.REAL, newClient.getID(), newClient.getColour());
+				Player newPlayer = new Player(Controller.REAL, newClient.getID(), newClient.getColour(), model);
 				this.model.addPlayer(newPlayer);
 			}
 		}

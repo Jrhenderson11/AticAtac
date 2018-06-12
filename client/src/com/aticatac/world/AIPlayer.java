@@ -64,12 +64,6 @@ public class AIPlayer extends Player {
 	private Level level;
 
 	/**
-	 * The current world that the game is played in, which contains details of all
-	 * other real and AI players in the game
-	 */
-	private World world;
-
-	/**
 	 * The position on the map of the level that the player is currently at,
 	 * differing from the display position
 	 */
@@ -107,8 +101,7 @@ public class AIPlayer extends Player {
 	 *            The number that identifies the colour of this players paint
 	 */
 	public AIPlayer(Controller controller, World world, String identifier, int colour) {
-		super(controller, identifier, colour);
-		this.world = world;
+		super(controller, identifier, colour, world);
 		this.level = world.getLevel();
 		this.currentPath = new LinkedList<>();
 		this.intermediatePath = new LinkedList<>();
@@ -141,7 +134,7 @@ public class AIPlayer extends Player {
 	 * @param position The display position of the player
 	 */
 	@Override
-	public void setPosition(Point position) {
+	public void setPosition(Point.Double position) {
 		this.position = position;
 		this.gridPosition = world.displayPositionToCoords(position);
 	}
@@ -155,7 +148,7 @@ public class AIPlayer extends Player {
 	 *            The change in y coordinate, can be negative
 	 */
 	@Override
-	public void move(int dX, int dY) {
+	public void move(double dX, double dY) {
 		super.move(dX, dY);
 		this.gridPosition = world.displayPositionToCoords(position);
 	}
@@ -269,9 +262,9 @@ public class AIPlayer extends Player {
 	 */
 	public Point getQuadrant(double rng) {
 		int range = (int) rng;
-		Point[] points = new Point[] { new Point(position.x, position.y + range),
-				new Point(position.x + range, position.y), new Point(position.x, position.y - range),
-				new Point(position.x - range, position.y) };
+		Point[] points = new Point[] { new Point((int) position.x,(int) position.y + range),
+				new Point((int)position.x + range, (int)position.y), new Point((int)position.x, (int)position.y - range),
+				new Point((int)position.x - range, (int)position.y) };
 		Point edges = world.coordsToDisplayPosition(new Point(level.getWidth(), level.getHeight()));
 		ArrayList<Point> options = new ArrayList<>();
 		if (position.y + range < edges.y) {
@@ -354,6 +347,14 @@ public class AIPlayer extends Player {
 		}
 		return false;
 	}
+	
+	public boolean inRange(Point.Double target) {
+		if (calculateDistance(target, position) <= RANGE_TO_SHOOT) {
+			// If the point lies inside the circle created by the range
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 
@@ -364,6 +365,14 @@ public class AIPlayer extends Player {
 	 * @return The distance between the two points entered
 	 */
 	public double calculateDistance(Point p1, Point p2) {
+		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2)) + Math.pow(p1.getY() - p2.getY(), 2));
+	}
+	
+	public double calculateDistance(Point.Double p1, Point.Double p2) {
+		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2)) + Math.pow(p1.getY() - p2.getY(), 2));
+	}
+	
+	public double calculateDistance(Point p1, Point.Double p2) {
 		return Math.sqrt((Math.pow(p1.getX() - p2.getX(), 2)) + Math.pow(p1.getY() - p2.getY(), 2));
 	}
 
@@ -394,6 +403,10 @@ public class AIPlayer extends Player {
 	 * @return An "intermediate" path of display points that join the current grid
 	 *         point and the next one
 	 */
+
+	public LinkedList<Point> gridToDisplay(Point.Double currentPos, Point nextGrid) {
+		return gridToDisplay(new Point((int) currentPos.x,(int) currentPos.y), nextGrid);
+	}
 	public LinkedList<Point> gridToDisplay(Point currentPos, Point nextGrid) {
 		LinkedList<Point> newPath = new LinkedList<>();
 		Point current = currentPos;

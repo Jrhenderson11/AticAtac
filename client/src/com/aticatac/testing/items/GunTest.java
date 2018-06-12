@@ -13,7 +13,7 @@ public class GunTest {
 	 */
 	@Test
 	public void testEnoughPaint() {
-		Player player = new Player(Controller.REAL, "test", 2);
+		Player player = new Player(Controller.REAL, "test", 2, null);
 		ShootGun gun = new ShootGun(player); 
 		//underlying implementation is in Gun, type of gun used here is irrelevant
 		player.setPaintLevel(0);
@@ -27,7 +27,7 @@ public class GunTest {
 	 */
 	@Test
 	public void testReady() {
-		Player player = new Player(Controller.REAL, "test", 2);
+		Player player = new Player(Controller.REAL, "test", 2, null);
 		ShootGun gun = new ShootGun(player);
 		//underlying implementation is in Gun, type of gun used here is irrelevant
 		assertTrue(gun.ready());

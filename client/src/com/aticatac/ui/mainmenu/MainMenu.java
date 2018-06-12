@@ -46,12 +46,12 @@ public class MainMenu extends Scene {
         SoundManager m = new SoundManager(Main.soundEnabled);
         m.playBgMenu();
 
-        /*System.out.println("Does main menu work?");
+        System.out.println("IS STAGE FUCKED?");
         if(primaryStage==null) {
-        	System.out.println("No");
-        } else {
         	System.out.println("Yes");
-        }*/
+        } else {
+        	System.out.println("No");
+        }
         // Supplier something = (() -> new Placeholder(new Group()));
 
         menuItems = new ArrayList<>();

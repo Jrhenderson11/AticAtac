@@ -24,7 +24,7 @@ public class GunBoxTest {
 	 */
 	@Test
 	public void testOpenBox() {
-		Player player = new Player(Controller.REAL, "test", 2);
+		Player player = new Player(Controller.REAL, "test", 2, null);
 		ShootGunBox shootGunBox = new ShootGunBox(new Point(0,0));
 		SprayGunBox sprayGunBox = new SprayGunBox(new Point(0,0));
 		SplatGunBox splatGunBox = new SplatGunBox(new Point(0,0));

@@ -3,12 +3,11 @@ package com.aticatac.world;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
-
 import com.aticatac.utils.Controller;
 import com.aticatac.world.items.Gun;
 
 @SuppressWarnings("serial")
-public class Player implements Serializable{
+public class Player implements Serializable {
 	
 	/**
 	 * The maximum level of paint a player can have
@@ -41,11 +40,22 @@ public class Player implements Serializable{
     /**
      * The position of this player on the display
      */
-    protected Point position;
+    protected Point.Double position;
     /**
      * The direction the player is looking stored as radians, 0 is looking to the right. increases clockwise.
      */
     protected Double lookDirection;
+    
+    protected World world;
+    
+    public static double SPEED = 1;
+    public static double MAXSPEED = 1.5;
+    
+	protected double xAccel=0, yAccel = 0;
+    protected double xVel = 0, yVel = 0;
+    protected double friction = 0.4;
+    
+    
     /**
      * The Gun this player is using, can be null
      */
@@ -72,22 +82,21 @@ public class Player implements Serializable{
      * @param identifier The unique identifier of the player
      * @param colour The number that identifies the colour of this players paint
      */
-    public Player(Controller controller, String identifier, int colour) {
+    public Player(Controller controller, String identifier, int colour, World braveNewWorld) {
     	this.controller = controller;
     	this.setIdentifier(identifier);
     	this.colour = colour;
-    	this.position = new Point(10, 10);
+    	this.position = new Point.Double(10, 10);
     	this.lookDirection = 0.0;
     	this.paintLevel = Player.MAX_PAINTLEVEL;
     	this.points = 0;
     	this.hasGun = false;
+    	this.world = braveNewWorld;
     }
-    
     
     // -------
     // Methods
     // -------
-    
     
     /**
      * Returns the Controller type for this player
@@ -101,7 +110,65 @@ public class Player implements Serializable{
      * Updates the player
      */
     public void update() {
-    	if (gun != null) {
+    	
+    	//move
+    	//get current acceleration + add to velocity
+    	System.out.println("\nBEFORE FRICTION:");
+    	System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
+    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+    	System.out.println("fric force x: " + (friction*xVel));
+    	System.out.println("fric force y: " + (friction*yVel));
+		
+    	//apply friction
+    	if (this.xVel > 0) {
+    		
+    		//going right so friction should be applied left
+			
+    		this.xAccel=Math.min(0, xAccel-Math.abs(friction*xVel));
+    		
+    	}else if (this.xVel < 0) {
+    		this.xAccel=Math.max(0, xAccel+Math.abs(friction*xVel));
+    	}
+    	
+    	if (this.yVel > 0) {
+    		this.yAccel=Math.min(0, yAccel-Math.abs(friction*yVel));
+    	}else if (this.yVel < 0) {
+    		this.yAccel=Math.max(0, yAccel+Math.abs(friction*yVel));
+    	}
+    	
+    	System.out.println("AFTER FRICTION:");
+    	System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
+    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+
+    	
+    	//apply acceleration and cap
+		this.xVel = (xVel+xAccel);
+		this.yVel = (yVel+yAccel);
+		
+		this.xVel = Math.min(MAXSPEED, Math.max(-MAXSPEED, this.xVel));
+		this.yVel = Math.min(MAXSPEED, Math.max(-MAXSPEED, this.yVel));
+   
+		
+		if (xVel<0.001 && xVel>0) {
+			xVel=0;
+		}
+		if (yVel<0.001 && yVel>0) {
+			yVel=0;
+		}
+		
+		
+    	System.out.println("AFTER UPDATE: ");
+    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+    	
+    	//move and check collisions
+    	this.move(xVel, yVel);
+    	Point p = world.displayPositionToCoords(position);
+		if (world.getLevel().getGrid()[p.x][p.y] == 1) {
+			System.out.println("COLLIDE");
+			this.move(-xVel, -yVel);   	    	    	
+		}
+
+		if (gun != null) {
     		gun.update(); //updates gun, used for gun cooldowns
     	}
     }
@@ -142,7 +209,7 @@ public class Player implements Serializable{
 	 * Get the current display position of the player
 	 * @return The display position of the player
 	 */
-	public Point getPosition() {
+	public Point.Double getPosition() {
 		return position;
 	}
 
@@ -150,8 +217,12 @@ public class Player implements Serializable{
 	 * Sets the Players position to the given display position
 	 * @param position The display position of the player
 	 */
-	public void setPosition(Point position) {
+	public void setPosition(Point.Double position) {
 		this.position = position;
+	}
+	
+	public void setPosition(Point position) {
+		this.position = new Point.Double(position.x, position.y);
 	}
 	
 	/**
@@ -159,7 +230,7 @@ public class Player implements Serializable{
 	 * @return Returns a Rectangle defining the players collision boundaries
 	 */
 	public Rectangle getRect() {
-		return new Rectangle(position.x-(PLAYER_SIZE/2), position.y-(PLAYER_SIZE/2), PLAYER_SIZE, PLAYER_SIZE);
+		return new Rectangle((int) position.x-(PLAYER_SIZE/2),(int) position.y-(PLAYER_SIZE/2), PLAYER_SIZE, PLAYER_SIZE);
 	}
 
 	/**
@@ -167,9 +238,29 @@ public class Player implements Serializable{
 	 * @param dX The change in x coordinate, can be negative
 	 * @param dY The change in y coordinate, can be negative
 	 */
-	public void move(int dX, int dY) {
-		this.position.x += dX;
-		this.position.y += dY;
+	public void move(double dX, double dY) {
+		double newX = this.position.x + dX;
+		double newY = this.position.y + dY;
+		
+		//&& newX<this.world.getLevel().getWidth()
+		if (newX>0 ) {
+			this.position.x = newX;
+		} else {
+			System.out.println("im being petulant");
+			
+			//repeat after me: I'm an idiot because the player is definitely not off the edge of the screen
+			System.out.println("I'm an idiot because the player is definitely not off the edge of the screen");
+			System.out.println("width: " + this.world.getLevel().getWidth());
+			System.out.println("newX: " + newX);
+		
+		}
+		
+		//&& newY<this.world.getLevel().getHeight()
+		if (newY>0 ) {
+			this.position.y = newY;
+		} else {
+			System.out.println("im being petulant vertically");
+		}
 	}
 
 	/**
@@ -281,5 +372,13 @@ public class Player implements Serializable{
 	 */
 	public void clearPoints() {
 		this.points = 0;
+	}
+
+    public void setxAccel(double xAccel) {
+		this.xAccel = xAccel;
+	}
+
+	public void setyAccel(double yAccel) {
+		this.yAccel = yAccel;
 	}
 }

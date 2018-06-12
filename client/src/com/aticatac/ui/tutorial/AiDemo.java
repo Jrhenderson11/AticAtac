@@ -57,7 +57,7 @@ public class AiDemo extends Scene {
         World world = new World(level);
         
         renderer.setWorld(world);
-        Player player = new Player(Controller.REAL, "player", 2);
+        Player player = new Player(Controller.REAL, "player", 2, world);
         player.setPosition(new Point(50, 50));
         world.addPlayer(player);
         AIPlayer aiPlayer = new AIPlayer(Controller.AI, world, "aiPlayer", 3);
@@ -90,7 +90,7 @@ public class AiDemo extends Scene {
   		setOnMouseMoved(new EventHandler<MouseEvent>() {
   	        @Override
   	        public void handle(MouseEvent me) {
-  	        	Point p = player.getPosition();
+  	        	Point.Double p = player.getPosition();
   	        	double dy = me.getY() - p.y; //y axis goes down
   	        	double dx = me.getX() - p.x;
   	        	double r = 0.0;
