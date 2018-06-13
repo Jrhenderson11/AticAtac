@@ -24,14 +24,7 @@ public class Main extends Application{
 	public static boolean soundEnabled;
 	
     public static void main(String[] args) {
-    	soundEnabled = true;
-    	if (args.length>0 && args[0].equals("soundoff")) {
-    		soundEnabled = false;
-    	}
     	
-        //SystemSettings.setScreenHeight(480);
-        //SystemSettings.setScreenWidth(720);
-        
     	Main.launch(args);
     }
 
@@ -65,9 +58,24 @@ public class Main extends Application{
     @Override
     public void start(Stage primaryStage) {
     	
-    	primaryStage.setResizable(false);
+    	//System.out.println(this.getParameters().getRaw());
     	SystemSettings.setScreenHeight(480);
         SystemSettings.setScreenWidth(720);
+    	
+    	
+    	soundEnabled = true;
+    	for (String param : this.getParameters().getRaw()) {
+    		if (param.equals("soundoff")) {
+    			soundEnabled = false;
+        	} else if (param.equals("fullscreen")) {
+            	SystemSettings.setScreenHeight(768);
+                SystemSettings.setScreenWidth(1366);
+    			
+    		}
+    	}
+        
+    	
+    	primaryStage.setResizable(false);
         primaryStage.setWidth(SystemSettings.getScreenWidth());
         primaryStage.setHeight(SystemSettings.getScreenHeight());
     	server = this.initialiseConnection();

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 public class Renderer {
 	
-	private final static Color NORMAL_WALL_COLOR = Color.WHITE;
+	private final static Color NORMAL_WALL_COLOR = Color.LIGHTGRAY;
 	private Color wallColor;
 	/**
 	 * The world to render
@@ -61,7 +61,6 @@ public class Renderer {
 		//render players
 		renderPlayers(g);
 	}
-	
 	
 	/**
 	 * Draws the map in black and white
@@ -185,11 +184,11 @@ public class Renderer {
 			gc.setStroke(color);
 			gc.setFill(color);
 			gc.setLineWidth(scaleX(1.0));
-			gc.fillOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
-			gc.strokeLine(px, py, px + (l * Math.sin(player.getLookDirection())), py - (l * Math.cos(player.getLookDirection())));
+			gc.fillOval(px - (playerSize/4), py - (playerSize/4), playerSize, playerSize);
+			gc.strokeLine(px+(playerSize/4), py+(playerSize/4), px+(playerSize/4) + (l * Math.sin(player.getLookDirection())), py+(playerSize/4) - (l * Math.cos(player.getLookDirection())));
 			gc.setStroke(opaqueColor);
 			gc.setLineWidth(scaleX(3));
-			gc.strokeOval(px - (playerSize/2), py - (playerSize/2), playerSize, playerSize);
+			gc.strokeOval(px - (playerSize/4), py - (playerSize/4), playerSize, playerSize);
 		}
 	}
 	
