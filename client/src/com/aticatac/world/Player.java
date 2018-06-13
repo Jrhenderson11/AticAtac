@@ -55,7 +55,6 @@ public class Player implements Serializable {
     protected double xVel = 0, yVel = 0;
     protected double friction = 0.4;
     
-    
     /**
      * The Gun this player is using, can be null
      */
@@ -69,12 +68,10 @@ public class Player implements Serializable {
      * Whether the player currently has a gun that it can use
      */
     protected boolean hasGun;
-
     
     // -----------
     // Constructor
     // -----------
-    
     
     /**
      * Constructor for a Player
@@ -113,18 +110,18 @@ public class Player implements Serializable {
     	
     	//move
     	//get current acceleration + add to velocity
-    	System.out.println("\nBEFORE FRICTION:");
-    	System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
-    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
-    	System.out.println("fric force x: " + (friction*xVel));
-    	System.out.println("fric force y: " + (friction*yVel));
+    	//System.out.println("\nBEFORE FRICTION:");
+    	//System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
+    	//System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+    	//System.out.println("fric force x: " + (friction*xVel));
+    	//System.out.println("fric force y: " + (friction*yVel));
 		
     	//apply friction
     	if (this.xVel > 0) {
     		//going right so friction should be applied left
     		//Math.min(0, 
     		this.xAccel=xAccel-Math.abs(friction*xVel);
-    	}else if (this.xVel < 0) {
+    	} else if (this.xVel < 0) {
     		//Math.max(0,
     		this.xAccel= xAccel+Math.abs(friction*xVel);
     	}
@@ -132,14 +129,14 @@ public class Player implements Serializable {
     	if (this.yVel > 0) {
     		//Math.min(0, 
     		this.yAccel=yAccel-Math.abs(friction*yVel);
-    	}else if (this.yVel < 0) {
+    	} else if (this.yVel < 0) {
     		//Math.max(0, 
     		this.yAccel=yAccel+Math.abs(friction*yVel);
     	}
     	
-    	System.out.println("AFTER FRICTION:");
-    	System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
-    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+		//System.out.println("AFTER FRICTION:");
+		//System.out.println("XACCEL, YACCEL = " + xAccel + ", " + yAccel);
+		//System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
     	
     	//apply acceleration and cap
 		this.xVel = (xVel+xAccel);
@@ -160,9 +157,8 @@ public class Player implements Serializable {
 			yVel=0;
 		}
 		
-		
-    	System.out.println("AFTER UPDATE: ");
-    	System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
+    	//System.out.println("AFTER UPDATE: ");
+    	//System.out.println("XVEL, YVEL = " + xVel + ", " + yVel);
     	
     	//move and check collisions
     	this.move(xVel, yVel);
@@ -265,6 +261,8 @@ public class Player implements Serializable {
 		} else {
 			System.out.println("im being petulant vertically");
 		}
+		
+		//System.out.println("X: " + this.position.x + ", Y: " + this.position.y);
 	}
 
 	/**

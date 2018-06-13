@@ -28,9 +28,11 @@ public class Main extends Application{
     	if (args.length>0 && args[0].equals("soundoff")) {
     		soundEnabled = false;
     	}
+    	
         //SystemSettings.setScreenHeight(480);
         //SystemSettings.setScreenWidth(720);
-        Main.launch(args);
+        
+    	Main.launch(args);
     }
 
     /**

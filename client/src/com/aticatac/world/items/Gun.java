@@ -26,11 +26,9 @@ public abstract class Gun implements Serializable{
 	 */
 	private int paintCost;
 	
-	
 	// -----------
 	// Constructor
 	// -----------
-	
 	
 	/**
 	 * @param user The Player using the gun
@@ -62,6 +60,7 @@ public abstract class Gun implements Serializable{
 	 * @param world The world to add the bullet to.
 	 * @return True if the gun was not in cooldown and fired a bullet.
 	 */
+
 	public abstract boolean fire(double direction, Point target, World world);
 	
 	/**

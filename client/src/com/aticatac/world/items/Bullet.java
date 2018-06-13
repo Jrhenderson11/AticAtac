@@ -35,7 +35,7 @@ public abstract class Bullet implements Collidable, Serializable{
 	 */
 	protected int shooter;
 	/**
-	 * How far the bullet has traveled.
+	 * How far the bullet has travelled.
 	 */
 	protected int travel;
 	

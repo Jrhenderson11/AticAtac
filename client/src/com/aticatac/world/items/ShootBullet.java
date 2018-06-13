@@ -40,7 +40,7 @@ public class ShootBullet extends Bullet {
 	}
 	
 	public ShootBullet(double direction, Point target, Point.Double startPositionD, int shooter) {
-		super((int) Math.min(target.distance(new Point((int) startPositionD.x,(int) startPositionD.x)), RANGE), direction, target, MOVESPEED, new Rectangle(new Point((int) startPositionD.x,(int) startPositionD.x), RECTSIZE), shooter);
+		super((int) Math.min(target.distance(new Point((int) startPositionD.x,(int) startPositionD.y)), RANGE), direction, target, MOVESPEED, new Rectangle(new Point((int) startPositionD.x,(int) startPositionD.y), RECTSIZE), shooter);
 	}
 	
 	
