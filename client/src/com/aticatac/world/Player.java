@@ -162,12 +162,7 @@ public class Player implements Serializable {
     	
     	//move and check collisions
     	this.move(xVel, yVel);
-    	Point p = world.displayPositionToCoords(position);
-		if (world.getLevel().getGrid()[p.x][p.y] == 1) {
-			//System.out.println("COLLIDE");
-			this.move(-xVel, -yVel);   	    	    	
-		}
-
+    	
 		if (gun != null) {
     		gun.update(); //updates gun, used for gun cooldowns
     	}
@@ -242,9 +237,13 @@ public class Player implements Serializable {
 		double newX = this.position.x + dX;
 		double newY = this.position.y + dY;
 		
+		Point p = world.displayPositionToCoords(new Point.Double(newX, newY));
+		Point playerPoint = world.displayPositionToCoords(this.position);
 		//&& newX<this.world.getLevel().getWidth()
 		if (newX>0 ) {
-			this.position.x = newX;
+			if (this.world.getLevel().getGrid()[p.x][playerPoint.y]!=1) {
+				this.position.x = newX;
+			}
 		} else {
 			System.out.println("im being petulant");
 			
@@ -257,7 +256,9 @@ public class Player implements Serializable {
 		
 		//&& newY<this.world.getLevel().getHeight()
 		if (newY>0 ) {
-			this.position.y = newY;
+			if (this.world.getLevel().getGrid()[playerPoint.x][p.y]!=1) {
+				this.position.y = newY;
+			}
 		} else {
 			System.out.println("im being petulant vertically");
 		}
