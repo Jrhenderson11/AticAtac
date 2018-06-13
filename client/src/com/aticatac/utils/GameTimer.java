@@ -13,7 +13,7 @@ public class GameTimer implements Serializable {
 	/**
 	 * Standard round duration
 	 */
-	public static final int ROUND_DURATION = 60;
+	public static final int ROUND_DURATION = 120;
 	/**
 	 * Standard post round duration
 	 */

@@ -16,7 +16,7 @@ public class Player implements Serializable {
 	/**
 	 * The rate at which paint regenerates proportional to the amount of territory control.
 	 */
-	public static final double PAINT_REGEN_RATE = 0.4d;
+	public static final double PAINT_REGEN_RATE = 0.1d;
 	/**
 	 * Default size (width and height) of the player
 	 */
@@ -119,18 +119,14 @@ public class Player implements Serializable {
     	//apply friction
     	if (this.xVel > 0) {
     		//going right so friction should be applied left
-    		//Math.min(0, 
     		this.xAccel=xAccel-Math.abs(friction*xVel);
     	} else if (this.xVel < 0) {
-    		//Math.max(0,
     		this.xAccel= xAccel+Math.abs(friction*xVel);
     	}
     	
     	if (this.yVel > 0) {
-    		//Math.min(0, 
     		this.yAccel=yAccel-Math.abs(friction*yVel);
     	} else if (this.yVel < 0) {
-    		//Math.max(0, 
     		this.yAccel=yAccel+Math.abs(friction*yVel);
     	}
     	

@@ -136,11 +136,7 @@ public class World implements Serializable {
 				level.updateCoords(p.x, p.y, player.getColour());
 			}
 			player.update();
-			if (regenTimer == REGEN_DELAY) { // used for a delay between each regeneration call
-				player.regenPaint(level.getPercentTiles(player.getColour()));
-				regenTimer = 0;
-			}
-			regenTimer++;
+			player.regenPaint(level.getPercentTiles(player.getColour()));
 		}
 		// update gunboxes
 		for (int i = 0; i < gunboxes.size(); i++) {
