@@ -120,7 +120,8 @@ public class Renderer {
 					double drawY = (y * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
-					g.fillRoundRect(drawX, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
+					// - glowRadius
+					g.fillRoundRect(drawX, drawY, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
 					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
@@ -131,7 +132,8 @@ public class Renderer {
 					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
-					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
+					// - glowRadius
+					g.fillRoundRect(drawX, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
 					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
@@ -142,7 +144,8 @@ public class Renderer {
 					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
-					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
+					//both???
+					g.fillRoundRect(drawX, drawY, glowRadius * 2, tileHeight + (glowRadius * 2), glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
 					g.fillRect(drawX, drawY, barWidth * 2, tileHeight);
@@ -153,7 +156,8 @@ public class Renderer {
 					double drawY = ((y + 1) * tileHeight);
 					//draw neon glow
 					g.setFill(opaqueColor);
-					g.fillRoundRect(drawX - glowRadius, drawY - glowRadius, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
+					//both
+					g.fillRoundRect(drawX, drawY, tileWidth + (glowRadius * 2), glowRadius * 2, glowArc, glowArc);
 					//draw neon bars
 					g.setFill(color);
 					g.fillRect(drawX, drawY, tileWidth, barWidth * 2);
@@ -197,8 +201,8 @@ public class Renderer {
 		int[][] grid = world.getLevel().getGrid();
 		double tileWidth = scaleX(SystemSettings.getNativeWidth() / world.getLevel().getWidth());
 		double tileHeight = scaleY(SystemSettings.getNativeHeight() / world.getLevel().getHeight());
-		double opacity = 0.5;
-		double brightness = 0.7;
+		double opacity = 1;
+		double brightness = 0.4;
 		
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid[0].length; y++) {
@@ -207,14 +211,15 @@ public class Renderer {
 						Color color = getColourByVal(player.getColour());
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
-						gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+						gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth), Math.ceil(tileHeight) + tileHeight);
 					}
 				}
+
 				if (grid[x][y] == 1) {
 					Color color = wallColor;
 					Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 					gc.setFill(opaqueColor);
-					gc.fillRect(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+					gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth), Math.ceil(tileHeight) + tileHeight/10);
 				}
 			}
 		}
