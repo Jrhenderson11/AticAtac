@@ -5,8 +5,12 @@ import static java.lang.StrictMath.sin;
 
 import java.util.ArrayList;
 
+import com.aticatac.rendering.display.Renderer;
 import com.aticatac.ui.utils.UIDrawer;
 import com.aticatac.utils.SystemSettings;
+import com.aticatac.world.Level;
+import com.aticatac.world.World;
+import com.aticatac.world.utils.LevelGen;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,18 +22,28 @@ import javafx.scene.text.TextAlignment;
 public class SettingsDrawer extends AnimationTimer{
 	private final long then;
     private GraphicsContext gc;
-	
+	private final Renderer render;
+    
 	public SettingsDrawer(GraphicsContext gc, long then){
 		this.then = then;
 		this.gc = gc;
+        this.render = new Renderer();
+        render.setWorld(new World(new Level(LevelGen.get(100, 100))));
 	}
 
 	@Override
 	public void handle(long now) {
 		double animation = now - then;
         animation = animation / 1000000000;
-
+        
         UIDrawer.background(gc, Color.BLACK);
+        render.render(gc.getCanvas().getGraphicsContext2D());
+        Color color = Color.BLACK;
+        double opacity = 0.8;
+        Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+        UIDrawer.background(gc.getCanvas().getGraphicsContext2D(), opaqueColor);
+
+        
         int width = SystemSettings.getScreenWidth();
         int height = SystemSettings.getScreenHeight();
 

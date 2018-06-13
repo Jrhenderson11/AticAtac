@@ -51,7 +51,7 @@ public class MainMenuAnimation extends AnimationTimer {
         render.render(canvas.getGraphicsContext2D());
 
         Color color = Color.BLACK;
-        double opacity = 0.7;
+        double opacity = 0.8;
         Color opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
         UIDrawer.background(canvas.getGraphicsContext2D(), opaqueColor);
 
