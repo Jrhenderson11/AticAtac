@@ -49,7 +49,7 @@ public class Player implements Serializable {
     protected World world;
     
     public static double SPEED = 1.5;
-    public static double MAXSPEED = 1.5;
+    public static double MAXSPEED = 2;
     
 	protected double xAccel=0, yAccel = 0;
     protected double xVel = 0, yVel = 0;
@@ -164,7 +164,7 @@ public class Player implements Serializable {
     	this.move(xVel, yVel);
     	Point p = world.displayPositionToCoords(position);
 		if (world.getLevel().getGrid()[p.x][p.y] == 1) {
-			System.out.println("COLLIDE");
+			//System.out.println("COLLIDE");
 			this.move(-xVel, -yVel);   	    	    	
 		}
 

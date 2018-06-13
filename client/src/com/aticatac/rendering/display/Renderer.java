@@ -210,7 +210,7 @@ public class Renderer {
 						Color color = getColourByVal(player.getColour());
 						Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 						gc.setFill(opaqueColor);
-						gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth), Math.ceil(tileHeight) + tileHeight);
+						gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth) + tileHeight/10, Math.ceil(tileHeight) + tileHeight/10);
 					}
 				}
 
@@ -218,7 +218,7 @@ public class Renderer {
 					Color color = wallColor;
 					Color opaqueColor = new Color(color.getRed() * brightness, color.getGreen()* brightness, color.getBlue()* brightness, opacity);
 					gc.setFill(opaqueColor);
-					gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth), Math.ceil(tileHeight) + tileHeight/10);
+					gc.fillRect(x * tileWidth, y * tileHeight, Math.ceil(tileWidth) + tileHeight/10, Math.ceil(tileHeight) + tileHeight/10);
 				}
 			}
 		}
